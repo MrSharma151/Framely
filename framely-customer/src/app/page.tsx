@@ -1,7 +1,12 @@
+import HeroSection from "@/components/ui/HeroSection";
+import FeaturedCategories from "@/components/ui/FeaturedCategories";
+
+
 export default function Home() {
   return (
-    <h1 className="text-3xl font-bold text-center underline">
-      Framely Customer Frontend with Tailwind ✅
-    </h1>
+    <>
+      <HeroSection />
+      <FeaturedCategories />
+    </>
   );
 }
