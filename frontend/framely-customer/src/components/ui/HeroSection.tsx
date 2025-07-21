@@ -1,29 +1,34 @@
+import Button from "@/components/ui/Button";
+
 export default function HeroSection() {
   return (
-    <section className="relative w-screen h-[70vh] m-0 p-0 overflow-hidden">
-      {/* ✅ Full Background Image */}
+    <section className="relative w-full h-[60vh] sm:h-[65vh] md:h-[60vh] lg:h-[70vh] overflow-hidden">
+      {/* ✅ Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/hero-banner.jpg')" }}
       />
 
-      {/* ✅ Dark Overlay for better text contrast */}
-      <div className="absolute inset-0 bg-black/50"></div>
+      {/* ✅ Premium Dark Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[var(--background)]/90" />
 
-      {/* ✅ Centered Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
-        <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4 drop-shadow-lg">
-          Discover Premium Eyewear
+      {/* ✅ Centered Hero Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 sm:px-6 md:px-8 lg:px-16">
+        <h1 className="font-extrabold leading-tight mb-4 
+          text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 
+          text-white drop-shadow-2xl tracking-wide">
+          Discover <span className="text-[var(--accent)]">Premium Eyewear</span>
         </h1>
-        <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-6 drop-shadow-md">
+
+        <p className="max-w-2xl text-sm sm:text-base md:text-lg lg:text-xl 
+          text-[var(--foreground-muted)] mb-6 drop-shadow-md">
           Stylish frames & lenses to match your personality
         </p>
-        <a
-          href="#"
-          className="px-6 py-3 bg-[#c8a84e] text-black hover:bg-[#b78f33] rounded-md text-lg font-semibold transition duration-300"
-        >
+
+        {/* ✅ Replace with Premium Button */}
+        <Button variant="primary" size="lg">
           Shop Now
-        </a>
+        </Button>
       </div>
     </section>
   );

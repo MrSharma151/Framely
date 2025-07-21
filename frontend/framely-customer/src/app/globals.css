@@ -2,21 +2,25 @@
 
 /* 🌟 Premium Theme variables */
 :root {
-  --background: #0a0a0a; /* Deep Charcoal Black */
-  --foreground: #ffffff; /* Pure White Text */
-  --foreground-muted: #d1d5db; /* Muted gray text for subtle elements */
-  --accent: #c8a84e; /* Soft premium gold accent */
-  --accent-hover: #b78f33; /* Slightly deeper gold on hover */
-  --gradient-bg: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+  --background: #0b0c10; /* Deep Midnight Blue-Black */
+  --background-alt: #111319; /* Slightly lighter dark for depth */
+  --foreground: #f5f6fa; /* Soft white */
+  --foreground-muted: #b4bccf; /* Muted but slightly brighter gray */
+  --accent: #4da6ff; /* Premium electric blue */
+  --accent-hover: #1e90ff; /* Deeper blue on hover */
+  --gradient-bg: radial-gradient(circle at top, #1c1f29 0%, #0b0c10 90%);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.05);
 }
 
-/* ✅ Dark mode - same premium look */
+/* ✅ Dark mode stays same */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ffffff;
-    --foreground-muted: #d1d5db;
-    --gradient-bg: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+    --background: #0b0c10;
+    --background-alt: #111319;
+    --foreground: #f5f6fa;
+    --foreground-muted: #b4bccf;
+    --gradient-bg: radial-gradient(circle at top, #1c1f29 0%, #0b0c10 90%);
   }
 }
 
@@ -27,33 +31,58 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  background: var(--gradient-bg); /* Luxury dark gradient */
-  color: var(--foreground); /* Always white text */
+  background: var(--gradient-bg);
+  color: var(--foreground);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased; /* smoother text */
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.15px;
+
+  /* 🆕 Adaptive root font size – scales between 14px & 15.5px */
+  font-size: clamp(14px, 0.9vw + 12px, 15.5px);
+  line-height: 1.55;
 }
 
-/* ✅ Default section spacing */
+/* ✅ Balanced section spacing */
 section {
-  margin-top: 4rem; /* 64px gap between sections */
+  margin-top: 2rem;
+  margin-bottom: 0;
+}
+section:first-of-type {
+  margin-top: 0;
 }
 
-section:first-of-type {
-  margin-top: 0; /* Hero section ke liye no gap */
+/* ✅ Headings refined for premium look */
+h1, h2, h3 {
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* 🆕 Slightly smaller adaptive heading sizes */
+h1 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+h2 {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+h3 {
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
 }
 
 /* ✅ Anchor Links */
 a {
   text-decoration: none;
   color: inherit;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 a:hover {
-  color: var(--accent); /* golden hover effect */
+  color: var(--accent);
+  text-shadow: 0 0 6px rgba(77, 166, 255, 0.3);
 }
 
-/* ✅ Muted secondary text */
+/* ✅ Muted text */
 .muted {
   color: var(--foreground-muted);
 }
@@ -66,18 +95,82 @@ li {
   padding: 0;
 }
 
-/* ✅ Images always scale well */
+/* ✅ Images hover – subtle, premium */
 img {
   max-width: 100%;
   height: auto;
   display: block;
   object-fit: cover;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+img:hover {
+  transform: scale(1.02);
+  filter: brightness(1.06);
 }
 
-/* ✅ Optional Glass effect for premium sections */
+/* ✅ Glass effect refined – softer shadows */
 .glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px) saturate(125%);
+  -webkit-backdrop-filter: blur(10px) saturate(125%);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* ✅ Smooth fade-in for sections */
+section {
+  animation: fadeInUp 0.65s ease forwards;
+  opacity: 0;
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ✅ Buttons universal style – more minimal */
+button {
+  transition: all 0.25s ease;
+  background: linear-gradient(135deg, var(--accent), #5eb4ff);
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+button:hover {
+  transform: translateY(-1.5px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(77, 166, 255, 0.28);
+}
+
+/* ✅ Subtle animated background accent */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(77, 166, 255, 0.03), transparent 70%);
+  animation: backgroundMove 28s linear infinite; /* slower for luxury feel */
+  z-index: -1;
+}
+@keyframes backgroundMove {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ✅ Line Clamp */
+.line-clamp-2 {
+  display: -webkit-box;           
+  -webkit-box-orient: vertical;   
+  -webkit-line-clamp: 2;          
+  line-clamp: 2;                  
+  overflow: hidden;               
+  text-overflow: ellipsis;        
 }
