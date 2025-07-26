@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Framely.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -164,7 +164,7 @@ namespace Framely.API.Controllers
         }
 
         // GET api/products/category?name=sunglasses
-        // Returns all products that belong to the given category name
+        // Returns ONLY products that EXACTLY belong to the given category name
         [HttpGet("category")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetByCategory([FromQuery] string name)
@@ -172,15 +172,19 @@ namespace Framely.API.Controllers
             if (string.IsNullOrWhiteSpace(name))
                 return BadRequest("Category name is required");
 
+            var cleanName = name.Trim().ToLower(); // lowercase for safe comparison
+
             var products = await _context.Products
                 .Include(p => p.Category)
-                .Where(p => p.Category != null && !string.IsNullOrEmpty(p.Category.Name) &&
-                            p.Category.Name.ToLower().Contains(name.ToLower())) // partial match
+                .Where(p => p.Category != null &&
+                            !string.IsNullOrEmpty(p.Category.Name) &&
+                            p.Category.Name.ToLower() == cleanName)  // ✅ EF can translate this
                 .ToListAsync();
 
             var result = _mapper.Map<List<ProductDto>>(products);
             return Ok(result);
         }
+
 
         // GET api/products/brand?name=rayban
         // Returns all products that match the given brand name

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Framely.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class OrdersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
