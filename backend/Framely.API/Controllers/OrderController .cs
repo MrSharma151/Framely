@@ -176,33 +176,39 @@ namespace Framely.API.Controllers
 
         // DELETE ORDER (Admin can delete any, User can cancel only their own)
         [HttpDelete("{id}")]
-        [Authorize] // must be logged in
-        public async Task<IActionResult> Delete(int id)
+        [Authorize]
+        public async Task<IActionResult> CancelOrDeleteOrder(int id)
         {
             var order = await _context.Orders
-                .Include(o => o.Items)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
             if (order == null)
                 return NotFound();
 
-            // Get logged-in user info
             var loggedInUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            var isAdmin = User.IsInRole("ADMIN"); 
+            var isAdmin = User.IsInRole("ADMIN");
 
-            // Ownership check: normal user can delete ONLY their own order
             if (!isAdmin && order.UserId != loggedInUserId)
+                return Forbid();
+
+            if (isAdmin)
             {
-                return Forbid(); // 403 Forbidden
+                // ✅ Admin can hard delete
+                _context.Orders.Remove(order);
+            }
+            else
+            {
+                // ✅ Normal user → just cancel (soft delete)
+                if (order.Status == "Pending")
+                    order.Status = "Cancelled";
+                else
+                    return BadRequest("Cannot cancel a completed order.");
             }
 
-            // If allowed (owner or admin), delete order
-            _context.OrderItems.RemoveRange(order.Items!);
-            _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
+
 
         // GET MY ORDERS (for logged-in user)
         [HttpGet("my")]

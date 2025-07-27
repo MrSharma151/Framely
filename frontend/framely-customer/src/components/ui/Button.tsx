@@ -5,6 +5,7 @@ type ButtonProps = {
   onClick?: () => void;
   className?: string;
   type?: "button" | "submit";
+  disabled?: boolean;
 };
 
 export default function Button({
@@ -15,38 +16,49 @@ export default function Button({
   type = "button",
   className = "",
 }: ButtonProps) {
-  const baseStyles =
-    "inline-flex items-center justify-center rounded-md font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--accent)]";
+  const baseStyles = `
+    relative inline-flex items-center justify-center rounded-xl font-semibold
+    transition-all duration-300 ease-out
+    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--accent)]
+    overflow-hidden
+    group
+  `;
 
   const sizeStyles = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-5 py-2 text-base",
-    lg: "px-7 py-3 text-lg",
+    sm: "px-4 py-1.5 text-sm",
+    md: "px-6 py-2.5 text-base",
+    lg: "px-8 py-3 text-lg",
   };
 
   const variantStyles = {
     primary: `
       text-white 
-      bg-[var(--accent)] 
-      hover:bg-[var(--accent-hover)] 
-      shadow-lg hover:shadow-[var(--accent)]/30
+      bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600
+      shadow-[0_4px_14px_rgba(80,120,255,0.4)]
+      hover:shadow-[0_6px_20px_rgba(90,140,255,0.5)]
+      hover:scale-[1.03]
     `,
     secondary: `
-      text-[var(--foreground)] 
-      bg-[var(--background-alt)] 
-      hover:bg-[var(--accent-hover)]/20 
-      shadow hover:shadow-[var(--accent)]/20
+      text-[var(--foreground)]
+      bg-[var(--background-alt)]
+      border border-white/10
+      hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-purple-500/10
+      hover:scale-[1.02]
     `,
     outline: `
-      border border-[var(--accent)] 
-      text-[var(--accent)] 
-      hover:bg-[var(--accent)] hover:text-[var(--background)]
+      border border-blue-400/50 
+      text-blue-400 
+      hover:bg-blue-500/10 hover:text-white 
+      hover:scale-[1.03]
+      shadow-[0_0_8px_rgba(80,120,255,0.3)]
     `,
     glass: `
-      glass 
-      text-[var(--foreground)] 
-      hover:bg-[var(--accent)]/10 
-      hover:shadow-[var(--accent)]/20
+      bg-white/5 backdrop-blur-md 
+      text-white 
+      border border-white/10
+      hover:border-blue-400/30 hover:bg-blue-500/10
+      hover:shadow-[0_0_10px_rgba(80,120,255,0.3)]
+      hover:scale-[1.02]
     `,
   };
 
@@ -54,9 +66,34 @@ export default function Button({
     <button
       type={type}
       onClick={onClick}
-      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
+      className={`
+        ${baseStyles} 
+        ${sizeStyles[size]} 
+        ${variantStyles[variant]} 
+        ${className}
+      `}
     >
+      {/* ✅ Main label */}
       {children}
+
+      {/* ✅ Floating Shine Animation */}
+      <span
+        className="
+          absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent
+          translate-x-[-200%] group-hover:translate-x-[200%]
+          transition-transform duration-700 ease-in-out
+        "
+      />
+
+      {/* ✅ Soft glow outline on hover */}
+      <span
+        className="
+          absolute inset-0 rounded-xl pointer-events-none
+          opacity-0 group-hover:opacity-100
+          transition duration-500
+          shadow-[0_0_15px_rgba(100,150,255,0.4)]
+        "
+      />
     </button>
   );
 }

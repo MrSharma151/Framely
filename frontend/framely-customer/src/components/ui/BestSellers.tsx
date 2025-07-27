@@ -1,12 +1,33 @@
-import Button from "@/components/ui/Button";
+"use client";
+
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { getProducts, Product } from "@/services/productService";
+import ProductCard from "@/components/ui/ProductCard";
 
 export default function BestSellers() {
-  const products = [
-    { id: 1, name: "Classic Round Frame", price: "₹2,499", image: "/images/products/round-frame.png" },
-    { id: 2, name: "Premium Aviator", price: "₹3,199", image: "/images/products/aviator.jpeg" },
-    { id: 3, name: "Blue Light Blocker", price: "₹1,899", image: "/images/products/blue-light.jpeg" },
-    { id: 4, name: "Trendy Cat Eye", price: "₹2,799", image: "/images/products/cat-eye.jpeg" },
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBestSellers = async () => {
+      try {
+        setLoading(true);
+
+        // ✅ Fetch only 4 products (page 1, size 4)
+        const res = await getProducts(1, 4, "name", "asc");
+        const fetched = res.data || [];
+
+        setProducts(fetched);
+      } catch (err) {
+        console.error("❌ Failed to load best sellers", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBestSellers();
+  }, []);
 
   return (
     <section className="py-20 relative">
@@ -20,62 +41,25 @@ export default function BestSellers() {
         </p>
       </div>
 
-      {/* ✅ Product Grid */}
-      <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
-        {products.map((p) => (
-          <div
-            key={p.id}
-            className="group relative rounded-2xl overflow-hidden bg-[var(--background-alt)] 
-            shadow-md hover:shadow-xl 
-            transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]
-            hover:-translate-y-[6px]"
-          >
-            {/* ✅ IMAGE SECTION */}
-            <div className="relative w-full h-56 sm:h-60 md:h-64 overflow-hidden">
-              <img
-                src={p.image}
-                alt={p.name}
-                className="absolute inset-0 w-full h-full object-cover object-center 
-                transform transition-transform duration-[1200ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
-                group-hover:scale-110"
-              />
+      {/* ✅ Loader */}
+      {loading ? (
+        <div className="flex justify-center py-10 text-gray-400">
+          <Loader2 className="animate-spin mr-2" /> Loading Best Sellers...
+        </div>
+      ) : (
+        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
 
-              {/* ✅ Smooth Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t 
-                from-[var(--background)]/70 via-black/30 to-transparent 
-                opacity-0 group-hover:opacity-100 
-                transition-opacity duration-700 ease-in-out" />
-
-              {/* ✅ Quick View Button */}
-              <div className="absolute inset-0 flex items-center justify-center 
-                opacity-0 translate-y-3 
-                transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] 
-                group-hover:opacity-100 group-hover:translate-y-0">
-                <Button variant="secondary" size="sm">
-                  Quick View
-                </Button>
-              </div>
+          {/* ✅ No Products Case */}
+          {products.length === 0 && (
+            <div className="col-span-full text-center text-gray-400">
+              No best sellers found.
             </div>
-
-            {/* ✅ INFO SECTION */}
-            <div className="p-5 flex flex-col justify-between text-center">
-              <div>
-                <h3 className="text-lg md:text-xl font-semibold text-white tracking-wide line-clamp-1">
-                  {p.name}
-                </h3>
-                <p className="mt-1 text-[var(--accent)] font-medium text-sm sm:text-base">
-                  {p.price}
-                </p>
-              </div>
-
-              {/* ✅ Add to Cart with PremiumButton */}
-              <Button className="mt-4 w-full">
-                Add to Cart →
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+          )}
+        </div>
+      )}
     </section>
   );
 }

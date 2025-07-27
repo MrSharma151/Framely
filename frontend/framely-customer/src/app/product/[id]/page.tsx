@@ -7,14 +7,17 @@ import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
 import { Product, getProductById } from "@/services/productService";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/hooks/useAuth"; // ✅ Auth check ke liye
 
 export default function ProductDetailsPage() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const router = useRouter();
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
+  const { user, hydrated } = useAuth(); // ✅ Logged-in check
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showGoToCart, setShowGoToCart] = useState(false); // ✅ Add-to-Cart ke baad show hoga
 
   const fixedImage = "/images/products/aviator.jpeg";
 
@@ -35,13 +38,17 @@ export default function ProductDetailsPage() {
   }, [id, router]);
 
   const handleAddToCart = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("⚠️ You need to login first to add items to cart");
+    // ✅ Agar logged-out hai → login page pe bhejdo
+    if (!user) {
+      toast.error("⚠️ Please login to add items to cart");
+      router.push("/auth/login");
       return;
     }
+
+    // ✅ Agar product loaded nahi hai
     if (!product) return;
 
+    // ✅ Add to Cart
     addToCart({
       id: product.id,
       name: product.name,
@@ -50,6 +57,15 @@ export default function ProductDetailsPage() {
     });
 
     toast.success(`✅ ${product.name} added to cart 🛒`);
+    setShowGoToCart(true); // ✅ Ab Go to Cart button show hoga
+  };
+
+  const handleGoToCart = () => {
+    if (cart.length === 0) {
+      toast.error("🛒 Your cart is empty!");
+      return;
+    }
+    router.push("/cart");
   };
 
   if (loading) {
@@ -104,24 +120,24 @@ export default function ProductDetailsPage() {
 
           {/* ✅ Product Info */}
           <div className="space-y-6">
-            {/* Title */}
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
               {product.name}
             </h1>
 
-            {/* Brand */}
             {product.brand && (
               <p className="text-gray-400 text-sm uppercase tracking-widest">
                 {product.brand}
               </p>
             )}
 
-            {/* Rating Placeholder */}
+            {/* Rating */}
             <div className="flex items-center gap-2 text-yellow-400">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} size={18} fill="currentColor" />
               ))}
-              <span className="text-gray-300 ml-2 text-sm">4.9 (120 reviews)</span>
+              <span className="text-gray-300 ml-2 text-sm">
+                4.9 (120 reviews)
+              </span>
             </div>
 
             {/* Price */}
@@ -129,26 +145,38 @@ export default function ProductDetailsPage() {
               ₹{product.price.toLocaleString("en-IN")}
             </p>
 
-            {/* Short Description */}
             {product.description && (
               <p className="text-gray-300 leading-relaxed">
                 {product.description}
               </p>
             )}
 
-            {/* ✅ Add to Cart Button */}
-            <div className="pt-4">
+            {/* ✅ Add to Cart + Go to Cart */}
+            <div className="pt-4 flex flex-col md:flex-row gap-3">
+              {/* ✅ Add to Cart → hamesha visible */}
               <Button
                 onClick={handleAddToCart}
                 variant="primary"
                 size="lg"
-                className="w-full md:w-auto shadow-lg hover:shadow-blue-500/30"
+                className="shadow-lg hover:shadow-blue-500/30"
               >
                 <ShoppingCart size={18} /> Add to Cart
               </Button>
+
+              {/* ✅ Go to Cart → sirf logged-in & product added hone ke baad */}
+              {user && showGoToCart && (
+                <Button
+                  onClick={handleGoToCart}
+                  variant="secondary"
+                  size="lg"
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  🛒 Go to Cart
+                </Button>
+              )}
             </div>
 
-            {/* ✅ Extra Details Section */}
+            {/* ✅ Extra Details */}
             <div className="grid grid-cols-2 gap-4 mt-8 text-sm">
               <div className="p-4 bg-white/5 rounded-xl backdrop-blur-md">
                 <p className="text-gray-400">Category</p>
@@ -170,7 +198,7 @@ export default function ProductDetailsPage() {
           </div>
         </div>
 
-        {/* ✅ Additional Info / Features */}
+        {/* ✅ Features */}
         <div className="mt-16 border-t border-white/10 pt-10">
           <h2 className="text-2xl font-bold mb-6">Why choose this product?</h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-300">

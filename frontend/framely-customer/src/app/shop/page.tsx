@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react";
 import { Search, Filter, Loader2, ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 
 import {
   getProducts,
   getProductsByCategoryName,
   Product,
+  PaginatedProductsResponse,
 } from "@/services/productService";
 import { getCategories, Category } from "@/services/categoryService";
 
@@ -15,6 +17,9 @@ import CategoryFilter from "@/components/ui/CategoryFilter";
 import ProductCard from "@/components/ui/ProductCard";
 
 export default function ShopPage() {
+  const searchParams = useSearchParams();
+  const initialCategoryFromURL = searchParams.get("category");
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
 
@@ -24,6 +29,12 @@ export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
+
+  // ✅ Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const PAGE_SIZE = 10; // ✅ Always 10 products per page
 
   /** ✅ Fetch categories on mount */
   useEffect(() => {
@@ -41,16 +52,23 @@ export default function ShopPage() {
     fetchCategories();
   }, []);
 
-  /** ✅ Fetch all products initially */
+  /** ✅ Fetch products when page/category changes */
   useEffect(() => {
-    fetchAllProducts();
-  }, []);
+    if (initialCategoryFromURL) {
+      setSelectedCategoryName(initialCategoryFromURL);
+      fetchCategoryProducts(initialCategoryFromURL);
+    } else {
+      fetchAllProducts(currentPage);
+    }
+  }, [initialCategoryFromURL, currentPage]);
 
-  const fetchAllProducts = async () => {
+  /** ✅ Fetch ALL products with backend pagination */
+  const fetchAllProducts = async (page: number) => {
     try {
       setLoadingProducts(true);
-      const res = await getProducts(1, 50, "name", "asc");
+      const res: PaginatedProductsResponse = await getProducts(page, PAGE_SIZE, "name", "asc");
       setProducts(res.data || []);
+      setTotalPages(res.totalPages);
     } catch {
       toast.error("Failed to load products");
     } finally {
@@ -58,12 +76,14 @@ export default function ShopPage() {
     }
   };
 
-  /** ✅ Fetch products by category */
+  /** ✅ Fetch products by category (no backend pagination for now) */
   const fetchCategoryProducts = async (categoryName: string) => {
     try {
       setLoadingProducts(true);
       const res = await getProductsByCategoryName(categoryName.trim());
       setProducts(res || []);
+      setTotalPages(1); // ✅ No pagination for filtered category
+      setCurrentPage(1);
     } catch {
       toast.error(`Failed to load products for "${categoryName}"`);
     } finally {
@@ -75,13 +95,13 @@ export default function ShopPage() {
   const handleCategorySelect = (categoryName: string | null) => {
     setSelectedCategoryName(categoryName);
     if (!categoryName) {
-      fetchAllProducts();
+      fetchAllProducts(1); // reset to first page
     } else {
       fetchCategoryProducts(categoryName);
     }
   };
 
-  /** ✅ Apply search + sort */
+  /** ✅ Apply search + sort (frontend only) */
   const filteredProducts = products
     .filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
@@ -105,7 +125,7 @@ export default function ShopPage() {
 
   return (
     <section className="relative py-16 sm:py-20">
-      {/* ✅ Background gradient for premium feel */}
+      {/* ✅ Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900/20 via-gray-800/10 to-transparent pointer-events-none" />
 
       {/* ✅ Page Title */}
@@ -153,7 +173,7 @@ export default function ShopPage() {
         </button>
       </div>
 
-      {/* ✅ Products Loading State */}
+      {/* ✅ Loading State */}
       {loadingProducts && (
         <div className="flex justify-center items-center py-20 text-gray-400">
           <Loader2 className="animate-spin mr-2" /> Loading products...
@@ -162,17 +182,44 @@ export default function ShopPage() {
 
       {/* ✅ Product Grid */}
       {!loadingProducts && (
-        <div className="relative z-20 container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-6">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <>
+          <div className="relative z-20 container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-6">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
 
-          {filteredProducts.length === 0 && (
-            <div className="col-span-full text-center text-gray-400">
-              No products found.
+            {filteredProducts.length === 0 && (
+              <div className="col-span-full text-center text-gray-400">
+                No products found.
+              </div>
+            )}
+          </div>
+
+          {/* ✅ Pagination Controls (only for non-category listing) */}
+          {!selectedCategoryName && totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 mt-10">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-md bg-gray-800 text-gray-300 disabled:opacity-50 hover:bg-gray-700 transition"
+              >
+                ← Prev
+              </button>
+
+              <span className="text-gray-400">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-md bg-gray-800 text-gray-300 disabled:opacity-50 hover:bg-gray-700 transition"
+              >
+                Next →
+              </button>
             </div>
           )}
-        </div>
+        </>
       )}
     </section>
   );

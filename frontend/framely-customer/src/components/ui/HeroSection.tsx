@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Button from "@/components/ui/Button";
 
 export default function HeroSection() {
@@ -14,21 +15,27 @@ export default function HeroSection() {
 
       {/* ✅ Centered Hero Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 sm:px-6 md:px-8 lg:px-16">
-        <h1 className="font-extrabold leading-tight mb-4 
+        <h1
+          className="font-extrabold leading-tight mb-4 
           text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 
-          text-white drop-shadow-2xl tracking-wide">
+          text-white drop-shadow-2xl tracking-wide"
+        >
           Discover <span className="text-[var(--accent)]">Premium Eyewear</span>
         </h1>
 
-        <p className="max-w-2xl text-sm sm:text-base md:text-lg lg:text-xl 
-          text-[var(--foreground-muted)] mb-6 drop-shadow-md">
+        <p
+          className="max-w-2xl text-sm sm:text-base md:text-lg lg:text-xl 
+          text-[var(--foreground-muted)] mb-6 drop-shadow-md"
+        >
           Stylish frames & lenses to match your personality
         </p>
 
-        {/* ✅ Replace with Premium Button */}
-        <Button variant="primary" size="lg">
-          Shop Now
-        </Button>
+        {/* ✅ Shop Now Button with Link */}
+        <Link href="/shop" passHref>
+          <Button variant="primary" size="lg">
+            Shop Now
+          </Button>
+        </Link>
       </div>
     </section>
   );

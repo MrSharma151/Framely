@@ -1,18 +1,41 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/hooks/useAuth"; // ✅ useAuth hook banaya tha
 import { Trash2, Plus, Minus } from "lucide-react";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 
 export default function CartPage() {
+  const router = useRouter();
   const { cart, removeFromCart, updateQuantity, total } = useCart();
+
+  // ✅ Auth context se user aur hydrated lo
+  const { user, hydrated } = useAuth();
+
+  // ✅ Sirf hydration ke baad redirect karo agar logged in nahi ho
+  useEffect(() => {
+    if (hydrated && !user) {
+      toast.error("⚠️ Please login to view your cart");
+      setTimeout(() => {
+        router.replace("/auth/login");
+      }, 800);
+    }
+  }, [hydrated, user, router]);
 
   const clearCart = () => {
     if (cart.length === 0) return;
     cart.forEach((item) => removeFromCart(item.id));
     toast.success("🛒 Cart cleared successfully!");
   };
+
+  // ✅ Hydration se pehle blank return karo (flicker avoid)
+  if (!hydrated) return null;
+
+  // ✅ Agar hydrated ho gaya aur user nahi hai to blank return karo (redirect ho raha)
+  if (!user) return null;
 
   return (
     <section className="container mx-auto px-4 md:px-8 py-14">
@@ -36,7 +59,7 @@ export default function CartPage() {
 
       {cart.length === 0 ? (
         <p className="text-center text-gray-400 text-base">
-          Your cart is empty.{" "}
+          Your cart is empty.
           <br />
           <span className="text-xs text-gray-500">
             Add some eyewear to get started!
@@ -58,7 +81,6 @@ export default function CartPage() {
 
               {/* Product Info + Actions */}
               <div className="flex-1 w-full">
-                {/* Title + Price + Remove */}
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                   <div>
                     <h2 className="text-sm md:text-base font-medium text-white leading-snug">
@@ -69,7 +91,6 @@ export default function CartPage() {
                     </p>
                   </div>
 
-                  {/* Remove Button */}
                   <Button
                     variant="outline"
                     size="sm"
@@ -85,7 +106,6 @@ export default function CartPage() {
 
                 {/* Quantity Controls + Subtotal */}
                 <div className="flex flex-wrap justify-start items-center gap-4 mt-3">
-                  {/* Quantity Controls */}
                   <div className="flex items-center gap-2 bg-gray-800/70 px-3 py-1.5 rounded-full backdrop-blur-sm text-xs">
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -102,7 +122,6 @@ export default function CartPage() {
                     </button>
                   </div>
 
-                  {/* Subtotal */}
                   <p className="text-xs md:text-sm text-gray-400">
                     Subtotal:{" "}
                     <span className="text-white font-medium">
@@ -114,7 +133,7 @@ export default function CartPage() {
             </div>
           ))}
 
-          {/* Total + Checkout */}
+          {/* ✅ Total + Checkout */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-gray-700 pt-5 mt-5">
             <h2 className="text-lg md:text-xl font-semibold">
               Total:{" "}
@@ -122,8 +141,19 @@ export default function CartPage() {
                 ₹{total.toLocaleString("en-IN")}
               </span>
             </h2>
-            <Button variant="primary" size="md" className="w-full md:w-auto">
-              Proceed to Checkout
+
+            <Button
+              variant="primary"
+              size="md"
+              className="w-full md:w-auto"
+              disabled={cart.length === 0}
+              onClick={() => {
+                if (cart.length > 0) {
+                  router.push("/checkout");
+                }
+              }}
+            >
+              Proceed to Checkout →
             </Button>
           </div>
         </div>

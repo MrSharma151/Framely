@@ -60,7 +60,7 @@ export default function CategoryFilter({
           onClick={() => onCategorySelect(null)}
         />
 
-        {/* ✅ Dynamic categories */}
+        {/* ✅ Dynamic Categories */}
         {sortedCategories.map((cat) => {
           const cleanName = cat.name.trim();
           return (
@@ -87,37 +87,35 @@ function CategoryButton({
   onClick: () => void;
 }) {
   return (
-    <button
+    <Button
       onClick={onClick}
+      // ✅ Allowed variants only
+      variant={isSelected ? "primary" : "outline"}
       className={`
-        relative px-6 py-2.5 rounded-full text-sm font-semibold tracking-wide
-        backdrop-blur-md transition-all duration-300 ease-out
-        overflow-hidden group
-        
+        relative rounded-full text-sm font-semibold tracking-wide 
+        transition-all duration-300 ease-out
+        px-5 py-2
+
         ${
           isSelected
-            ? "bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white shadow-[0_0_15px_rgba(100,120,255,0.3)] scale-105"
-            : "bg-white/5 text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-purple-500/10"
+            ? "scale-105 shadow-lg shadow-blue-500/30 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 border border-blue-400/40"
+            : "hover:scale-105 hover:shadow-md"
         }
       `}
     >
-      {/* ✅ Label */}
-      <span className="truncate">{label}</span>
+      {label}
 
-      {/* ✅ Premium Shine Swipe on Hover */}
-      <span
-        className="
-          absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%]
-          bg-gradient-to-r from-transparent via-white/10 to-transparent
-          opacity-0 group-hover:opacity-100 transition-all duration-700 ease-in-out
-          rounded-full
-        "
-      />
-
-      {/* ✅ Soft glow ring when selected */}
+      {/* ✅ Soft premium glow ring only for selected */}
       {isSelected && (
-        <span className="absolute inset-0 rounded-full border border-blue-400/40 animate-pulse" />
+        <span
+          className="
+            absolute inset-0 rounded-full 
+            border border-blue-300/40 
+            shadow-[0_0_12px_rgba(80,120,255,0.4)] 
+            pointer-events-none
+          "
+        />
       )}
-    </button>
+    </Button>
   );
 }

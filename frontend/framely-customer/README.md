@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 👓 Framely Customer Frontend (MVP)
 
-## Getting Started
+Framely is an **online eyewear store** where users can browse products, filter by categories, search, place orders, and manage their account.  
+This is the **Customer Frontend (MVP level)** built with **Next.js (App Router)**.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📌 Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Next.js 14+ (App Router)** – Modern React framework
+- **TypeScript** – Strict type safety
+- **TailwindCSS** – Utility-first styling
+- **Lucide-react** – Icon library
+- **Axios** – For API calls (`apiClient.ts`)
+- **react-hot-toast** – User-friendly notifications
+- **JWT Authentication** – Token stored in `localStorage`
+- **Protected Routes** – Redirect to login if unauthenticated
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✅ Features Implemented (MVP Level)
 
-## Learn More
+- ✅ **Auth-aware pages**
+  - Redirects to `/auth/login` if user not logged in
+  - Uses `useAuth()` hook for hydration check
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ **Shop Page**
+  - **Backend Pagination** – Shows **10 products per page** with Prev/Next
+  - **Category Filter** – Fetches products by category name
+  - **Search** – Client-side filtering on loaded products
+  - **Sort** – Toggle between `Price Low→High`, `Price High→Low`, or default
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- ✅ **Product Details Page**
+  - Shows product details fetched from backend
+  - Includes fallback image & category name
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- ✅ **My Orders Page**
+  - Fetches logged-in user's orders
+  - **Order Date in IST (converted from backend UTC)**
+  - Status badges (`Pending`, `Processing`, `Completed`, `Cancelled`)
+  - Cancel button for pending orders
+  - Shows ordered items + total price
 
-## Deploy on Vercel
+- ✅ **Cart & Checkout (MVP)**
+  - Simple cart management (stored client-side)
+  - Basic checkout flow → order placement
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ✅ **Category Filter Component**
+  - Displays all categories
+  - Allows switching between all products vs. filtered category
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- ✅ **Toast Notifications**
+  - For errors (e.g., failed API calls)
+  - For success (e.g., order cancelled)
+
+---
+
+---
+
+## 🌐 Backend API Integration
+
+- **Base API URL** is configured in `apiClient.ts`
+- **Product APIs**
+  - `/Products?page=1&pageSize=10&sortBy=name&sortOrder=asc`
+  - `/Products/{id}`
+  - `/Products/category?name=Men`
+  - `/Products/search?term=aviator`
+- **Category API**
+  - `/Categories` → returns all available categories
+- **Order APIs**
+  - `/Orders/my` → fetch logged-in user orders
+  - `/Orders/{id}/cancel` → cancel pending order
+
+**Pagination Response Structure:**
+
+```json
+{
+  "totalItems": 43,
+  "totalPages": 5,
+  "currentPage": 1,
+  "pageSize": 10,
+  "data": [
+    { "id": 1, "name": "Premium Aviator", "price": 1999, "imageUrl": "/img.jpg" }
+  ]
+}
+
+

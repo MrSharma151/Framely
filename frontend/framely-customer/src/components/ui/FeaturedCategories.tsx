@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 export default function FeaturedCategories() {
   const categories = [
-    { name: "Men", image: "/images/categories/men.avif" },
-    { name: "Women", image: "/images/categories/women.avif" },
-    { name: "Kids", image: "/images/categories/kids.jpg" },
+    { name: "Men's Eyewear", image: "/images/categories/men.avif" },
+    { name: "Women's Eyewear", image: "/images/categories/women.avif" },
+    { name: "Kids' Eyewear", image: "/images/categories/kids.jpg" },
     { name: "Sunglasses", image: "/images/categories/sunglasses.jpg" },
   ];
 
@@ -21,12 +23,12 @@ export default function FeaturedCategories() {
       {/* ✅ Grid Layout */}
       <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
         {categories.map((cat) => (
-          <a
+          <Link
             key={cat.name}
-            href="#"
+            href={`/shop?category=${encodeURIComponent(cat.name)}`}
             className="relative group rounded-2xl overflow-hidden shadow-lg 
-            transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]
-            hover:shadow-2xl hover:-translate-y-[6px]"
+              transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]
+              hover:shadow-2xl hover:-translate-y-[6px]"
           >
             {/* ✅ Smooth Image Zoom */}
             <div className="relative w-full h-52 sm:h-56 lg:h-60 overflow-hidden">
@@ -34,8 +36,8 @@ export default function FeaturedCategories() {
                 src={cat.image}
                 alt={cat.name}
                 className="absolute inset-0 w-full h-full object-cover object-center 
-                transform transition-transform duration-[1200ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
-                group-hover:scale-105"
+                  transform transition-transform duration-[1200ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
+                  group-hover:scale-105"
               />
 
               {/* ✅ Smooth Gradient Overlay */}
@@ -60,7 +62,7 @@ export default function FeaturedCategories() {
                 </span>
               </div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </section>
