@@ -1,0 +1,108 @@
+{
+  "totalItems": 20,
+  "totalPages": 2,
+  "currentPage": 1,
+  "pageSize": 10,
+  "data": [
+    {
+      "id": 22,
+      "name": "Anti-Fog Racquetball Goggles",
+      "brand": "SooGree",
+      "description": "Protective sports eyewear with anti-fog lenses and replaceable pads.",
+      "price": 1199,
+      "imageUrl": "https://www.amazon.com/SooGree-Basketball-Protective-Racquetball-Replaceable/dp/B09NQ4QXL4",
+      "categoryId": 13,
+      "categoryName": "Sports Eyewear"
+    },
+    {
+      "id": 8,
+      "name": "Anti-Slip Eyeglass Ear Hooks",
+      "brand": "GripVision",
+      "description": "Soft silicone ear hooks that prevent glasses from slipping during daily use or sports activities.",
+      "price": 149,
+      "imageUrl": "https://www.walmart.com/ip/2Pairs-Anti-Slip-Eyeglass-Ear-Hooks-Lightweight-Non-Slip-Eyewear-Retainers-Fashion-Eyewear-Accessories-Eye-Glasses-Temple-Tip-Holder-Pink-and-Blue/1705839536",
+      "categoryId": 15,
+      "categoryName": "Accessories"
+    },
+    {
+      "id": 18,
+      "name": "Clear Cat Eye Glasses",
+      "brand": "Eyebuydirect",
+      "description": "Elegant cat-eye frames with prescription lenses for women.",
+      "price": 1399,
+      "imageUrl": "https://www.eyebuydirect.com/eyeglasses/frames/element-clear-m-20159",
+      "categoryId": 9,
+      "categoryName": "Prescription Glasses"
+    },
+    {
+      "id": 25,
+      "name": "Clear Round Frames",
+      "brand": "Etsy",
+      "description": "Elegant round glasses with anti-reflective and blue light blocking lenses.",
+      "price": 999,
+      "imageUrl": "https://www.etsy.com/listing/1327199143/clear-round-eye-glasses-frames-women",
+      "categoryId": 7,
+      "categoryName": "Women's Eyewear"
+    },
+    {
+      "id": 14,
+      "name": "Colorful Reese Frame",
+      "brand": "BrightEyes",
+      "description": "Vibrant and lightweight glasses available in multiple fun colors.",
+      "price": 849,
+      "imageUrl": "https://www.kidsbrighteyes.com/products/size-42-reese-frame-6-colors-available",
+      "categoryId": 8,
+      "categoryName": "Kids' Eyewear"
+    },
+    {
+      "id": 11,
+      "name": "Daily Comfort Contact Lenses",
+      "brand": "ClearView",
+      "description": "Soft daily disposable lenses for all-day hydration and clarity.",
+      "price": 1199,
+      "imageUrl": "https://my.clevelandclinic.org/health/articles/10737-contacts",
+      "categoryId": 11,
+      "categoryName": "Contact Lenses"
+    },
+    {
+      "id": 13,
+      "name": "Flexible Kids Glasses",
+      "brand": "NanoVista",
+      "description": "Indestructible and flexible frames designed for active kids.",
+      "price": 999,
+      "imageUrl": "https://nano-vista.com/en/",
+      "categoryId": 8,
+      "categoryName": "Kids' Eyewear"
+    },
+    {
+      "id": 17,
+      "name": "Gold Aviator RX Glasses",
+      "brand": "Randolph USA",
+      "description": "23k gold aviator-style prescription glasses with premium clarity.",
+      "price": 2499,
+      "imageUrl": "https://www.randolphusa.com/products/aviator-23k-gold-clear-rx-eyewear",
+      "categoryId": 9,
+      "categoryName": "Prescription Glasses"
+    },
+    {
+      "id": 12,
+      "name": "HydraFlex Monthly Lenses",
+      "brand": "VisionPro",
+      "description": "Monthly wear lenses with advanced oxygen permeability for healthy eyes.",
+      "price": 1499,
+      "imageUrl": "https://www.smartbuyglasses.com/optical-center/prescription/glasses-vs-contact-lenses-pros-and-cons",
+      "categoryId": 11,
+      "categoryName": "Contact Lenses"
+    },
+    {
+      "id": 19,
+      "name": "LED Lighted Readers",
+      "brand": "BrightRead",
+      "description": "Reading glasses with built-in LED lights for nighttime use.",
+      "price": 499,
+      "imageUrl": "https://www.amazon.com/Reading-Glasses-Readers-Magnifier-Nighttime/dp/B07ZZ54HWF",
+      "categoryId": 14,
+      "categoryName": "Reading Glasses"
+    }
+  ]
+}
