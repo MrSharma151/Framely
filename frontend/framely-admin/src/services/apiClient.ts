@@ -1,37 +1,45 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
-// Create a centralized axios instance for all API requests
 const apiClient = axios.create({
-  baseURL: "https://localhost:7178/api/v1", // Base URL for your backend API
+  baseURL: "https://localhost:7178/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Automatically attach the JWT token from localStorage (if it exists)
-apiClient.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+// ✅ Attach JWT token from cookies to each request
+apiClient.interceptors.request.use(
+  (config) => {
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
-  }
-  return config;
-});
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// Global response interceptor to handle API errors consistently
+// ✅ Global error handler
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
     const message = error.response?.data?.message || error.message;
 
-    console.error("API Error:", message);
+    console.error("❌ API Error:", message);
 
-    // If token is invalid or expired, clear local storage and redirect to login
+    // Optional: You can also handle 500, 404, etc. globally here
     if (status === 401 || status === 403) {
-      localStorage.removeItem("token");
-      window.location.href = "/auth/login";
+      Cookies.remove("token");
+      Cookies.remove("user");
+
+      // Use a slight delay to allow UI feedback before redirect
+      setTimeout(() => {
+        window.location.href = "/auth/login";
+      }, 500);
     }
 
     return Promise.reject(error);

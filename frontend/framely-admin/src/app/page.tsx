@@ -1,10 +1,10 @@
 "use client";
 
-import ProductMetrics from "@/components/ui/ProductMetrics";
-import RevenueTrend from "@/components/ui/RevenueTrend";
-import RecentOrders from "@/components/ui/RecentOrders";
-import TopSellingProducts from "@/components/ui/TopSellingProducts";
-import LowStockAlerts from "@/components/ui/LowStockAlerts";
+import ProductMetrics from "@/components/ui/dashboard/ProductMetrics";
+import RevenueTrend from "@/components/ui/dashboard/RevenueTrend";
+import RecentOrders from "@/components/ui/dashboard/RecentOrders";
+import TopSellingProducts from "@/components/ui/dashboard/TopSellingProducts";
+import LowStockAlerts from "@/components/ui/dashboard/LowStockAlerts";
 
 export default function DashboardPage() {
   return (

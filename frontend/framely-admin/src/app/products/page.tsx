@@ -1,35 +1,92 @@
 "use client";
-import { useState } from "react";
-import AddProductModal from "@/components/ui/AddProductModal";
-import EditProductModal from "@/components/ui/EditProductModal";
-import ProductTable from "@/components/ui/ProductTable";
-import ProductFilters from "@/components/ui/ProductFilters";
+import { useEffect, useState } from "react";
+import {
+  Product,
+  getProducts,
+  searchProducts,
+  getProductsByCategoryName,
+  getProductsByBrand,
+  createProduct,
+  updateProduct,
+} from "@/services/ProductService";
 
-// 🧩 Dummy Product Type
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  brand: string;
-  imageUrl: string;
-  category: {
-    id: number;
-    name: string;
-  };
-}
+import AddProductModal from "@/components/ui/products/AddProductModal";
+import EditProductModal from "@/components/ui/products/EditProductModal";
+import ProductTable from "@/components/ui/products/ProductTable";
+import ProductFilters from "@/components/ui/products/ProductFilters";
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
 
-  const handleProductAdded = () => {
-    setRefreshKey((prev) => prev + 1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [sortBy] = useState("name");
+  const [sortOrder] = useState<"asc" | "desc">("asc");
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    const response = await getProducts(currentPage, pageSize, sortBy, sortOrder);
+    setProducts(response.data);
+    setLoading(false);
   };
 
-  const handleProductUpdated = (updated: Product) => {
-    console.log("Updated Product:", updated);
-    setRefreshKey((prev) => prev + 1);
+  useEffect(() => {
+    fetchProducts();
+  }, [currentPage]);
+
+  const handleSearch = async (term: string) => {
+    if (term.trim() === "") {
+      fetchProducts();
+      return;
+    }
+
+    setLoading(true);
+    const results = await searchProducts(term);
+    setProducts(results);
+    setLoading(false);
+  };
+
+  const handleFilterCategory = async (category: string) => {
+    if (!category) {
+      fetchProducts();
+      return;
+    }
+
+    setLoading(true);
+    const results = await getProductsByCategoryName(category);
+    setProducts(results);
+    setLoading(false);
+  };
+
+  const handleFilterBrand = async (brand: string) => {
+    if (!brand) {
+      fetchProducts();
+      return;
+    }
+
+    setLoading(true);
+    const results = await getProductsByBrand(brand);
+    setProducts(results);
+    setLoading(false);
+  };
+
+  const handleProductAdded = async (newProduct: Omit<Product, "id">) => {
+    const created = await createProduct(newProduct);
+    if (created) {
+      fetchProducts();
+      setShowAddModal(false);
+    }
+  };
+
+  const handleProductUpdated = async (id: number, updatedData: Partial<Product>) => {
+    const success = await updateProduct(id, updatedData);
+    if (success) {
+      fetchProducts();
+      setEditProduct(null);
+    }
   };
 
   return (
@@ -48,30 +105,33 @@ export default function ProductsPage() {
       </div>
 
       <ProductFilters
-        onSearch={(term) => console.log("Search:", term)}
-        onFilterCategory={(cat) => console.log("Category:", cat)}
-        onFilterBrand={(brand) => console.log("Brand:", brand)}
+        onSearch={handleSearch}
+        onFilterCategory={handleFilterCategory}
+        onFilterBrand={handleFilterBrand}
       />
 
-      <ProductTable
-        key={refreshKey}
-        // onEditClick={(product: Product) => setEditProduct(product)}
-      />
+      {/* <ProductTable
+        products={products}
+        loading={loading}
+        onEditClick={(product: Product) => setEditProduct(product)}
+      /> */}
 
-      {showAddModal && (
+      {/* {showAddModal && (
         <AddProductModal
           onClose={() => setShowAddModal(false)}
           onProductAdded={handleProductAdded}
         />
-      )}
+      )} */}
 
-      {editProduct && (
+      {/* {editProduct && (
         <EditProductModal
           product={editProduct}
           onClose={() => setEditProduct(null)}
-          onProductUpdated={handleProductUpdated}
+          onProductUpdated={(updated) =>
+            handleProductUpdated(editProduct.id, updated)
+          }
         />
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,24 +1,27 @@
-// src/context/AuthContext.tsx
 "use client";
 
-import { createContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import Cookies from "js-cookie";
+import { usePathname, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-/**
- * Interface for the login API response payload.
- */
+// ✅ Auth data from backend
 interface AuthResponseDto {
   userId: string;
   fullName: string;
   email: string;
-  role: "ADMIN"; // Restrict only ADMIN for now
+  role: "ADMIN";
   token: string;
   expiresAt: string;
   refreshToken: string | null;
 }
 
-/**
- * Interface for the user data stored locally in state and localStorage.
- */
+// ✅ Minimal user model for frontend
 interface User {
   userId: string;
   fullName: string;
@@ -28,9 +31,6 @@ interface User {
   refreshToken: string | null;
 }
 
-/**
- * Shape of the authentication context.
- */
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -40,62 +40,63 @@ interface AuthContextType {
   error: string | null;
 }
 
-// Create AuthContext with undefined initial value
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-/**
- * Props accepted by the AuthProvider component.
- */
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-/**
- * Provides authentication state and actions to all children via context.
- */
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Load user and token from localStorage when app starts.
-   */
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // ✅ Hydrate on first load
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const savedToken = localStorage.getItem("token");
-    const savedUser = localStorage.getItem("user");
+    const savedToken = Cookies.get("token");
+    const savedUser = Cookies.get("user");
 
     if (savedToken && savedUser) {
       try {
         const parsedUser: User = JSON.parse(savedUser);
 
-        // Restore session only if user is an admin
         if (parsedUser.role === "ADMIN") {
           setToken(savedToken);
           setUser(parsedUser);
         } else {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
+          Cookies.remove("token");
+          Cookies.remove("user");
+          setToken(null);
+          setUser(null);
+
+          if (pathname !== "/auth/login") {
+            toast.error("Only Admin users can login.");
+            router.push("/auth/login");
+          }
         }
       } catch (err) {
-        console.error("❌ Failed to parse stored user:", err);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        console.error("❌ Failed to parse user:", err);
+        Cookies.remove("token");
+        Cookies.remove("user");
       }
     }
 
     setHydrated(true);
-  }, []);
+  }, [pathname, router]);
 
-  /**
-   * Handles login by saving user/token and validating role.
-   */
+  // ✅ Login
   const login = (authData: AuthResponseDto) => {
     if (authData.role !== "ADMIN") {
-      setError("Only Admin users are allowed to login.");
+      if (!error) {
+        setError("Only Admin users are allowed to login.");
+        toast.error("Only Admin users are allowed to login.");
+      }
       return;
     }
 
@@ -105,32 +106,40 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(userData);
     setError(null);
 
-    if (typeof window !== "undefined") {
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(userData));
-    }
+    Cookies.set("token", token, {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+    });
+
+    Cookies.set("user", JSON.stringify(userData), {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+    });
+
+    toast.success("Logged in successfully.");
+    router.push("/");
   };
 
-  /**
-   * Clears session state and localStorage.
-   */
+  // ✅ Logout
   const logout = () => {
     setToken(null);
     setUser(null);
     setError(null);
-
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-    }
+    Cookies.remove("token");
+    Cookies.remove("user");
+    toast.success("Logged out.");
+    router.push("/auth/login");
   };
 
-  /**
-   * Provide context values to all children.
-   */
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, hydrated, error }}>
+    <AuthContext.Provider
+      value={{ user, token, login, logout, hydrated, error }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+
+export { AuthContext };

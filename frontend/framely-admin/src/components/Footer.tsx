@@ -1,14 +1,5 @@
-import Link from "next/link";
-
 export default function Footer() {
   const year = new Date().getFullYear();
-
-  const footerLinks = [
-    { name: "Dashboard", path: "/" },
-    { name: "Products", path: "/products" },
-    { name: "Categories", path: "/categories" },
-    { name: "Orders", path: "/orders" },
-  ];
 
   return (
     <footer
@@ -23,28 +14,7 @@ export default function Footer() {
         transition-all
       "
     >
-      {/* 🌐 Footer Nav Links */}
-      <div className="flex flex-wrap justify-center gap-6 mb-4">
-        {footerLinks.map((link) => (
-          <Link
-            key={link.path}
-            href={link.path}
-            className="
-              text-sm font-medium tracking-wide 
-              text-[var(--text-secondary)] 
-              hover:text-transparent 
-              hover:bg-gradient-to-r hover:from-[#A5D7E8] hover:to-[#8AB4F8] 
-              hover:bg-clip-text 
-              hover:drop-shadow-[0_0_6px_rgba(165,215,232,0.3)]
-              transition-all duration-300
-            "
-          >
-            {link.name}
-          </Link>
-        ))}
-      </div>
-
-      {/* 📜 Copyright */}
+      {/* 🧊 Branding Info Only - No Links */}
       <div
         className="
           text-xs 

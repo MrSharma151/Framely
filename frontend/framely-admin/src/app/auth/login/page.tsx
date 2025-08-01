@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { loginUser } from "@/services/authService";
-import { toast } from "react-hot-toast"; // ✅ Toast import
+import { toast } from "react-hot-toast";
+import Button from "@/components/ui/Button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,62 +13,83 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
+      toast.dismiss();
       toast.error("Please fill in all fields.");
       return;
     }
 
     try {
-      const response = await loginUser({ email, password });
-      login(response); // ✅ Save to AuthContext
+      setLoading(true);
 
+      const response = await loginUser({ email, password });
+
+      if (response.role !== "ADMIN") {
+        toast.dismiss();
+        toast.error("Only Admin users can access this panel.");
+        return;
+      }
+
+      login(response);
+      toast.dismiss();
       toast.success("Login successful ✅");
       router.push("/");
     } catch (err: any) {
+      toast.dismiss();
       toast.error("Invalid email or password ❌");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Admin Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-[#0b1524] to-[#0a111d] px-4">
+      <div className="card w-full max-w-md">
+        <h2 className="text-3xl font-bold mb-6 text-center text-white">
+          Admin Panel Login
+        </h2>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+            <label className="block text-sm font-medium text-text-secondary mb-1">
+              Email
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
               placeholder="admin@example.com"
               required
+              className="w-full"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label className="block text-sm font-medium text-text-secondary mb-1">
+              Password
+            </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
               placeholder="••••••••"
               required
+              className="w-full"
             />
           </div>
 
-          <button
+          <Button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full justify-center"
+            disabled={loading}
           >
-            Login
-          </button>
+            {loading ? "Logging in..." : "Login"}
+          </Button>
         </form>
       </div>
     </div>

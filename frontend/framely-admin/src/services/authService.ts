@@ -1,30 +1,25 @@
-// src/services/authService.ts
 import apiClient from "./apiClient";
+import Cookies from "js-cookie";
 
-/**
- * Payload sent during login request.
- */
+// ✅ Login credentials payload
 export interface LoginPayload {
   email: string;
   password: string;
 }
 
-/**
- * Interface representing the response received after successful login.
- */
+// ✅ Auth response from backend
 export interface AuthResponse {
   userId: string;
   fullName: string;
   email: string;
-  role: "ADMIN"; // Adjust if more roles are added in future
+  role: "ADMIN";
   token: string;
   expiresAt: string;
   refreshToken: string | null;
 }
 
 /**
- * Sends login request to the API and returns the full user authentication data.
- * Stores the token and user info locally if needed (optional - usually handled in AuthContext).
+ * ✅ Sends login request to the API and returns the full authentication response.
  */
 export const loginUser = async (data: LoginPayload): Promise<AuthResponse> => {
   const response = await apiClient.post<AuthResponse>("/Auth/login", data);
@@ -32,10 +27,14 @@ export const loginUser = async (data: LoginPayload): Promise<AuthResponse> => {
 };
 
 /**
- * Clears stored token and user data from local storage and redirects to login page.
+ * ✅ Clears JWT token and user data from cookies and redirects to login page.
  */
 export const logoutUser = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  window.location.href = "/auth/login";
+  Cookies.remove("token");
+  Cookies.remove("user");
+
+  // Optional: Add delay for toast to show if needed
+  setTimeout(() => {
+    window.location.href = "/auth/login";
+  }, 300);
 };

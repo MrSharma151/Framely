@@ -75,7 +75,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4 relative">
+    <div className="flex justify-center items-center min-h-screen px-4 py-4 relative">
       {/* Background gradient accent */}
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--background)] via-transparent to-[var(--background-alt)] opacity-70"></div>
 
