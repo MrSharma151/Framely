@@ -91,10 +91,10 @@ const CategoriesPage: React.FC = () => {
   );
 
   return (
-    <div className="page-container card fade-in">
+    <div className="min-h-screen w-full bg-dark-glass backdrop-blur-md px-4 sm:px-6 md:px-10 py-6 md:py-10 rounded-xl shadow-2xl fade-in transition-all duration-300">
       {/* Header */}
-      <div className="flex-row-between align-center mb-3">
-        <h1 className="title">📁 Categories</h1>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+        <h1 className="title text-2xl sm:text-3xl font-bold text-primary">📁 Categories</h1>
         <Button
           variant="gradient"
           size="md"
@@ -106,12 +106,12 @@ const CategoriesPage: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="section mb-2">
+      <div className="mb-4">
         <CategorySearchBar searchTerm={searchTerm} onSearch={handleSearch} />
       </div>
 
       {/* Table */}
-      <div className="table-glass">
+      <div className="mt-4 overflow-hidden rounded-xl">
         <CategoryTable
           categories={filteredCategories}
           onEdit={handleOpenEditModal}

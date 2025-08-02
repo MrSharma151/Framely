@@ -1,60 +1,58 @@
 "use client";
 
-import { useState } from "react";
-import ProductService from "@/services/ProductService";
+import React, { useEffect, useState } from "react";
+import { Product } from "@/services/ProductService";
+import { getAllCategories } from "@/services/CategoryService";
 import { toast } from "react-hot-toast";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  brand: string;
-  imageUrl: string;
-  description: string;
-  stockQuantity: number;
-  category: {
-    id: number;
-    name: string;
-  };
-}
+import Button from "../Button";
 
 interface EditProductModalProps {
   product: Product;
   onClose: () => void;
-  onProductUpdated: () => void;
+  onProductUpdated: (updatedData: Product) => Promise<void>;
 }
 
-export default function EditProductModal({ product, onClose, onProductUpdated }: EditProductModalProps) {
+const EditProductModal: React.FC<EditProductModalProps> = ({
+  product,
+  onClose,
+  onProductUpdated,
+}) => {
   const [name, setName] = useState(product.name);
-  const [price, setPrice] = useState(product.price);
   const [brand, setBrand] = useState(product.brand);
   const [description, setDescription] = useState(product.description);
-  const [stockQuantity, setStockQuantity] = useState(product.stockQuantity);
-  const [categoryId, setCategoryId] = useState(product.category.id);
+  const [price, setPrice] = useState(product.price);
   const [imageUrl, setImageUrl] = useState(product.imageUrl);
+  const [categoryId, setCategoryId] = useState<number>(product.categoryId || 0);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleUpdate = async () => {
-    if (!name || !price || !brand || !categoryId) {
-      toast.error("Please fill all required fields");
-      return;
-    }
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const all = await getAllCategories();
+      setCategories(all);
+    };
+    fetchCategories();
+  }, []);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
+
+    const updatedData: Product = {
+      id: product.id, // ✅ Ensure ID is included in request
+      name,
+      brand,
+      description,
+      price,
+      imageUrl,
+      categoryId,
+    };
+
     try {
-      await ProductService.updateProduct(product.id, {
-        name,
-        price,
-        brand,
-        description,
-        imageUrl,
-        categoryId,
-      });
+      await onProductUpdated(updatedData);
       toast.success("Product updated successfully");
-      onProductUpdated();
       onClose();
     } catch (error) {
-      console.error("Update failed:", error);
       toast.error("Failed to update product");
     } finally {
       setLoading(false);
@@ -62,29 +60,84 @@ export default function EditProductModal({ product, onClose, onProductUpdated }:
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-xl">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Edit Product</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
+      <div className="w-full max-w-lg bg-zinc-900 p-6 rounded-2xl shadow-lg border border-zinc-700">
+        <h2 className="text-xl font-semibold mb-4 text-white">Edit Product</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
 
-        <div className="space-y-3">
-          <input className="w-full border p-2 rounded" placeholder="Product Name" value={name} onChange={(e) => setName(e.target.value)} />
-          <input className="w-full border p-2 rounded" type="number" placeholder="Price" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
-          <input className="w-full border p-2 rounded" placeholder="Brand" value={brand} onChange={(e) => setBrand(e.target.value)} />
-          <input className="w-full border p-2 rounded" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-          <input className="w-full border p-2 rounded" type="number" placeholder="Stock Quantity" value={stockQuantity} onChange={(e) => setStockQuantity(Number(e.target.value))} />
-          <input className="w-full border p-2 rounded" type="number" placeholder="Category ID" value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} />
-          <input className="w-full border p-2 rounded" placeholder="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
-        </div>
+          {/* Readonly ID */}
+          <input
+            type="text"
+            value={`ID: ${product.id}`}
+            disabled
+            className="w-full p-2 rounded bg-zinc-800 border border-zinc-700 text-zinc-400 cursor-not-allowed"
+          />
 
-        <div className="mt-6 flex justify-end gap-3">
-          <button className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600" onClick={onClose} disabled={loading}>
-            Cancel
-          </button>
-          <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700" onClick={handleUpdate} disabled={loading}>
-            {loading ? "Updating..." : "Update Product"}
-          </button>
-        </div>
+          <input
+            type="text"
+            placeholder="Product Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Brand"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            required
+          />
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            rows={3}
+            required
+          />
+          <input
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(parseFloat(e.target.value))}
+            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Image URL"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+          />
+          <select
+            value={categoryId}
+            onChange={(e) => setCategoryId(parseInt(e.target.value))}
+            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            required
+          >
+            <option value={0}>Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex justify-end gap-3 mt-6">
+            <Button type="button" onClick={onClose} variant="secondary">
+              Cancel
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Updating..." : "Update Product"}
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
-}
+};
+
+export default EditProductModal;

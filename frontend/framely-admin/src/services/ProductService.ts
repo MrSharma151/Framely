@@ -15,6 +15,16 @@ export interface Product {
   categoryName?: string;
 }
 
+// 🎯 Payload type for product creation (excluding ID)
+export type CreateProductPayload = {
+  name: string;
+  brand: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  categoryId: number;
+};
+
 // 📦 Paginated Response Type
 export interface PaginatedProductsResponse {
   totalItems: number;
@@ -62,7 +72,9 @@ export const getProductById = async (id: number): Promise<Product | null> => {
 };
 
 // ➕ Create new product
-export const createProduct = async (product: Omit<Product, "id">): Promise<Product | null> => {
+export const createProduct = async (
+  product: CreateProductPayload
+): Promise<Product | null> => {
   try {
     const response = await apiClient.post("/Products", product);
     toast.success("Product created successfully");
@@ -80,15 +92,17 @@ export const updateProduct = async (
   updatedProduct: Partial<Product>
 ): Promise<boolean> => {
   try {
+    updatedProduct.id = id; // ✅ Ensure ID match
     await apiClient.put(`/Products/${id}`, updatedProduct);
     toast.success("Product updated successfully");
     return true;
   } catch (error: any) {
     toast.error("Failed to update product");
-    console.error(`❌ Error in updateProduct(${id}):`, error);
+    console.error("❌ Error in UpdateProduct:", error);
     return false;
   }
 };
+
 
 // ❌ Delete product
 export const deleteProduct = async (id: number): Promise<boolean> => {
