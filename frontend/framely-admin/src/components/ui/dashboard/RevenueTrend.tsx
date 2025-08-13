@@ -1,93 +1,120 @@
 "use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { BarChart3, TrendingUp } from "lucide-react";
+import { getPaginatedOrders, Order } from "@/services/OrderService";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
+
+interface RevenueData {
+  month: string;
+  revenue: number;
+}
 
 export default function RevenueTrend() {
+  const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
+
+  useEffect(() => {
+    const fetchRevenueData = async () => {
+      try {
+        const ordersRes = await getPaginatedOrders(1, 1000);
+        const orders: Order[] = ordersRes?.data || [];
+
+        const revenueMap: Record<string, number> = {};
+        orders.forEach((order) => {
+          const date = new Date(order.orderDate);
+          const month = date.toLocaleString("default", { month: "short" });
+          if (!revenueMap[month]) revenueMap[month] = 0;
+          revenueMap[month] += order.totalAmount || 0;
+        });
+
+        const chartData = Object.entries(revenueMap).map(([month, revenue]) => ({
+          month,
+          revenue,
+        }));
+
+        setRevenueData(chartData);
+      } catch (err) {
+        console.error("Error fetching revenue data:", err);
+      }
+    };
+
+    fetchRevenueData();
+  }, []);
+
   return (
-    <div
-      className="
-        relative group
-        p-6 rounded-xl 
-        bg-gradient-to-br from-[rgba(20,40,80,0.6)] to-[rgba(10,20,40,0.3)]
-        border border-[var(--border-color)]
-        backdrop-blur-xl
-        shadow-[0_8px_25px_rgba(0,0,0,0.25)]
-        transition-all duration-300
-        hover:scale-[1.02] hover:shadow-[0_12px_30px_rgba(0,0,0,0.35)]
-      "
-    >
+    <div className="card fade-in hover:shadow-[0_8px_25px_rgba(138,180,248,0.25)] hover:scale-[1.01] transition-transform duration-300">
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <div>
-          <h2
-            className="
-              text-xl font-bold 
-              bg-gradient-to-r from-[#A5D7E8] to-[#8AB4F8]
-              bg-clip-text text-transparent
-            "
-          >
+          <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-[var(--primary-light)] to-[var(--primary)] bg-clip-text text-transparent">
             📈 Revenue Trend
           </h2>
-          <p className="text-sm text-[var(--text-secondary)]">
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)]">
             Monthly revenue growth overview
           </p>
         </div>
-
-        {/* Icon in gradient badge */}
-        <div
-          className="
-            w-12 h-12 flex items-center justify-center
-            rounded-xl shadow-md
-            bg-gradient-to-br from-[#3E68C2] to-[#8AB4F8]
-            group-hover:scale-105 transition
-          "
-        >
-          <TrendingUp className="w-6 h-6 text-white" />
+        <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl shadow-md bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] group-hover:scale-105 transition">
+          <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
         </div>
       </div>
 
-      {/* Chart Placeholder */}
-      <div
-        className="
-          relative h-56 rounded-lg 
-          flex flex-col items-center justify-center
-          bg-[rgba(255,255,255,0.03)]
-          border border-[var(--border-color)]
-          backdrop-blur-md
-          shadow-inner
-        "
-      >
-        <BarChart3 className="w-12 h-12 text-[var(--accent-secondary)] opacity-40" />
-        <span className="mt-2 text-sm text-[var(--text-secondary)]">
-          Revenue Chart Placeholder
-        </span>
-
-        {/* Optional gradient glow effect */}
-        <div
-          className="
-            absolute inset-0 rounded-lg 
-            opacity-0 group-hover:opacity-10 
-            bg-gradient-to-r from-[#A5D7E8] to-[#8AB4F8] blur-xl transition
-          "
-        ></div>
+      {/* Chart */}
+      <div className="relative h-48 sm:h-56 rounded-lg flex flex-col items-center justify-center bg-[rgba(255,255,255,0.03)] border border-[var(--border-color)] backdrop-blur-md shadow-inner overflow-hidden">
+        {revenueData.length > 0 ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={revenueData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="month" stroke="var(--text-secondary)" fontSize={12} />
+              <YAxis stroke="var(--text-secondary)" fontSize={12} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "rgba(19,42,79,0.9)",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "8px",
+                  color: "var(--text-primary)",
+                  fontSize: "0.8rem",
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="revenue"
+                stroke="var(--accent-secondary)"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex flex-col items-center text-center p-4">
+            <BarChart3 className="w-10 h-10 sm:w-12 sm:h-12 text-[var(--accent-secondary)] opacity-40" />
+            <span className="mt-2 text-xs sm:text-sm text-[var(--text-secondary)]">
+              No revenue data available
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Footer mini stats */}
-      <div className="mt-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 text-sm">
-        <p className="text-green-400 font-medium">
-          ✅ +8% compared to last month
-        </p>
-        <button
-          className="
-            px-4 py-2 text-xs font-medium rounded-lg
-            bg-gradient-to-r from-[#3E68C2] to-[#8AB4F8]
-            hover:shadow-[0_4px_12px_rgba(138,180,248,0.35)]
-            transition
-            text-white
-          "
-        >
-          View Detailed Report
-        </button>
+      {/* Footer CTA */}
+      <div className="mt-5 flex justify-end">
+        <Link href="/" className="btn-primary text-xs sm:text-sm">
+          View Detailed Report →
+        </Link>
       </div>
+
+
     </div>
   );
 }
+
+
+

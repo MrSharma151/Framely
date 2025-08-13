@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Category, getAllCategories } from "@/services/CategoryService";
-import { Search } from "lucide-react";
+import { getAllCategories } from "@/services/CategoryService";
+import Button from "@/components/ui/Button";
 
 interface ProductFiltersProps {
   onSearch: (term: string) => void;
   onFilterCategory: (category: string) => void;
   onFilterBrand: (brand: string) => void;
-  onSearchById: (id: number) => void; // ✅ NEW PROP
+  onSearchById: (id: number) => void;
+  onClearFilters: () => void;
 }
 
 const ProductFilters: React.FC<ProductFiltersProps> = ({
@@ -16,113 +17,110 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   onFilterCategory,
   onFilterBrand,
   onSearchById,
+  onClearFilters,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [brandTerm, setBrandTerm] = useState("");
-  const [idTerm, setIdTerm] = useState(""); // ✅ For ID search
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
+  const [productId, setProductId] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await getAllCategories();
-      setCategories(data || []);
+      setCategories(data.map((cat) => cat.name));
     };
     fetchCategories();
   }, []);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSearch(searchTerm);
-  };
-
-  const handleBrandSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onFilterBrand(brandTerm);
-  };
-
-  const handleIdSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsedId = parseInt(idTerm);
-    if (!isNaN(parsedId)) {
-      onSearchById(parsedId);
+  const handleApplyFilters = () => {
+    if (searchTerm) onSearch(searchTerm);
+    else if (productId) onSearchById(Number(productId));
+    else {
+      if (category) onFilterCategory(category);
+      if (brand) onFilterBrand(brand);
     }
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const category = e.target.value;
-    setSelectedCategory(category);
-    onFilterCategory(category);
+  const handleClear = () => {
+    setSearchTerm("");
+    setCategory("");
+    setBrand("");
+    setProductId("");
+    onClearFilters();
   };
 
   return (
-    <div className="bg-[#1e1e2f] rounded-2xl p-4 mb-6 shadow-md border border-gray-800 flex flex-col gap-4 md:flex-row md:items-center md:justify-between flex-wrap">
-      
-      {/* 🔍 Search by ID */}
-      <form onSubmit={handleIdSubmit} className="flex items-center gap-2 w-full md:w-1/4">
+    <div className="flex flex-wrap items-end gap-4 mb-6">
+      {/* Product Name */}
+      <div className="flex flex-col">
+        <label className="text-[var(--text-secondary)] mb-1 text-xs sm:text-sm">
+          Product Name
+        </label>
         <input
           type="text"
-          placeholder="🆔 Search by ID..."
-          value={idTerm}
-          onChange={(e) => setIdTerm(e.target.value)}
-          className="w-full px-4 py-2 rounded bg-[#2a2a3d] text-white placeholder:text-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-        />
-        <button
-          type="submit"
-          className="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-2 rounded transition"
-        >
-          <Search size={18} />
-        </button>
-      </form>
-
-      {/* 🔤 Search by Name */}
-      <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full md:w-1/4">
-        <input
-          type="text"
-          placeholder="🔍 Search by product name..."
+          placeholder="Enter product name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 rounded bg-[#2a2a3d] text-white placeholder:text-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-3 py-2 rounded border border-[var(--border-color)] bg-[var(--surface-hover)] text-[var(--text-primary)] w-44 sm:w-48"
         />
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded transition"
-        >
-          <Search size={18} />
-        </button>
-      </form>
+      </div>
 
-      {/* 🏷️ Filter by Brand */}
-      <form onSubmit={handleBrandSubmit} className="flex items-center gap-2 w-full md:w-1/4">
+      {/* Brand */}
+      <div className="flex flex-col">
+        <label className="text-[var(--text-secondary)] mb-1 text-xs sm:text-sm">
+          Brand
+        </label>
         <input
           type="text"
-          placeholder="🏷️ Filter by brand..."
-          value={brandTerm}
-          onChange={(e) => setBrandTerm(e.target.value)}
-          className="w-full px-4 py-2 rounded bg-[#2a2a3d] text-white placeholder:text-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder="Enter brand name"
+          value={brand}
+          onChange={(e) => setBrand(e.target.value)}
+          className="px-3 py-2 rounded border border-[var(--border-color)] bg-[var(--surface-hover)] text-[var(--text-primary)] w-44 sm:w-48"
         />
-        <button
-          type="submit"
-          className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded transition"
-        >
-          Filter
-        </button>
-      </form>
+      </div>
 
-      {/* 📂 Category Dropdown */}
-      <div className="w-full md:w-1/4">
+      {/* Product ID */}
+      <div className="flex flex-col">
+        <label className="text-[var(--text-secondary)] mb-1 text-xs sm:text-sm">
+          Product ID
+        </label>
+        <input
+          type="number"
+          placeholder="Enter product ID"
+          value={productId}
+          onChange={(e) => setProductId(e.target.value)}
+          className="px-3 py-2 rounded border border-[var(--border-color)] bg-[var(--surface-hover)] text-[var(--text-primary)] w-44 sm:w-48"
+        />
+      </div>
+
+      {/* Category */}
+      <div className="flex flex-col">
+        <label className="text-[var(--text-secondary)] mb-1 text-xs sm:text-sm">
+          Category
+        </label>
         <select
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-          className="w-full bg-[#2a2a3d] text-white px-4 py-2 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="px-3 py-2 rounded border border-[var(--border-color)] bg-[var(--surface-hover)] text-[var(--text-primary)] w-44 sm:w-48"
         >
-          <option value="">📂 All Categories</option>
+          <option value="">Select Category</option>
           {categories.map((cat) => (
-            <option key={cat.id} value={cat.name}>
-              {cat.name}
+            <option key={cat} value={cat}>
+              {cat}
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex gap-3 mt-2 sm:mt-0">
+        <Button variant="primary" size="sm" onClick={handleApplyFilters}>
+          Apply Filters
+        </Button>
+        <Button variant="secondary" size="sm" onClick={handleClear}>
+          Clear Filters
+        </Button>
       </div>
     </div>
   );

@@ -1,50 +1,90 @@
 "use client";
-import { Package, Tag, ShoppingCart, DollarSign } from "lucide-react";
+
+import { useEffect, useState } from "react";
+import { Package, Tag, ShoppingCart, DollarSign, Loader2 } from "lucide-react";
+import { getProducts } from "@/services/ProductService";
+import { getCategories } from "@/services/CategoryService";
+import { getPaginatedOrders } from "@/services/OrderService";
 
 export default function ProductMetrics() {
-  const stats = [
-    { title: "Total Products", value: "128", change: "+12 this week", changeColor: "text-green-400", icon: Package },
-    { title: "Categories", value: "12", change: "Organized", changeColor: "text-blue-400", icon: Tag },
-    { title: "Total Orders", value: "458", change: "+34 this week", changeColor: "text-yellow-400", icon: ShoppingCart },
-    { title: "Revenue", value: "$12,430", change: "+8% from last week", changeColor: "text-green-400", icon: DollarSign },
-  ];
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState([
+    { title: "Total Products", value: "0", change: "", changeColor: "text-green-400", icon: Package },
+    { title: "Categories", value: "0", change: "", changeColor: "text-blue-400", icon: Tag },
+    { title: "Total Orders", value: "0", change: "", changeColor: "text-yellow-400", icon: ShoppingCart },
+    { title: "Revenue", value: "₹0", change: "", changeColor: "text-green-400", icon: DollarSign },
+  ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      const [productsRes, categoriesRes, ordersRes] = await Promise.all([
+        getProducts(1, 1),
+        getCategories(1, 1),
+        getPaginatedOrders(1, 1000),
+      ]);
+
+      const totalProducts = productsRes?.totalItems ?? 0;
+      const totalCategories = categoriesRes?.totalItems ?? 0;
+      const totalOrders = ordersRes?.totalItems ?? 0;
+      const totalRevenue =
+        ordersRes?.data?.reduce((sum, order) => sum + (order.totalAmount || 0), 0) || 0;
+
+      setStats([
+        { title: "Total Products", value: `${totalProducts}`, change: "", changeColor: "text-green-400", icon: Package },
+        { title: "Categories", value: `${totalCategories}`, change: "", changeColor: "text-blue-400", icon: Tag },
+        { title: "Total Orders", value: `${totalOrders}`, change: "", changeColor: "text-yellow-400", icon: ShoppingCart },
+        { title: "Revenue", value: `₹${totalRevenue.toLocaleString()}`, change: "", changeColor: "text-green-400", icon: DollarSign },
+      ]);
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--text-secondary)]" />
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 fade-in">
       {stats.map((stat, idx) => {
         const Icon = stat.icon;
         return (
           <div
             key={idx}
             className="
-              relative group 
-              p-5 rounded-xl
-              bg-gradient-to-br from-[rgba(20,40,80,0.6)] to-[rgba(10,20,40,0.3)]
-              border border-[var(--border-color)]
-              backdrop-blur-xl
-              shadow-[0_8px_25px_rgba(0,0,0,0.25)]
+              card relative group
+              p-6 rounded-2xl
+              flex flex-col
               transition-all duration-300
-              hover:scale-[1.03] hover:shadow-[0_12px_30px_rgba(0,0,0,0.35)]
+              hover:scale-[1.02]
             "
           >
-            {/* Icon with soft gradient background */}
+            {/* Icon Container */}
             <div
               className="
-                w-12 h-12 rounded-xl 
-                bg-gradient-to-br from-[#3E68C2] to-[#8AB4F8]
+                w-14 h-14 rounded-xl 
+                bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)]
                 flex items-center justify-center
                 shadow-md
                 group-hover:shadow-lg group-hover:scale-105 transition
               "
             >
-              <Icon className="w-6 h-6 text-white" />
+              <Icon className="w-7 h-7 text-white" />
             </div>
 
             {/* Title */}
             <h3
               className="
-                mt-4 text-lg font-semibold 
-                bg-gradient-to-r from-[#A5D7E8] to-[#8AB4F8]
+                mt-5 text-lg font-semibold 
+                bg-gradient-to-r from-[var(--highlight)] to-[var(--accent-secondary)]
                 bg-clip-text text-transparent
               "
             >
@@ -52,22 +92,26 @@ export default function ProductMetrics() {
             </h3>
 
             {/* Value */}
-            <p className="text-3xl font-extrabold mt-2 tracking-wide text-white">
+            <p className="text-3xl font-extrabold mt-2 tracking-wide text-[var(--text-primary)] leading-snug">
               {stat.value}
             </p>
 
-            {/* Change / Status */}
-            <span className={`text-sm mt-1 block ${stat.changeColor}`}>
-              {stat.change}
-            </span>
+            {/* Change % */}
+            {stat.change && (
+              <span className={`text-sm mt-1 block ${stat.changeColor}`}>
+                {stat.change}
+              </span>
+            )}
 
-            {/* Glow ring on hover */}
-            <div className="
-              absolute inset-0 rounded-xl
-              opacity-0 group-hover:opacity-10
-              bg-gradient-to-r from-[#A5D7E8] to-[#8AB4F8]
-              blur-xl transition
-            "></div>
+            {/* Hover Glow Effect */}
+            <div
+              className="
+                absolute inset-0 rounded-2xl
+                opacity-0 group-hover:opacity-10
+                bg-gradient-to-r from-[var(--highlight)] to-[var(--accent-secondary)]
+                blur-2xl transition
+              "
+            ></div>
           </div>
         );
       })}

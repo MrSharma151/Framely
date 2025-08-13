@@ -23,7 +23,9 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const [price, setPrice] = useState(product.price);
   const [imageUrl, setImageUrl] = useState(product.imageUrl);
   const [categoryId, setCategoryId] = useState<number>(product.categoryId || 0);
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     setLoading(true);
 
     const updatedData: Product = {
-      id: product.id, // ✅ Ensure ID is included in request
+      id: product.id,
       name,
       brand,
       description,
@@ -50,7 +52,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
 
     try {
       await onProductUpdated(updatedData);
-      toast.success("Product updated successfully");
+      // toast.success("Product updated successfully");
       onClose();
     } catch (error) {
       toast.error("Failed to update product");
@@ -60,17 +62,19 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
-      <div className="w-full max-w-lg bg-zinc-900 p-6 rounded-2xl shadow-lg border border-zinc-700">
-        <h2 className="text-xl font-semibold mb-4 text-white">Edit Product</h2>
+    <div className="modal-backdrop" onClick={onClose}>
+      <div
+        className="modal-content fade-in max-w-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-
           {/* Readonly ID */}
           <input
             type="text"
             value={`ID: ${product.id}`}
             disabled
-            className="w-full p-2 rounded bg-zinc-800 border border-zinc-700 text-zinc-400 cursor-not-allowed"
+            className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-secondary)] cursor-not-allowed"
           />
 
           <input
@@ -78,7 +82,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             placeholder="Product Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-primary)]"
             required
           />
           <input
@@ -86,14 +90,14 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             placeholder="Brand"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
-            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-primary)]"
             required
           />
           <textarea
             placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-primary)]"
             rows={3}
             required
           />
@@ -102,7 +106,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             placeholder="Price"
             value={price}
             onChange={(e) => setPrice(parseFloat(e.target.value))}
-            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-primary)]"
             required
           />
           <input
@@ -110,12 +114,12 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             placeholder="Image URL"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
-            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-primary)]"
           />
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(parseInt(e.target.value))}
-            className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 text-white"
+            className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-primary)]"
             required
           >
             <option value={0}>Select Category</option>

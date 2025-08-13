@@ -1,110 +1,147 @@
-# 👓 Framely – Optical E-commerce Web Application  
+# 👓 Framely – Optical E-commerce Web Application
 
-Framely is an **optical e-commerce platform** for browsing, managing, and selling eyewear products like **glasses, sunglasses, and contact lenses**.  
+Framely is a modern **optical e-commerce platform** designed for browsing, managing, and selling eyewear products including **glasses, sunglasses, and contact lenses**.
 
-It consists of:  
-- **Backend (ASP.NET Core Web API)** – Core APIs & business logic  
-- **Framely Customer Frontend (Next.js)** – User-facing storefront  
-- **Framely Admin Panel (Upcoming)** – Admin dashboard for product & order management  
+### 🧩 Architecture Overview
+- **Backend:** ASP.NET Core Web API – Core APIs & business logic
+- **Customer Frontend:** Next.js – User-facing storefront
+- **Admin Panel:** Next.js – Admin dashboard for product & order management
 
----
-
-## ✅ Current Project Status  
-
-### 1️⃣ Backend (ASP.NET Core Web API) – ✅ MVP Ready  
-
-- ✔ **Product, Category, and Order APIs** created  
-- ✔ **DTOs & AutoMapper** integrated  
-- ✔ **JWT Authentication + Role-based Authorization**  
-- ✔ **Pagination, Sorting, Filtering, and Searching** for products  
-- ✔ **Basic validations & error handling** added  
-- ✔ **EF Core with migrations** applied  
-- ✔ **Swagger API documentation** + partial testing  
-
-**Areas of improvement:**  
-- 🔄 Advanced validations & deeper error standardization  
-- 🔄 Response wrapping for consistent API responses  
-- 🔄 Unit & integration testing  
+> ✅ All core modules are now MVP complete. Next up:  Deployment.
 
 ---
 
-### 2️⃣ Framely Customer Frontend (Next.js + Tailwind) – ✅ MVP Completed  
+## 🚀 Project Status
 
-- ✔ **Next.js App Router setup** with TailwindCSS styling  
-- ✔ **Authentication-aware pages** (redirects to login if unauthenticated)  
-- ✔ **Shop Page**  
-  - Backend-driven **pagination** (10 items per page)  
-  - **Category filter** (fetches products by category name)  
-  - **Client-side search & sort** (Low→High, High→Low pricing)  
-- ✔ **Product Details Page** (with fallback image & category)  
-- ✔ **My Orders Page**  
-  - Fetch logged-in user orders  
-  - Show **order date in IST** (converted from backend UTC)  
-  - Status badges (`Pending`, `Processing`, `Completed`, `Cancelled`)  
-  - Cancel button for pending orders  
-- ✔ **Minimal cart & checkout flow (MVP)**  
-- ✔ **Toast notifications** for success/error  
+### 1️⃣ Backend – ASP.NET Core Web API (✅ MVP Complete)
 
-📄 **Detailed Framely Customer README available in `framely-customer/README.md`**  
+**Implemented Features:**
+- ✔ Product, Category, and Order APIs
+- ✔ DTOs with AutoMapper integration
+- ✔ JWT Authentication + Role-based Authorization
+- ✔ Pagination, Sorting, Filtering, and Searching
+- ✔ Basic validations & error handling
+- ✔ EF Core with migrations
+- ✔ Swagger API docs + partial testing
 
----
-
-### 3️⃣ Framely Admin Panel – 🚧 Next in Progress  
-
-Next major focus will be building the **Admin Dashboard** for managing:  
-- Products & Categories (CRUD)  
-- Orders (view, update status, cancel)  
-- User management (role-based access)  
-
-This will be a **separate Next.js app (`framely-admin`)** consuming the same backend APIs.  
+**Post-MVP Enhancements:**
+- 🔄 Advanced validations & consistent error structure
+- 🔄 Unified response wrapping
+- 🔄 Unit & integration test coverage
 
 ---
 
-## 🔄 Overall Roadmap  
+### 2️⃣ Customer Frontend – Next.js + TailwindCSS (✅ MVP Complete)
 
-✅ **Phase 1:** Backend MVP + Customer Frontend MVP – **DONE**  
-✅ Basic product listing, category filtering, and order placement working  
+**Key Features:**
+- ✔ App Router setup with Tailwind styling
+- ✔ Auth-aware routing (redirects unauthenticated users)
+- ✔ Shop Page
+  - Server-side pagination (10 items/page)
+  - Category-based filtering
+  - Client-side search & sort (Low→High, High→Low)
+- ✔ Product Details Page (fallback image + category display)
+- ✔ My Orders Page
+  - Displays user orders with IST timestamps
+  - Status badges: `Pending`, `Processing`, `Completed`, `Cancelled`
+  - Cancel option for pending orders
+- ✔ Minimal cart & checkout flow
+- ✔ Toast notifications for feedback
 
-🚧 **Phase 2:** Framely Admin Panel (Next.js + Tailwind + Charts) – **NEXT**  
-🚧 Add advanced validations, error handling & testing in backend  
-🚧 Improve UI/UX with better animations, image optimizations, and infinite scroll  
-
-🎯 **Phase 3:** Deployment on **Azure App Service + Azure SQL Database**  
-
----
-
-## 🛠 Tech Stack  
-
-- **Backend:** ASP.NET Core Web API, EF Core, AutoMapper, JWT  
-- **Frontend (Customer):** Next.js (TypeScript), Tailwind CSS  
-- **Frontend (Admin):** Next.js (TypeScript) [Planned]  
-- **Database:** SQL Server  
-- **Deployment (Planned):** Azure  
+📄 See detailed customer README in `framely-customer/README.md`
 
 ---
 
-## 📌 Current MVP Scope  
+### 3️⃣ Admin Panel – Next.js + TailwindCSS (✅ MVP Complete)
 
-✅ Users can **browse products**, filter by categories, search & sort  
-✅ Authenticated users can **place orders & view their order history**  
-✅ Orders show **IST timestamps** and allow **cancellation if pending**  
-✅ Backend supports **pagination, filtering, sorting, searching**  
+**Highlights:**
+- 💎 Fully responsive glassmorphic dashboard
+- ✔ CRUD for Products & Categories
+- ✔ Order management: view, update status, cancel
+- ✔ Role-based user access
+- ✔ Search, filter, and pagination
+- ✔ Modals for Add/Edit/Delete actions
+- ✔ Notifications via `react-hot-toast`
+- ✔ Basic revenue & order charts
 
-This is an **MVP**, not production-ready yet. Future phases will add:  
-- Infinite scroll, improved checkout, payment gateway integration  
-- Admin dashboard for full e-commerce management  
-- Complete CI/CD deployment  
+📁 This is a separate Next.js app (`framely-admin`) consuming shared backend APIs.
 
 ---
 
-## 👨‍💻 Author  
+## 🗺️ Roadmap
+
+✅ **Phase 1:** Backend + Customer Frontend MVP  
+✅ **Phase 2:** Admin Panel MVP  
+✅ **Phase 3:** Deployment
+
+🎯 Deployment Plan:
+- Host backend on **Azure App Service**
+- Deploy both frontends (`framely-customer`, `framely-admin`) on Azure
+- Configure environment variables (API URLs, JWT secrets)
+- Enable HTTPS, optimize images, and apply production caching
+
+---
+
+## 🧰 Tech Stack
+
+| Layer        | Technologies                                      |
+|--------------|---------------------------------------------------|
+| Backend      | ASP.NET Core Web API, EF Core, AutoMapper, JWT    |
+| Frontend     | Next.js (TypeScript), Tailwind CSS                |
+| Database     | SQL Server                                        |
+| Deployment   | Azure App Service                                 |
+
+---
+
+## 📦 MVP Scope
+
+- ✅ Users can browse, search, sort, and filter products
+- ✅ Authenticated users can place orders and view history
+- ✅ Orders show IST timestamps and allow cancellation if pending
+- ✅ Admins can manage products, categories, and orders
+- ✅ Backend supports pagination, filtering, sorting, and search
+
+> Framely is now deployment-ready at MVP level.
+
+---
+
+## 👨‍💻 Author
 
 **Rohit Sharma**  
+rhs.rohitsharma@gmail.com
 
 ---
 
-## 📩 Notes  
+## 📩 Notes
 
-This project is actively evolving. The **customer-facing frontend (framely-customer)** is **MVP complete**, and now development will shift towards **framely-admin** for product & order management.  
+This project is actively evolving. All core modules—Backend, Customer Frontend, and Admin Panel—are MVP complete and ready for deployment.
+
+Next steps include:
+- 💳 Payment flow simulation
+- ⚙️ CI/CD pipeline experimentation
+- 📊 Advanced analytics & reporting
 
 Stay tuned for updates 🚀
+
+---
+
+## 🛠 Running Locally
+
+```bash
+# Clone repository
+git clone <repo-url>
+
+# Run Customer Frontend
+cd framely-customer
+npm install
+npm run dev
+
+# Run Admin Panel
+cd framely-admin
+npm install
+npm run dev
+```
+
+---
+
+

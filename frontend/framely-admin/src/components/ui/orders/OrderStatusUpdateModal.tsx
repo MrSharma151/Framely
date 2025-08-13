@@ -2,40 +2,51 @@
 
 import React, { useState, useEffect } from "react";
 import Button from "../Button";
-import { OrderStatus } from "@/services/OrderService";
+import { Order, OrderStatus } from "@/services/OrderService";
 
 interface OrderStatusUpdateModalProps {
   isOpen: boolean;
+  order: Order | null;
   onClose: () => void;
-  currentStatus: OrderStatus;
   onConfirm: (newStatus: OrderStatus) => Promise<void>;
 }
 
 const OrderStatusUpdateModal: React.FC<OrderStatusUpdateModalProps> = ({
   isOpen,
+  order,
   onClose,
-  currentStatus,
   onConfirm,
 }) => {
-  const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(currentStatus);
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(
+    order?.status ?? "Pending"
+  );
 
   useEffect(() => {
-    setSelectedStatus(currentStatus);
-  }, [currentStatus, isOpen]);
+    if (order) {
+      setSelectedStatus(order.status);
+    }
+  }, [order, isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !order) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-lg p-6 w-[90%] max-w-md space-y-4">
-        <h2 className="text-xl font-semibold">Update Order Status</h2>
+    <div className="modal-backdrop">
+      <div className="modal-content fade-in max-w-md w-full space-y-5">
+        <h2 className="text-xl font-semibold text-primary">Update Order Status</h2>
 
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Select New Status:</label>
+        <div className="text-sm text-secondary space-y-1">
+          <p><strong>Order ID:</strong> #{order.id}</p>
+          <p><strong>Customer:</strong> {order.customerName}</p>
+        </div>
+
+        <div className="space-y-2 pt-2">
+          <label className="block text-sm font-medium text-secondary">
+            Select New Status:
+          </label>
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value as OrderStatus)}
-            className="w-full px-3 py-2 border rounded-md dark:bg-zinc-800 dark:text-white"
+            className="w-full"
           >
             <option value="Pending">Pending</option>
             <option value="Processing">Processing</option>
@@ -45,12 +56,14 @@ const OrderStatusUpdateModal: React.FC<OrderStatusUpdateModalProps> = ({
         </div>
 
         <div className="flex justify-end gap-3 pt-4">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="secondary" size="sm" onClick={onClose}>
             Cancel
           </Button>
           <Button
+            variant="primary"
+            size="sm"
             onClick={() => onConfirm(selectedStatus)}
-            disabled={selectedStatus === currentStatus}
+            disabled={selectedStatus === order.status}
           >
             Update
           </Button>

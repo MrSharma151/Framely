@@ -44,21 +44,7 @@ export default function EditCategoryModal({
 
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog onClose={onClose} className="fixed inset-0 z-50 flex items-center justify-center px-4">
-        {/* Overlay */}
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-200"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-        </Transition.Child>
-
-        {/* Modal */}
+      <Dialog onClose={onClose} className="modal-backdrop">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -68,47 +54,44 @@ export default function EditCategoryModal({
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-95"
         >
-          <Dialog.Panel className="card w-full max-w-md">
-            <Dialog.Title className="text-xl font-bold mb-4 text-center">
+          <Dialog.Panel className="modal-content fade-in">
+            <Dialog.Title className="text-center text-xl font-semibold mb-4">
               ✏️ Edit Category
             </Dialog.Title>
 
             <div className="space-y-5">
-              {/* Name */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label className="block text-sm font-medium mb-1 text-secondary">
                   Name <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
+                  className="w-full"
+                  placeholder="Category Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Category Name"
-                  className="w-full"
                 />
               </div>
 
-              {/* Description */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label className="block text-sm font-medium mb-1 text-secondary">
                   Description
                 </label>
                 <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full resize-none"
                   placeholder="Optional Description"
                   rows={3}
-                  className="w-full resize-none"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
 
-              {/* Buttons */}
               <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={onClose}>
+                <Button variant="secondary" size="sm" onClick={onClose}>
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
+                  variant="primary"
+                  size="sm"
                   onClick={handleUpdate}
                   disabled={loading || !name.trim()}
                 >

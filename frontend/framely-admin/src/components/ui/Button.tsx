@@ -1,9 +1,9 @@
 import React from "react";
 import clsx from "clsx";
 
-// Define available props for the Button component
+// Props definition for the Button component
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "ghost" | "secondary" | "danger" | "outline" | "gradient";
+  variant?: "primary" | "secondary" | "danger" | "outline" | "gradient" | "ghost";
   size?: "sm" | "md" | "lg" | "icon";
   fullWidth?: boolean;
   isLoading?: boolean;
@@ -19,26 +19,26 @@ const Button: React.FC<ButtonProps> = ({
   className,
   ...props
 }) => {
-  // Base style for all buttons
+  // Base button style applied to all variants
   const baseStyle =
-    "inline-flex items-center justify-center rounded font-medium focus:outline-none transition duration-150";
+    "inline-flex items-center justify-center rounded-md font-medium focus:outline-none transition-all duration-150";
 
-  // Size variations (✅ Added "icon")
+  // Size variations for different button layouts
   const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
     sm: "px-3 py-1 text-sm",
     md: "px-4 py-2 text-base",
     lg: "px-5 py-3 text-lg",
-    icon: "p-2",
+    icon: "p-2", // Used for icon-only buttons
   };
 
-  // Variant-based color styling (✅ Added "ghost")
+  // Variant-specific styles
   const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-gray-600 text-white hover:bg-gray-700",
+    primary: "bg-[var(--accent-primary)] text-white hover:bg-blue-700",
+    secondary: "bg-[var(--surface-hover)] text-[var(--text-primary)] hover:bg-[var(--surface)]",
     danger: "bg-red-600 text-white hover:bg-red-700",
-    outline: "border border-gray-400 text-gray-700 hover:bg-gray-100",
+    outline: "border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--surface-hover)]",
     gradient: "bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:opacity-90",
-    ghost: "bg-transparent text-gray-700 hover:bg-gray-100",
+    ghost: "bg-transparent text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]",
   };
 
   return (
@@ -57,6 +57,7 @@ const Button: React.FC<ButtonProps> = ({
       {...props}
     >
       {isLoading ? (
+        // Loading spinner animation
         <span className="animate-spin h-5 w-5 border-2 border-t-transparent border-white rounded-full"></span>
       ) : (
         children

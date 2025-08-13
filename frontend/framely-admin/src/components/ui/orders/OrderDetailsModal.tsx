@@ -2,7 +2,7 @@
 
 import React from "react";
 import Button from "../Button";
-import { Order } from "@/services/OrderService"; // ✅ Using global Order interface
+import { Order } from "@/services/OrderService";
 
 interface OrderDetailsModalProps {
   isOpen: boolean;
@@ -18,55 +18,57 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   if (!isOpen || !order) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center">
-      <div className="bg-[#1a1a1a] w-full max-w-2xl rounded-2xl p-6 relative border border-gray-700 shadow-lg">
-        <h2 className="text-xl font-bold mb-4 text-white">
+    <div className="modal-backdrop">
+      <div className="modal-content fade-in max-w-2xl w-full">
+        <h2 className="text-xl font-semibold mb-4 text-primary">
           Order #{order.id} Details
         </h2>
 
-        <div className="space-y-2 text-sm text-gray-300">
+        <div className="space-y-2 text-sm text-secondary">
           <p><strong>Customer:</strong> {order.customerName}</p>
           <p><strong>Email:</strong> {order.email}</p>
           <p><strong>Phone:</strong> {order.mobileNumber}</p>
           <p><strong>Address:</strong> {order.address}</p>
           <p><strong>Order Date:</strong> {new Date(order.orderDate).toLocaleString()}</p>
           <p><strong>Status:</strong> {order.status}</p>
+          <p><strong>User ID:</strong> {order.userId ?? "N/A"}</p>
         </div>
 
         <div className="mt-6">
-          <h3 className="text-md font-semibold text-white mb-2">Items</h3>
-          <div className="max-h-48 overflow-y-auto border border-gray-700 rounded-lg">
+          <h3 className="text-md font-semibold text-primary mb-2">Items</h3>
+          <div className="max-h-48 overflow-y-auto table-glass">
             <table className="w-full text-sm">
-              <thead className="bg-gray-800 text-white">
+              <thead className="text-secondary border-b border-[var(--border-color)]">
                 <tr>
-                  <th className="px-3 py-2 text-left">Product</th>
-                  <th className="px-3 py-2 text-left">Qty</th>
-                  <th className="px-3 py-2 text-left">Price</th>
+                  <th className="py-2 text-left">Product</th>
+                  <th className="py-2 text-left">Product ID</th>
+                  <th className="py-2 text-left">Qty</th>
+                  <th className="py-2 text-left">Unit Price</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-600 bg-black">
+              <tbody>
                 {order.items.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-3 py-2">{item.productName}</td>
-                    <td className="px-3 py-2">{item.quantity}</td>
-                    <td className="px-3 py-2">₹{item.unitPrice.toFixed(2)}</td>
+                  <tr key={item.id} className="hover:bg-highlight transition">
+                    <td className="py-2">{item.productName}</td>
+                    <td className="py-2">{item.productId}</td>
+                    <td className="py-2">{item.quantity}</td>
+                    <td className="py-2">₹{item.unitPrice.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <p className="mt-4 text-white text-right text-lg font-bold">
+          <p className="mt-4 text-right text-lg font-bold text-highlight">
             Total: ₹{order.totalAmount.toFixed(2)}
           </p>
         </div>
 
-        <Button
-          onClick={onClose}
-          className="mt-6 bg-red-600 hover:bg-red-700 text-white px-4 py-2 float-right"
-        >
-          Close
-        </Button>
+        <div className="mt-6 flex justify-end">
+          <Button variant="danger" size="sm" onClick={onClose}>
+            Close
+          </Button>
+        </div>
       </div>
     </div>
   );

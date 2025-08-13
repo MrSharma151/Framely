@@ -26,7 +26,6 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
-
       const response = await loginUser({ email, password });
 
       if (response.role !== "ADMIN") {
@@ -48,15 +47,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-[#0b1524] to-[#0a111d] px-4">
-      <div className="card w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-white">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-radial px-4">
+      <div className="card glass w-full max-w-md p-6 rounded-xl shadow-lg border border-border">
+        <h2 className="text-3xl font-bold mb-6 text-center text-primary">
           Admin Panel Login
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Email
             </label>
             <input
@@ -65,12 +64,12 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@example.com"
               required
-              className="w-full"
+              className="input w-full"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Password
             </label>
             <input
@@ -79,7 +78,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full"
+              className="input w-full"
             />
           </div>
 

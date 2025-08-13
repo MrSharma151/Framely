@@ -1,4 +1,5 @@
 export default function Footer() {
+  // Get the current year dynamically
   const year = new Date().getFullYear();
 
   return (
@@ -14,7 +15,7 @@ export default function Footer() {
         transition-all
       "
     >
-      {/* 🧊 Branding Info Only - No Links */}
+      {/* Footer branding and copyright information */}
       <div
         className="
           text-xs 

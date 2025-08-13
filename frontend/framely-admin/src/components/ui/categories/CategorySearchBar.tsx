@@ -20,10 +20,6 @@ export default function CategorySearchBar({
     setInputValue(searchTerm);
   }, [searchTerm]);
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(inputValue.trim());
@@ -32,39 +28,43 @@ export default function CategorySearchBar({
   const handleClear = () => {
     setInputValue("");
     onSearch("");
-    inputRef.current?.focus();
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col sm:flex-row sm:items-center gap-4 mb-5"
+      className="flex flex-col sm:flex-row sm:items-end gap-4 mb-3 fade-in"
     >
       {/* Search Input with Clear Button */}
       <div className="relative w-full">
+        <label className="block mb-1 text-sm text-secondary">
+          Search Category
+        </label>
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search categories by name..."
+          placeholder="Search by name"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className="w-full pr-10"
+          className="w-full pr-12"
         />
         {inputValue && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute top-1/2 right-3 -translate-y-1/2 text-sm text-secondary hover:text-red-400"
+            className="absolute top-[65%] right-3 translate-y-[-50%] text-secondary hover:text-red-400 transition"
             aria-label="Clear search"
           >
-            <X size={18} />
+            <X size={12} />
           </button>
         )}
       </div>
 
       {/* Submit Button */}
-      <div>
-        <Button type="submit">Search</Button>
+      <div className="sm:w-auto">
+        <Button type="submit" size="sm" className="w-full sm:w-auto">
+          Search
+        </Button>
       </div>
     </form>
   );

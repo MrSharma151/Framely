@@ -3,82 +3,83 @@
 import React, { useState, useEffect } from "react";
 import Button from "../Button";
 
-// ✅ Strict Status Enum
 const orderStatusOptions = ["Pending", "Processing", "Completed", "Cancelled"] as const;
-type OrderStatus = (typeof orderStatusOptions)[number];
+export type OrderStatus = (typeof orderStatusOptions)[number];
 
-interface OrderFiltersProps {
-  onApplyFilters?: (filters: {
+export interface OrderFiltersProps {
+  filters: {
+    status?: OrderStatus;
+    orderId: string;
+    userId: string;
+  };
+  onApplyFilters: (filters: {
     sortBy: string;
     sortOrder: "asc" | "desc";
     status?: OrderStatus;
     orderId?: number;
     userId?: string;
   }) => void;
-  statusFilter?: OrderStatus;
-  onStatusChange?: (status: OrderStatus) => void;
 }
 
 const OrderFilters: React.FC<OrderFiltersProps> = ({
+  filters,
   onApplyFilters,
-  statusFilter,
-  onStatusChange,
 }) => {
   const [sortBy, setSortBy] = useState("orderDate");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [status, setStatus] = useState<OrderStatus | "">(statusFilter || "");
-  const [orderId, setOrderId] = useState("");
-  const [userId, setUserId] = useState("");
+  const [status, setStatus] = useState<OrderStatus | "">(filters.status || "");
+  const [orderId, setOrderId] = useState(filters.orderId);
+  const [userId, setUserId] = useState(filters.userId);
 
   useEffect(() => {
-    if (statusFilter !== undefined) {
-      setStatus(statusFilter);
-    }
-  }, [statusFilter]);
-
-  const handleStatusChange = (value: string) => {
-    const typedValue = value as OrderStatus | "";
-    setStatus(typedValue);
-    if (onStatusChange && typedValue !== "") {
-      onStatusChange(typedValue);
-    }
-  };
+    setStatus(filters.status || "");
+    setOrderId(filters.orderId);
+    setUserId(filters.userId);
+  }, [filters]);
 
   const handleApply = () => {
-    if (onApplyFilters) {
-      onApplyFilters({
-        sortBy,
-        sortOrder,
-        status: status || undefined,
-        orderId: orderId ? Number(orderId) : undefined,
-        userId: userId || undefined,
-      });
-    }
+    onApplyFilters({
+      sortBy,
+      sortOrder,
+      status: status || undefined,
+      orderId: orderId ? Number(orderId) : undefined,
+      userId: userId || undefined,
+    });
+  };
+
+  const handleClear = () => {
+    setSortBy("orderDate");
+    setSortOrder("desc");
+    setStatus("");
+    setOrderId("");
+    setUserId("");
+    onApplyFilters({
+      sortBy: "orderDate",
+      sortOrder: "desc",
+    });
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4 bg-white/5 rounded-xl shadow-md">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
       {/* 🔢 Sort By */}
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-semibold">Sort By</label>
+      <div>
+        <label className="block mb-1 text-sm text-secondary">Sort By</label>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="p-2 rounded bg-transparent border border-gray-500 text-sm"
+          className="w-full"
         >
           <option value="orderDate">Order Date</option>
-          <option value="customerName">Customer Name</option>
-          <option value="totalAmount">Total Amount</option>
         </select>
       </div>
 
       {/* ↕️ Sort Order */}
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-semibold">Sort Order</label>
+      <div>
+        <label className="block mb-1 text-sm text-secondary">Sort Order</label>
         <select
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
-          className="p-2 rounded bg-transparent border border-gray-500 text-sm"
+          className="w-full"
         >
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
@@ -86,12 +87,12 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
       </div>
 
       {/* 🏷️ Order Status */}
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-semibold">Order Status</label>
+      <div>
+        <label className="block mb-1 text-sm text-secondary">Order Status</label>
         <select
           value={status}
-          onChange={(e) => handleStatusChange(e.target.value)}
-          className="p-2 rounded bg-transparent border border-gray-500 text-sm"
+          onChange={(e) => setStatus(e.target.value as OrderStatus | "")}
+          className="w-full"
         >
           <option value="">All</option>
           {orderStatusOptions.map((s) => (
@@ -103,40 +104,48 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
       </div>
 
       {/* 🧾 Order ID */}
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-semibold">Order ID</label>
+      <div>
+        <label className="block mb-1 text-sm text-secondary">Order ID</label>
         <input
           type="number"
           value={orderId}
           onChange={(e) => setOrderId(e.target.value)}
           placeholder="e.g. 1024"
-          className="p-2 rounded bg-transparent border border-gray-500 text-sm"
+          className="w-full"
         />
       </div>
 
       {/* 👤 User ID */}
-      <div className="flex flex-col">
-        <label className="mb-1 text-sm font-semibold">User ID</label>
+      <div>
+        <label className="block mb-1 text-sm text-secondary">User ID</label>
         <input
           type="text"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
           placeholder="e.g. abc-user-123"
-          className="p-2 rounded bg-transparent border border-gray-500 text-sm"
+          className="w-full"
         />
       </div>
 
-      {/* ✅ Apply Button */}
-      {onApplyFilters && (
-        <div className="flex items-end">
-          <Button
-            onClick={handleApply}
-            className="w-full bg-green-600 hover:bg-green-700 text-white"
-          >
-            Apply Filters
-          </Button>
-        </div>
-      )}
+      {/* ✅ Apply + ❌ Clear Filters */}
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-end mt-1">
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={handleApply}
+          className="w-full sm:w-auto"
+        >
+          Apply Filters
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={handleClear}
+          className="w-full sm:w-auto"
+        >
+          Clear Filters
+        </Button>
+      </div>
     </div>
   );
 };

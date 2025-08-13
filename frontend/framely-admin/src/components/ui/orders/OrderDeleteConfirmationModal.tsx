@@ -2,44 +2,44 @@
 
 import React from "react";
 import Button from "../Button";
+import { Order } from "@/services/OrderService";
 
 interface OrderDeleteConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  message?: string;
+  order?: Order | null;
 }
 
 const OrderDeleteConfirmationModal: React.FC<OrderDeleteConfirmationModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  message = "Are you sure you want to delete this order?",
+  order,
 }) => {
-  if (!isOpen) return null;
+  if (!isOpen || !order) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center">
-      <div className="bg-[#1a1a1a] w-full max-w-sm rounded-xl p-6 border border-gray-700 shadow-xl">
-        <h2 className="text-lg font-semibold text-white mb-4">Confirm Delete</h2>
-        <p className="text-gray-300 mb-6">{message}</p>
+    <div className="modal-backdrop">
+      <div className="modal-content fade-in max-w-md w-full space-y-5">
+        <h2 className="text-xl font-semibold text-primary">Delete Order</h2>
 
-        <div className="flex justify-end gap-4">
-          <Button
-            onClick={onClose}
-            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2"
-          >
+        <p className="text-sm text-secondary">
+          Are you sure you want to delete the following order?
+        </p>
+
+        <ul className="text-sm text-muted space-y-1">
+          <li><strong>Order ID:</strong> #{order.id}</li>
+          <li><strong>Customer Name:</strong> {order.customerName}</li>
+          <li><strong>Email:</strong> {order.email}</li>
+        </ul>
+
+        <div className="flex justify-end gap-3 pt-2">
+          <Button variant="secondary" size="sm" onClick={onClose}>
             Cancel
           </Button>
-
-          <Button
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2"
-          >
-            Delete
+          <Button variant="danger" size="sm" onClick={onConfirm}>
+            Confirm Delete
           </Button>
         </div>
       </div>

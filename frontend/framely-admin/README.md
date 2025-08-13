@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 👓 Framely Admin Dashboard (MVP)
 
-## Getting Started
+Framely Admin is a **premium admin dashboard** for managing the Framely eyewear store.  
+Admins can **manage categories, products, and orders**, and monitor overall data.  
+This is the **Admin Frontend (MVP level)** built with **Next.js (App Router) + TypeScript + Tailwind CSS**.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📌 Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Next.js 14+ (App Router)** – Modern React framework  
+- **TypeScript** – Strict type safety  
+- **TailwindCSS** – Utility-first styling  
+- **Lucide-react** – Icon library  
+- **Axios** – For API calls (`apiClient.ts`)  
+- **react-hot-toast** – User-friendly notifications  
+- **Global Dark Premium Theme** – Using CSS variables & glassmorphism  
+- **Protected Routes** – Redirect to login if unauthenticated  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✅ Features Implemented (MVP Level)
 
-## Learn More
+- ✅ **Dashboard**
+  - Overview of orders, revenue, and quick stats (charts optional)
+  - Uses reusable **Card** and **Table** components
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ **Categories Page**
+  - Add, edit, search, delete categories
+  - Glassmorphic tables and modals
+  - Fully responsive
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- ✅ **Products Page**
+  - CRUD operations on products
+  - Filter by category and brand
+  - Image upload & preview
+  - Pagination & search
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- ✅ **Orders Page**
+  - View all orders with pagination
+  - Update order status (`Pending`, `Processing`, `Completed`, `Cancelled`)
+  - View order details in modal
+  - Delete orders (if required)
 
-## Deploy on Vercel
+- ✅ **Reusable Components**
+  - **Buttons**, **Cards**, **Tables**, **Modals**
+  - Search bars and filters
+  - Smooth transitions and hover effects
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ✅ **Notifications**
+  - Success and error messages using **react-hot-toast**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🌐 Backend API Integration
+
+- **Base API URL** is configured in `apiClient.ts`
+
+- **Category APIs**
+  - `/Categories` → Get all categories
+  - `/Categories` [POST] → Add category
+  - `/Categories/{id}` [PUT] → Update category
+  - `/Categories/{id}` [DELETE] → Delete category
+
+- **Product APIs**
+  - `/Products` → Get all products
+  - `/Products/{id}` → Get product details
+  - `/Products` [POST] → Add product
+  - `/Products/{id}` [PUT] → Update product
+  - `/Products/{id}` [DELETE] → Delete product
+  - `/Products/category?name=` → Filter by category
+  - `/Products/brand?name=` → Filter by brand
+  - `/Products/search?term=` → Search products
+
+- **Order APIs**
+  - `/Orders` → Get paginated orders
+  - `/Orders/{id}` → Get order by ID
+  - `/Orders/{id}/status` [PUT] → Update order status
+  - `/Orders/{id}` [DELETE] → Delete order
+
+**Pagination Response Example:**
+
+```json
+{
+  "totalItems": 120,
+  "totalPages": 12,
+  "currentPage": 1,
+  "pageSize": 10,
+  "data": [
+    {
+      "id": 1,
+      "userId": 101,
+      "totalPrice": 4999,
+      "status": "Pending",
+      "items": [
+        { "productId": 1, "name": "Premium Aviator", "quantity": 2, "price": 1999 }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 "use client";
+
 import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import {
@@ -18,6 +19,7 @@ import EditProductModal from "@/components/ui/products/EditProductModal";
 import ProductTable from "@/components/ui/products/ProductTable";
 import ProductFilters from "@/components/ui/products/ProductFilters";
 import ProductDeleteConfirmationModal from "@/components/ui/products/ProductDeleteConfirmationModal";
+import Button from "@/components/ui/Button";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -35,15 +37,14 @@ export default function ProductsPage() {
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // ✅ Fetch Products
   const fetchProducts = async () => {
     setLoading(true);
     const response = await getProducts(currentPage, pageSize, sortBy, sortOrder);
-
     if (response) {
       setProducts(response.data);
       setTotalPages(response.totalPages);
     }
-
     setLoading(false);
   };
 
@@ -51,12 +52,9 @@ export default function ProductsPage() {
     fetchProducts();
   }, [currentPage]);
 
+  // ✅ Filters
   const handleSearch = async (term: string) => {
-    if (term.trim() === "") {
-      fetchProducts();
-      return;
-    }
-
+    if (!term.trim()) return fetchProducts();
     setLoading(true);
     const results = await searchProducts(term);
     setProducts(results);
@@ -65,32 +63,8 @@ export default function ProductsPage() {
     setLoading(false);
   };
 
-  const handleSearchById = async (id: number) => {
-  const product = await getProductById(id);
-  if (product) {
-    setProducts([product]); // sirf ek product dikhao
-  } else {
-    setProducts([]); // ya empty table dikhao
-  }
-};
-
-const handleProductByIdSearch = async (id: number) => {
-  if (!id) return;
-  const product = await getProductById(id); // 👈 ye already import hona chahiye
-  if (product) {
-    setProducts([product]); // 👈 tumhara existing state update logic
-  } else {
-    toast.error("No product found with this ID");
-  }
-};
-
-
   const handleFilterCategory = async (category: string) => {
-    if (!category) {
-      fetchProducts();
-      return;
-    }
-
+    if (!category) return fetchProducts();
     setLoading(true);
     const results = await getProductsByCategoryName(category);
     setProducts(results);
@@ -100,11 +74,7 @@ const handleProductByIdSearch = async (id: number) => {
   };
 
   const handleFilterBrand = async (brand: string) => {
-    if (!brand) {
-      fetchProducts();
-      return;
-    }
-
+    if (!brand) return fetchProducts();
     setLoading(true);
     const results = await getProductsByBrand(brand);
     setProducts(results);
@@ -113,6 +83,24 @@ const handleProductByIdSearch = async (id: number) => {
     setLoading(false);
   };
 
+  const handleProductByIdSearch = async (id: number) => {
+    if (!id) return;
+    const product = await getProductById(id);
+    if (product) {
+      setProducts([product]);
+      setTotalPages(1);
+      setCurrentPage(1);
+    } else {
+      toast.error("No product found with this ID");
+    }
+  };
+
+  const handleClearFilters = () => {
+    setCurrentPage(1);
+    fetchProducts();
+  };
+
+  // ✅ CRUD
   const handleProductAdded = async (newProduct: Omit<Product, "id">) => {
     const created = await createProduct(newProduct);
     if (created) {
@@ -129,104 +117,91 @@ const handleProductByIdSearch = async (id: number) => {
     }
   };
 
-  const handleDeleteClick = (product: Product) => {
-    setProductToDelete(product);
-  };
+  const handleDeleteClick = (product: Product) => setProductToDelete(product);
 
   const handleConfirmDelete = async () => {
     if (!productToDelete) return;
-
     setIsDeleting(true);
     const success = await deleteProduct(productToDelete.id);
     setIsDeleting(false);
-
     if (success) {
       fetchProducts();
       setProductToDelete(null);
     }
   };
 
-  const handleCancelDelete = () => {
-    setProductToDelete(null);
-  };
+  const handleCancelDelete = () => setProductToDelete(null);
 
+  // ✅ Pagination
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
-
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="page-container px-4 sm:px-6 lg:px-8 py-6 space-y-8 fade-in">
+
+      {/* Header */}
+      <header className="flex-row-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Products</h1>
-          <p className="text-gray-400">Manage all products here</p>
+          <h1 className="title">📦 Products</h1>
+          <p className="text-[var(--text-secondary)] mt-1 text-sm sm:text-base">
+            Manage and monitor all your product inventory here.
+          </p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-200"
-        >
+        <Button variant="primary" size="md" onClick={() => setShowAddModal(true)}>
           + Add Product
-        </button>
-      </div>
+        </Button>
+      </header>
 
-      <ProductFilters
-        onSearch={handleSearch}
-        onFilterCategory={handleFilterCategory}
-        onFilterBrand={handleFilterBrand}
-        onSearchById={handleProductByIdSearch}
-      />
+      {/* Filters */}
+      <section className="card">
+        <ProductFilters
+          onSearch={handleSearch}
+          onFilterCategory={handleFilterCategory}
+          onFilterBrand={handleFilterBrand}
+          onSearchById={handleProductByIdSearch}
+          onClearFilters={handleClearFilters}
+        />
+      </section>
 
-      <ProductTable
-        products={products}
-        loading={loading}
-        onEditClick={(product: Product) => setEditProduct(product)}
-        onDeleteClick={handleDeleteClick}
-        refreshProducts={fetchProducts}
-      />
+      {/* Table - no container wrap */}
+      <section className="overflow-x-auto">
+        <ProductTable
+          products={products}
+          loading={loading}
+          onEditClick={setEditProduct}
+          onDeleteClick={handleDeleteClick}
+          refreshProducts={fetchProducts}
+        />
+      </section>
 
-      {/* Pagination Controls */}
-      <div className="mt-6 flex justify-center gap-4">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
-        >
+      {/* Pagination */}
+      <section className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <Button variant="secondary" size="sm" onClick={handlePrevPage} disabled={currentPage === 1}>
           Previous
-        </button>
-        <span className="text-white">
+        </Button>
+        <span className="text-[var(--text-primary)] text-sm sm:text-base">
           Page {currentPage} of {totalPages}
         </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
-        >
+        <Button variant="secondary" size="sm" onClick={handleNextPage} disabled={currentPage === totalPages}>
           Next
-        </button>
-      </div>
+        </Button>
+      </section>
 
+      {/* Modals */}
       {showAddModal && (
-        <AddProductModal
-          onClose={() => setShowAddModal(false)}
-          onProductAdded={handleProductAdded}
-        />
+        <AddProductModal onClose={() => setShowAddModal(false)} onProductAdded={handleProductAdded} />
       )}
-
       {editProduct && (
         <EditProductModal
           product={editProduct}
           onClose={() => setEditProduct(null)}
-          onProductUpdated={(updatedFields) =>
-            handleProductUpdated(editProduct.id, updatedFields)
-          }
+          onProductUpdated={(fields) => handleProductUpdated(editProduct.id, fields)}
         />
       )}
-
-      {/* Delete Confirmation Modal */}
       {productToDelete && (
         <ProductDeleteConfirmationModal
           isOpen={!!productToDelete}

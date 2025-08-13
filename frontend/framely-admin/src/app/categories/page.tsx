@@ -27,6 +27,7 @@ const CategoriesPage: React.FC = () => {
     categoryName: "",
   });
 
+  // ✅ Fetch categories
   const fetchCategories = async () => {
     try {
       setLoading(true);
@@ -41,6 +42,7 @@ const CategoriesPage: React.FC = () => {
     fetchCategories();
   }, []);
 
+  // ✅ Handlers
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
@@ -90,28 +92,29 @@ const CategoriesPage: React.FC = () => {
     cat.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // ✅ UI
   return (
-    <div className="min-h-screen w-full bg-dark-glass backdrop-blur-md px-4 sm:px-6 md:px-10 py-6 md:py-10 rounded-xl shadow-2xl fade-in transition-all duration-300">
+    <div className="page-container px-4 sm:px-6 lg:px-8 py-6 space-y-8 fade-in">
       {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-        <h1 className="title text-2xl sm:text-3xl font-bold text-primary">📁 Categories</h1>
-        <Button
-          variant="gradient"
-          size="md"
-          onClick={() => setIsAddModalOpen(true)}
-          className="shadow-md"
-        >
-          ➕ Add Category
+      <header className="flex-row-between gap-4">
+        <div>
+          <h1 className="title">📁 Categories</h1>
+          <p className="text-[var(--text-secondary)] mt-1 text-sm sm:text-base">
+            Manage and organize your product categories here.
+          </p>
+        </div>
+        <Button variant="primary" size="md" onClick={() => setIsAddModalOpen(true)}>
+          + Add Category
         </Button>
-      </div>
+      </header>
 
       {/* Search */}
-      <div className="mb-4">
+      <section className="card">
         <CategorySearchBar searchTerm={searchTerm} onSearch={handleSearch} />
-      </div>
+      </section>
 
       {/* Table */}
-      <div className="mt-4 overflow-hidden rounded-xl">
+      <section className="overflow-x-auto">
         <CategoryTable
           categories={filteredCategories}
           onEdit={handleOpenEditModal}
@@ -121,29 +124,35 @@ const CategoriesPage: React.FC = () => {
           }}
           isLoading={loading}
         />
-      </div>
+      </section>
 
       {/* Modals */}
-      <AddCategoryModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddCategory}
-      />
-      <EditCategoryModal
-        isOpen={!!selectedCategory}
-        category={selectedCategory}
-        onClose={() => setSelectedCategory(null)}
-        onUpdate={handleEditCategory}
-        onSuccess={() => {}}
-      />
-      <ConfirmDeleteModal
-        isOpen={confirmDeleteModal.open}
-        categoryName={confirmDeleteModal.categoryName}
-        onConfirm={confirmDeleteCategory}
-        onCancel={() =>
-          setConfirmDeleteModal({ open: false, categoryId: null, categoryName: "" })
-        }
-      />
+      {isAddModalOpen && (
+        <AddCategoryModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onAdd={handleAddCategory}
+        />
+      )}
+      {selectedCategory && (
+        <EditCategoryModal
+          isOpen={!!selectedCategory}
+          category={selectedCategory}
+          onClose={() => setSelectedCategory(null)}
+          onUpdate={handleEditCategory}
+          onSuccess={() => {}}
+        />
+      )}
+      {confirmDeleteModal.open && (
+        <ConfirmDeleteModal
+          isOpen={confirmDeleteModal.open}
+          categoryName={confirmDeleteModal.categoryName}
+          onConfirm={confirmDeleteCategory}
+          onCancel={() =>
+            setConfirmDeleteModal({ open: false, categoryId: null, categoryName: "" })
+          }
+        />
+      )}
     </div>
   );
 };

@@ -4,13 +4,17 @@ import { useEffect, useState } from "react";
 import { Product } from "@/services/ProductService";
 import { toast } from "react-hot-toast";
 import { getAllCategories, Category } from "@/services/CategoryService";
+import Button from "@/components/ui/Button";
 
 interface AddProductModalProps {
   onClose: () => void;
   onProductAdded: (newProduct: Omit<Product, "id">) => Promise<void>;
 }
 
-export default function AddProductModal({ onClose, onProductAdded }: AddProductModalProps) {
+export default function AddProductModal({
+  onClose,
+  onProductAdded,
+}: AddProductModalProps) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState<number | "">("");
   const [brand, setBrand] = useState("");
@@ -52,7 +56,7 @@ export default function AddProductModal({ onClose, onProductAdded }: AddProductM
     const toastId = toast.loading("Creating product...");
     try {
       await onProductAdded(newProduct);
-      toast.success("Product created successfully", { id: toastId });
+      // toast.success("Product created successfully", { id: toastId });
       onClose();
     } catch (error) {
       console.error(error);
@@ -63,34 +67,39 @@ export default function AddProductModal({ onClose, onProductAdded }: AddProductM
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
+    <div className="modal-backdrop" onClick={onClose}>
+      <div
+        className="modal-content fade-in"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
 
         <div className="space-y-4">
           <input
-            className="w-full border p-2 rounded"
+            className="w-full border border-[var(--border-color)] bg-[var(--surface-hover)] p-2 rounded"
             placeholder="Product Name *"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <input
-            className="w-full border p-2 rounded"
+            className="w-full border border-[var(--border-color)] bg-[var(--surface-hover)] p-2 rounded"
             type="number"
             placeholder="Price (in ₹) *"
             value={price}
-            onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
+            onChange={(e) =>
+              setPrice(e.target.value === "" ? "" : Number(e.target.value))
+            }
           />
           <input
-            className="w-full border p-2 rounded"
+            className="w-full border border-[var(--border-color)] bg-[var(--surface-hover)] p-2 rounded"
             placeholder="Brand *"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
           />
 
-          {/* ✅ Dropdown for Category */}
+          {/* Category Dropdown */}
           <select
-            className="w-full border p-2 rounded"
+            className="w-full border border-[var(--border-color)] bg-[var(--surface-hover)] p-2 rounded"
             value={categoryId}
             onChange={(e) => setCategoryId(Number(e.target.value))}
           >
@@ -103,35 +112,38 @@ export default function AddProductModal({ onClose, onProductAdded }: AddProductM
           </select>
 
           <textarea
-            className="w-full border p-2 rounded"
+            className="w-full border border-[var(--border-color)] bg-[var(--surface-hover)] p-2 rounded"
             placeholder="Description *"
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
           <input
-            className="w-full border p-2 rounded"
+            className="w-full border border-[var(--border-color)] bg-[var(--surface-hover)] p-2 rounded"
             placeholder="Image URL *"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
           />
         </div>
 
+        {/* Action Buttons */}
         <div className="mt-6 flex justify-end gap-3">
-          <button
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={onClose}
             disabled={loading}
           >
             Cancel
-          </button>
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
             onClick={handleCreate}
-            disabled={loading}
+            isLoading={loading}
           >
-            {loading ? "Creating..." : "Add Product"}
-          </button>
+            Add Product
+          </Button>
         </div>
       </div>
     </div>

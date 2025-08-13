@@ -32,21 +32,7 @@ export default function AddCategoryModal({
 
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog onClose={onClose} className="fixed inset-0 z-50 flex items-center justify-center px-4 sm:px-6">
-        {/* Overlay */}
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-200"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-        </Transition.Child>
-
-        {/* Modal Panel */}
+      <Dialog onClose={onClose} className="modal-backdrop">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -56,50 +42,44 @@ export default function AddCategoryModal({
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-95"
         >
-          <Dialog.Panel className="card max-w-md w-full sm:max-w-lg">
-            <Dialog.Title className="text-center text-xl font-bold mb-4">
+          <Dialog.Panel className="modal-content fade-in">
+            <Dialog.Title className="text-center text-xl font-semibold mb-4">
               ➕ Add New Category
             </Dialog.Title>
 
-            <div className="space-y-5">
-              {/* Name Input */}
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Sunglasses"
-                  className="w-full"
-                  required
-                />
-              </div>
+            <div className="space-y-4">
+              <input
+                className="w-full"
+                placeholder="Category Name *"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <textarea
+                className="w-full resize-none"
+                placeholder="Optional description"
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
 
-              {/* Description Input */}
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Description
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={3}
-                  placeholder="Optional description"
-                  className="w-full resize-none"
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="flex justify-end gap-3 pt-2">
-                <Button variant="outline" onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button onClick={handleSubmit} disabled={loading || !name.trim()}>
-                  {loading ? "Adding..." : "Add Category"}
-                </Button>
-              </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onClose}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleSubmit}
+                disabled={loading || !name.trim()}
+              >
+                {loading ? "Adding..." : "Add Category"}
+              </Button>
             </div>
           </Dialog.Panel>
         </Transition.Child>
