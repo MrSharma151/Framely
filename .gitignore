@@ -77,3 +77,4 @@ TestResult*/
 
 # Ignore secrets (if any)
 secrets.json
+appsettings.json
