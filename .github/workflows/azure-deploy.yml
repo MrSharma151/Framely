@@ -16,16 +16,16 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.x'
+        dotnet-version: '9.0.x' 
 
     - name: Restore dependencies
-      run: dotnet restore ./backend
+      run: dotnet restore ./backend/Framely.API/Framely.API.csproj
 
     - name: Build
-      run: dotnet build ./backend -c Release --no-restore
+      run: dotnet build ./backend/Framely.API/Framely.API.csproj -c Release --no-restore
 
     - name: Publish .NET app
-      run: dotnet publish ./backend -c Release -r linux-x64 --self-contained true -o ./backend/publish
+      run: dotnet publish ./backend/Framely.API/Framely.API.csproj -c Release -o ./backend/publish
 
     - name: Login to Azure
       uses: azure/login@v1
