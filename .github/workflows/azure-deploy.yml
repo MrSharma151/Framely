@@ -1,0 +1,32 @@
+# .github/workflows/azure-deploy.yml
+name: Deploy Framely Backend to Azure
+
+on:
+  push:
+    branches:
+      - azure-deployment
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Publish .NET app
+      run: |
+        cd backend
+        dotnet publish -c Release -r linux-x64 --self-contained true -o ./publish
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: FramelyBackend
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        package: FramelyBackend/publish
