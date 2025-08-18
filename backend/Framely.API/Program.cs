@@ -180,7 +180,7 @@ app.MapGet("/", async context =>
         </head>
         <body>
             <div class='container'>
-                <h1>🚀 Framely API</h1>
+                <h1>Framely API</h1>
                 <p>Welcome to Framely backend service</p>
                 <button onclick=""window.location.href='/swagger/index.html'"">
                     Open Swagger Docs
