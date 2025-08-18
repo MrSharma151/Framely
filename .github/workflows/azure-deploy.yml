@@ -1,4 +1,3 @@
-# .github/workflows/azure-deploy.yml
 name: Deploy Framely Backend to Azure
 
 on:
