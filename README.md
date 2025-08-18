@@ -75,7 +75,7 @@ Framely is a modern **optical e-commerce platform** designed for browsing, manag
 ✅ **Phase 3:** Deployment
 
 🎯 Deployment Plan:
-- Host backend on **Azure App Service**
+- Host framely-backend on **Azure App Service**
 - Deploy both frontends (`framely-customer`, `framely-admin`) on Azure
 - Configure environment variables (API URLs, JWT secrets)
 - Enable HTTPS, optimize images, and apply production caching
