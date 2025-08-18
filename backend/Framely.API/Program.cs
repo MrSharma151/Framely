@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -140,6 +141,57 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// This is the entry point for the Framely API application.
+app.MapGet("/", async context =>
+{
+    var html = @"
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Framely API</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background: #0d1117;
+                    color: #fff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                .container {
+                    text-align: center;
+                }
+                button {
+                    padding: 12px 24px;
+                    font-size: 16px;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    background-color: #4676E1;
+                    color: white;
+                    transition: 0.3s;
+                }
+                button:hover {
+                    background-color: #365dc1;
+                }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <h1>🚀 Framely API</h1>
+                <p>Welcome to Framely backend service</p>
+                <button onclick=""window.location.href='/swagger/index.html'"">
+                    Open Swagger Docs
+                </button>
+            </div>
+        </body>
+        </html>";
+context.Response.ContentType = "text/html";
+await context.Response.WriteAsync(html);
+});
+
 
 // Step 11: Optional DB seeding via config flag
 if (builder.Configuration.GetValue<bool>("SeedAdmin"))
