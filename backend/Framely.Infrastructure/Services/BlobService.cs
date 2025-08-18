@@ -22,13 +22,14 @@ namespace Framely.Infrastructure.Services
         /// <param name="configuration">Application configuration</param>
         public BlobService(IConfiguration configuration)
         {
-            var connectionString = configuration["AzureBlobStorage:ConnectionString"];
-            var containerName = configuration["AzureBlobStorage:ContainerName"];
-            _accountName = configuration["AzureBlobStorage:AccountName"]
-                ?? throw new ArgumentNullException("AzureBlobStorage:AccountName");
+            var connectionString = configuration["Storage:ConnectionString"];
+            var containerName = configuration["Storage:Container"];
 
-            _accountKey = configuration["AzureBlobStorage:AccountKey"]
-                ?? throw new ArgumentNullException("AzureBlobStorage:AccountKey");
+            _accountName = configuration["Storage:Name"]
+                ?? throw new ArgumentNullException("Storage:Name");
+
+            _accountKey = configuration["Storage:Key"]
+                ?? throw new ArgumentNullException("Storage:Key");
 
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException(nameof(connectionString), "Azure Blob Storage connection string is missing.");
@@ -37,11 +38,12 @@ namespace Framely.Infrastructure.Services
                 throw new ArgumentNullException(nameof(containerName), "Azure Blob Storage container name is missing.");
 
             if (string.IsNullOrEmpty(_accountName) || string.IsNullOrEmpty(_accountKey))
-                throw new ArgumentNullException("AccountName/AccountKey missing in configuration.");
+                throw new ArgumentNullException("Storage Name/Key missing in configuration.");
 
             _containerClient = new BlobContainerClient(connectionString, containerName);
             _containerClient.CreateIfNotExists(PublicAccessType.None);
         }
+
 
         /// <summary>
         /// Uploads a file stream to Blob Storage with the specified name and content type.

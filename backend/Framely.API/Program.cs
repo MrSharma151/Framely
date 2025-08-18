@@ -80,7 +80,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 // Step 5: Configure JWT Authentication
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
-var jwtKey = jwtSection["Key"] ?? throw new Exception("JWT Key is missing in configuration");
+var jwtKey = jwtSection["Secret"] ?? throw new Exception("JWT Key is missing in configuration");
 var jwtIssuer = jwtSection["Issuer"] ?? throw new Exception("JWT Issuer is missing in configuration");
 var jwtAudience = jwtSection["Audience"] ?? "FramelyUsers";
 
