@@ -1,9 +1,9 @@
-// src/components/layout/Footer.tsx
 "use client";
 
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Mail, Phone, MapPin } from "lucide-react";
+import Link from "next/link"; 
 
 // Global footer with brand info, contact, navigation, and social links
 export default function Footer() {
@@ -49,16 +49,16 @@ export default function Footer() {
           <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
           <ul className="space-y-2 text-[var(--foreground-muted)]">
             <li>
-              <a href="/" className="hover:text-[var(--accent)] transition-colors">Home</a>
+              <Link href="/" className="hover:text-[var(--accent)] transition-colors">Home</Link>
             </li>
             <li>
-              <a href="/shop" className="hover:text-[var(--accent)] transition-colors">Shop</a>
+              <Link href="/shop" className="hover:text-[var(--accent)] transition-colors">Shop</Link>
             </li>
             <li>
-              <a href="/services" className="hover:text-[var(--accent)] transition-colors">Services</a>
+              <Link href="/services" className="hover:text-[var(--accent)] transition-colors">Services</Link>
             </li>
             <li>
-              <a href="/about" className="hover:text-[var(--accent)] transition-colors">About</a>
+              <Link href="/about" className="hover:text-[var(--accent)] transition-colors">About</Link>
             </li>
           </ul>
         </div>

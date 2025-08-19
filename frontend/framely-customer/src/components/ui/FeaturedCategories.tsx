@@ -1,5 +1,5 @@
-// src/components/ui/FeaturedCategories.tsx
 import Link from "next/link";
+import Image from "next/image"; // ✅ Added for optimized image handling
 
 // Displays featured product categories with image overlays and hover effects
 export default function FeaturedCategories() {
@@ -36,14 +36,17 @@ export default function FeaturedCategories() {
           >
             {/* Image container with zoom effect */}
             <div className="relative w-full h-52 sm:h-56 lg:h-60 overflow-hidden">
-              <img
+              <Image
                 src={cat.image}
                 alt={cat.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 25vw"
                 className="
-                  absolute inset-0 w-full h-full object-cover object-center 
-                  transform transition-transform duration-[1200ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
+                  object-cover object-center 
+                  transition-transform duration-[1200ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
                   group-hover:scale-105
                 "
+                priority={false}
               />
 
               {/* Gradient overlay on hover */}

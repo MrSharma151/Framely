@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image"; // ✅ Enables automatic image optimization
 import { Eye, Star, Users, Phone, Mail, MapPin } from "lucide-react";
 
 /* About page component */
@@ -21,12 +22,16 @@ export default function AboutPage() {
 
       {/* Story Section */}
       <div className="relative z-10 container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 px-6 items-center">
-        {/* Left - Image */}
+        {/* Left - Optimized Image */}
         <div className="rounded-2xl overflow-hidden shadow-lg hover:scale-[1.02] transition">
-          <img
+          {/* ✅ Replaced <img> with <Image /> for better LCP and bandwidth */}
+          <Image
             src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=80"
             alt="Framely Store"
+            width={1200}
+            height={800}
             className="w-full h-full object-cover"
+            priority
           />
         </div>
 
@@ -39,7 +44,7 @@ export default function AboutPage() {
           </p>
           <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
             From <b>AI-powered eye tests</b> to <b>home visit consultations</b>, we bring technology & care together
-            to give you the best optical experience. Whether it's <b>spectacles, sunglasses, or contact lenses</b>,
+            to give you the best optical experience. Whether it&apos;s <b>spectacles, sunglasses, or contact lenses</b>,
             we ensure the highest quality with unmatched customer support.
           </p>
         </div>

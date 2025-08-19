@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import { placeOrder } from "@/services/orderService";
+import Image from "next/image"; // ✅ Next.js Image component ko import kiya
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -76,8 +77,8 @@ export default function CheckoutPage() {
       toast.success("✅ Order placed successfully!");
       clearCart();
       router.push("/orders");
-    } catch (err: any) {
-      console.error("Order failed:", err.response?.data || err.message);
+    } catch (err: unknown) { // ✅ Yahan 'any' ko 'unknown' se replace kiya
+      console.error("Order failed:", err);
       toast.error("Failed to place order. Try again!");
     } finally {
       setLoading(false);
@@ -122,9 +123,11 @@ export default function CheckoutPage() {
                   className="flex items-center justify-between border-b border-gray-700 pb-4"
                 >
                   <div className="flex items-center gap-4">
-                    <img
+                    <Image // ✅ `<img>` ko `<Image>` se replace kiya
                       src={item.image}
                       alt={item.name}
+                      width={64} // ✅ `width` prop add kiya (w-16 = 64px)
+                      height={64} // ✅ `height` prop add kiya (h-16 = 64px)
                       className="w-16 h-16 rounded-xl object-cover shadow-md"
                     />
                     <div>
@@ -245,7 +248,7 @@ export default function CheckoutPage() {
 
         {/* Additional reassurance */}
         <div className="mt-12 text-center text-gray-400 text-sm max-w-2xl mx-auto">
-          🔒 Your personal information is secure with us.  
+          🔒 Your personal information is secure with us.
           Our team ensures **safe handling of your prescription & eyewear**.
         </div>
       </div>

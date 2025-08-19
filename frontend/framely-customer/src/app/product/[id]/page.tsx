@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ShoppingCart, ArrowLeft, Star } from "lucide-react";
 import toast from "react-hot-toast";
+import Image from "next/image"; // ✅ Image component import kiya
 import Button from "@/components/ui/Button";
 import { Product, getProductById } from "@/services/productService";
 import { useCart } from "@/context/CartContext";
@@ -13,7 +14,7 @@ export default function ProductDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const { addToCart, cart } = useCart();
-  const { user, hydrated } = useAuth(); // Logged-in check
+  const { user } = useAuth(); // User authentication context
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,8 @@ export default function ProductDetailsPage() {
         setLoading(true);
         const res = await getProductById(Number(id));
         setProduct(res);
-      } catch (error) {
+      } catch (error) { // Error handling
+        console.error("Failed to fetch product:", error);
         toast.error("❌ Failed to load product details");
         router.push("/shop");
       } finally {
@@ -105,9 +107,11 @@ export default function ProductDetailsPage() {
           {/* Product Image Section */}
           <div className="relative w-full">
             <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-              <img
+              <Image // ✅ `<img>` ko `<Image>` se replace kiya
                 src={imageToShow}
                 alt={product.name}
+                width={800} // ✅ `width` prop add kiya (example value)
+                height={800} // ✅ `height` prop add kiya (example value)
                 className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />

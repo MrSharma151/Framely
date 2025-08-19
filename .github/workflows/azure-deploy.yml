@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - azure-deployment
+    paths:
+      - 'backend/**' # CI/CD triggers only from backend changes
 
 jobs:
   build-and-deploy:

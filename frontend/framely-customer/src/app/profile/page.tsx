@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import Button from "@/components/ui/Button";
+import Image from "next/image"; // ✅ Next.js Image component import kiya
 
 export default function MyProfilePage() {
   const { user, hydrated, logout } = useAuth();
@@ -23,7 +23,6 @@ export default function MyProfilePage() {
   return (
     <section className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 py-12 px-4">
       <div className="max-w-3xl mx-auto">
-
         {/* Page Title */}
         <h1 className="text-4xl font-extrabold text-center text-white mb-10 drop-shadow-lg">
           👤 My Profile
@@ -31,14 +30,15 @@ export default function MyProfilePage() {
 
         {/* Profile Card */}
         <div className="relative p-8 rounded-3xl shadow-2xl border border-white/10 backdrop-blur-2xl bg-white/5 text-center hover:shadow-[0_0_40px_rgba(255,255,255,0.05)] transition-all">
-
           {/* Avatar */}
           <div className="flex justify-center">
             <div className="relative">
-              <img
+              <Image // ✅ `<img>` ko `<Image>` se replace kiya
                 src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                 alt="User Avatar"
-                className="w-28 h-28 rounded-full border-4 border-white/20 shadow-xl"
+                width={112} // ✅ `w-28` ke liye 112px width diya
+                height={112} // ✅ `h-28` ke liye 112px height diya
+                className="rounded-full border-4 border-white/20 shadow-xl"
               />
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/30 to-pink-500/30 blur-xl"></div>
             </div>
@@ -49,9 +49,7 @@ export default function MyProfilePage() {
           <p className="text-gray-400 text-sm mt-1">{user.email}</p>
 
           {/* Role Badge */}
-          <div className="mt-3 inline-block px-5 py-1 text-xs font-semibold rounded-full 
-                          bg-gradient-to-r from-blue-500/20 to-purple-500/20 
-                          text-blue-300 border border-blue-600/40 shadow-sm">
+          <div className="mt-3 inline-block px-5 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-300 border border-blue-600/40 shadow-sm">
             {user.role || "USER"}
           </div>
 
@@ -69,9 +67,7 @@ export default function MyProfilePage() {
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-5">
             {/* My Orders */}
             <button
-              className="px-7 py-3 rounded-xl text-white font-semibold 
-                         bg-gradient-to-r from-purple-500 to-pink-500 
-                         hover:scale-105 hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all"
+              className="px-7 py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-105 hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all"
               onClick={() => router.push("/orders")}
             >
               📦 My Orders
@@ -79,10 +75,7 @@ export default function MyProfilePage() {
 
             {/* Logout */}
             <button
-              className="px-7 py-3 rounded-xl font-semibold border 
-                         border-red-500/60 text-red-400 
-                         hover:bg-red-500/10 hover:text-red-300 
-                         hover:scale-105 transition-all"
+              className="px-7 py-3 rounded-xl font-semibold border border-red-500/60 text-red-400 hover:bg-red-500/10 hover:text-red-300 hover:scale-105 transition-all"
               onClick={() => {
                 logout();
                 toast.success("✅ Logged out successfully");

@@ -59,8 +59,13 @@ export default function RegisterPage() {
       await registerUser({ fullName, email, phoneNumber, password });
       toast.success("User registered successfully! Please login to continue.");
       router.push("/auth/login"); // redirect to login
-    } catch (error: any) {
-      console.error("Registration error:", error);
+    } catch (error: unknown) {
+      // Narrowing unknown error to preserve type safety and avoid eslint violations
+      if (error instanceof Error) {
+        console.error("Registration error:", error.message);
+      } else {
+        console.error("Unknown registration error:", error);
+      }
       toast.error("Registration failed. Try again!");
     } finally {
       setLoading(false);

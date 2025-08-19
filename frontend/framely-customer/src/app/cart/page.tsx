@@ -7,15 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { Trash2, Plus, Minus } from "lucide-react";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
+import Image from "next/image"; // Added for optimized image rendering
 
 export default function CartPage() {
   const router = useRouter();
   const { cart, removeFromCart, updateQuantity, total } = useCart();
-
-  // Get user and hydration status from Auth context
   const { user, hydrated } = useAuth();
 
-  // Redirect to login if not authenticated after hydration
   useEffect(() => {
     if (hydrated && !user) {
       toast.error("⚠️ Please login to view your cart");
@@ -25,22 +23,16 @@ export default function CartPage() {
     }
   }, [hydrated, user, router]);
 
-  // Clear all items from cart
   const clearCart = () => {
     if (cart.length === 0) return;
     cart.forEach((item) => removeFromCart(item.id));
     toast.success("🛒 Cart cleared successfully!");
   };
 
-  // Avoid UI flicker before hydration
-  if (!hydrated) return null;
-
-  // If not authenticated, render nothing (redirecting)
-  if (!user) return null;
+  if (!hydrated || !user) return null;
 
   return (
     <section className="container mx-auto px-4 md:px-8 py-14">
-      {/* Header Row: Title + Clear All button */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
           🛒 Your Cart
@@ -59,7 +51,6 @@ export default function CartPage() {
       </div>
 
       {cart.length === 0 ? (
-        // Empty Cart Message
         <p className="text-center text-gray-400 text-base">
           Your cart is empty.
           <br />
@@ -74,16 +65,20 @@ export default function CartPage() {
               key={item.id}
               className="flex flex-col md:flex-row gap-4 items-start md:items-center bg-gradient-to-r from-gray-900/60 via-gray-800/40 to-gray-900/60 rounded-xl p-5 shadow-md hover:shadow-blue-500/10 transition-all duration-300"
             >
-              {/* Product Image */}
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-28 h-28 md:w-32 md:h-32 rounded-lg object-cover shadow-sm hover:scale-[1.02] transition-transform"
-              />
+              {/* ✅ Optimized Product Image */}
+              <div className="relative w-28 h-28 md:w-32 md:h-32 shrink-0">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  className="rounded-lg object-cover shadow-sm hover:scale-[1.02] transition-transform"
+                  sizes="(max-width: 768px) 112px, 128px"
+                  priority={false}
+                />
+              </div>
 
               {/* Product Details and Actions */}
               <div className="flex-1 w-full">
-                {/* Name, Price & Remove Button */}
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                   <div>
                     <h2 className="text-sm md:text-base font-medium text-white leading-snug">
@@ -107,7 +102,6 @@ export default function CartPage() {
                   </Button>
                 </div>
 
-                {/* Quantity Controls and Subtotal */}
                 <div className="flex flex-wrap justify-start items-center gap-4 mt-3">
                   <div className="flex items-center gap-2 bg-gray-800/70 px-3 py-1.5 rounded-full backdrop-blur-sm text-xs">
                     <button
@@ -136,7 +130,6 @@ export default function CartPage() {
             </div>
           ))}
 
-          {/* Cart Total and Checkout Button */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-gray-700 pt-5 mt-5">
             <h2 className="text-lg md:text-xl font-semibold">
               Total:{" "}

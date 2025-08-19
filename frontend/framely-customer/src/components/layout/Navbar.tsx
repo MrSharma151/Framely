@@ -1,4 +1,3 @@
-// src/components/layout/Navbar.tsx
 "use client";
 
 import { useState, useContext, useRef, useEffect } from "react";
@@ -14,11 +13,27 @@ export default function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false); // user dropdown toggle
   const dropdownRef = useRef<HTMLDivElement>(null); // ref for outside click detection
 
+  // Access auth context and cart state
   const auth = useContext(AuthContext);
-  if (!auth) return null;
+  const { cart } = useCart();
+  
+  // Handle outside click to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Early return if auth context is not available
+  if (!auth) {
+    return null;
+  }
   const { user, logout, hydrated } = auth;
 
-  const { cart } = useCart();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // total cart quantity
 
   const baseLinks = [
@@ -30,17 +45,6 @@ export default function Navbar() {
 
   const userLinks = user ? [{ name: "My Orders", href: "/orders" }] : [];
   const allLinks = [...baseLinks, ...userLinks];
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-[var(--background-alt)]/80 border-b border-[var(--glass-border)] shadow-sm">

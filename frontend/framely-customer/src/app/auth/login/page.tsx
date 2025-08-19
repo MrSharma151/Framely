@@ -32,8 +32,13 @@ export default function LoginPage() {
 
       toast.success("Login successful");
       router.push("/"); // Redirect to homepage
-    } catch (error: any) {
-      console.error("Login error:", error);
+    } catch (error: unknown) {
+      // ✅ Type-safe error handling using `unknown`
+      if (error instanceof Error) {
+        console.error("Login error:", error.message);
+      } else {
+        console.error("Login error:", error);
+      }
       toast.error("Invalid email or password");
     } finally {
       setLoading(false);

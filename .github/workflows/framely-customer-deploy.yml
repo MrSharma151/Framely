@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - azure-deployment # CI/CD triggers only from deployment branch
+    paths:
+      - 'frontend/framely-customer/**' # Trigger only on frontend changes
 
 jobs:
   build-and-deploy:
