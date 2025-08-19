@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import Image from "next/image"; // ✅ Next.js Image component import kiya
 
 export default function MyProfilePage() {
   const { user, hydrated, logout } = useAuth();
@@ -33,12 +32,10 @@ export default function MyProfilePage() {
           {/* Avatar */}
           <div className="flex justify-center">
             <div className="relative">
-              <Image // ✅ `<img>` ko `<Image>` se replace kiya
+              <img 
                 src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                 alt="User Avatar"
-                width={112} // ✅ `w-28` ke liye 112px width diya
-                height={112} // ✅ `h-28` ke liye 112px height diya
-                className="rounded-full border-4 border-white/20 shadow-xl"
+                className="rounded-full border-4 border-white/20 shadow-xl w-28 h-28" // ✅ width and height classes add ki hain
               />
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/30 to-pink-500/30 blur-xl"></div>
             </div>

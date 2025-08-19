@@ -7,7 +7,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { Trash2, Plus, Minus } from "lucide-react";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
-import Image from "next/image"; // Added for optimized image rendering
 
 export default function CartPage() {
   const router = useRouter();
@@ -65,15 +64,12 @@ export default function CartPage() {
               key={item.id}
               className="flex flex-col md:flex-row gap-4 items-start md:items-center bg-gradient-to-r from-gray-900/60 via-gray-800/40 to-gray-900/60 rounded-xl p-5 shadow-md hover:shadow-blue-500/10 transition-all duration-300"
             >
-              {/* ✅ Optimized Product Image */}
+              {/* Replaced Image with img tag */}
               <div className="relative w-28 h-28 md:w-32 md:h-32 shrink-0">
-                <Image
+                <img
                   src={item.image}
                   alt={item.name}
-                  fill
-                  className="rounded-lg object-cover shadow-sm hover:scale-[1.02] transition-transform"
-                  sizes="(max-width: 768px) 112px, 128px"
-                  priority={false}
+                  className="rounded-lg object-cover shadow-sm w-full h-full hover:scale-[1.02] transition-transform"
                 />
               </div>
 

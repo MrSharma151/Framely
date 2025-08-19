@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { Product } from "@/services/productService";
 import { ArrowRight } from "lucide-react";
 import Button from "@/components/ui/Button";
-import Image from "next/image"; // Added for optimized image handling
 
 interface ProductCardProps {
   product: Product;
@@ -38,16 +37,14 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       {/* Product image with hover zoom */}
       <div className="relative w-full h-52 overflow-hidden">
-        <Image
+        {/* Replaced Image with img tag */}
+        <img
           src={fixedImage}
           alt={product.name}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
           className="
-            object-cover transition-transform duration-700 ease-out 
+            absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out 
             group-hover:scale-105
           "
-          priority={false}
         />
 
         {/* Gradient overlay on hover */}

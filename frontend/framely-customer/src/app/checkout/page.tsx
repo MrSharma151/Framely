@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import { placeOrder } from "@/services/orderService";
-import Image from "next/image"; // ✅ Next.js Image component ko import kiya
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -77,7 +76,7 @@ export default function CheckoutPage() {
       toast.success("✅ Order placed successfully!");
       clearCart();
       router.push("/orders");
-    } catch (err: unknown) { // ✅ Yahan 'any' ko 'unknown' se replace kiya
+    } catch (err: unknown) {
       console.error("Order failed:", err);
       toast.error("Failed to place order. Try again!");
     } finally {
@@ -103,7 +102,7 @@ export default function CheckoutPage() {
   return (
     <section className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-950 py-10 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Page Title */}
+      
         <h1 className="text-3xl md:text-4xl font-extrabold text-center text-white mb-10">
           🛍 Checkout
         </h1>
@@ -123,11 +122,9 @@ export default function CheckoutPage() {
                   className="flex items-center justify-between border-b border-gray-700 pb-4"
                 >
                   <div className="flex items-center gap-4">
-                    <Image // ✅ `<img>` ko `<Image>` se replace kiya
+                    <img // Using standard img tag for simplicity
                       src={item.image}
                       alt={item.name}
-                      width={64} // ✅ `width` prop add kiya (w-16 = 64px)
-                      height={64} // ✅ `height` prop add kiya (h-16 = 64px)
                       className="w-16 h-16 rounded-xl object-cover shadow-md"
                     />
                     <div>

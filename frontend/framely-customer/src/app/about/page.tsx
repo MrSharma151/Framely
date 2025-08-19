@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image"; // ✅ Enables automatic image optimization
 import { Eye, Star, Users, Phone, Mail, MapPin } from "lucide-react";
 
 /* About page component */
@@ -24,14 +23,11 @@ export default function AboutPage() {
       <div className="relative z-10 container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 px-6 items-center">
         {/* Left - Optimized Image */}
         <div className="rounded-2xl overflow-hidden shadow-lg hover:scale-[1.02] transition">
-          {/* ✅ Replaced <img> with <Image /> for better LCP and bandwidth */}
-          <Image
+          {/*  Replaced <Image /> with <img> */}
+          <img
             src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=80"
             alt="Framely Store"
-            width={1200}
-            height={800}
             className="w-full h-full object-cover"
-            priority
           />
         </div>
 
@@ -81,7 +77,7 @@ export default function AboutPage() {
           Get in Touch with Us
         </h2>
         <p className="text-gray-300 max-w-xl mx-auto mb-10">
-          Have questions about our services, products, or want to book a home visit?  
+          Have questions about our services, products, or want to book a home visit?
           Reach out to us via call, email, or visit our store.
         </p>
 

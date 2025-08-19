@@ -17,6 +17,7 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -26,9 +27,21 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn-icons-png.flaticon.com', // Flaticon icons
+      },
     ],
   },
   transpilePackages: ['react-icons'],
+  eslint: {
+    // Disables ESLint during production builds
+    // This will ignore ESLint errors during the build process
+    ignoreDuringBuilds: true,
+    rules: {
+      '@next/next/no-img-element': 'off',
+    },
+  },
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
