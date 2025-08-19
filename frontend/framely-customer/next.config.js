@@ -42,6 +42,7 @@ const nextConfig = {
       '@next/next/no-img-element': 'off',
     },
   },
+  output: 'standalone', // Enables standalone output for easier deployment
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
