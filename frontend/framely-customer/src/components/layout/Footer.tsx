@@ -3,7 +3,7 @@
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Mail, Phone, MapPin } from "lucide-react";
-import Link from "next/link"; 
+import Link from "next/link";
 
 // Global footer with brand info, contact, navigation, and social links
 export default function Footer() {

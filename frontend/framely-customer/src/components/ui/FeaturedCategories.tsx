@@ -4,8 +4,8 @@ import Image from "next/image"; // ✅ Added for optimized image handling
 // Displays featured product categories with image overlays and hover effects
 export default function FeaturedCategories() {
   const categories = [
-    { name: "Men's Eyewear", image: "/images/categories/men.avif" },
-    { name: "Women's Eyewear", image: "/images/categories/women.avif" },
+    { name: "Men's Eyewear", image: "/images/categories/men.jpg" },
+    { name: "Women's Eyewear", image: "/images/categories/women.jpg" },
     { name: "Kids' Eyewear", image: "/images/categories/kids.jpg" },
     { name: "Sunglasses", image: "/images/categories/sunglasses.jpg" },
   ];
