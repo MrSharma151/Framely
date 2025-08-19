@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
-/* 🌟 Premium Theme variables */
+/* Theme Variables */
 :root {
-  --background: #0b0c10; /* Deep Midnight Blue-Black */
-  --background-alt: #111319; /* Slightly lighter dark for depth */
-  --foreground: #f5f6fa; /* Soft white */
-  --foreground-muted: #b4bccf; /* Muted but slightly brighter gray */
-  --accent: #4da6ff; /* Premium electric blue */
-  --accent-hover: #1e90ff; /* Deeper blue on hover */
+  --background: #0b0c10;          /* Deep Midnight Blue-Black */
+  --background-alt: #111319;      /* Slightly lighter dark for depth */
+  --foreground: #f5f6fa;          /* Soft white */
+  --foreground-muted: #b4bccf;    /* Muted gray */
+  --accent: #4da6ff;              /* Premium electric blue */
+  --accent-hover: #1e90ff;        /* Deeper blue on hover */
   --gradient-bg: radial-gradient(circle at top, #1c1f29 0%, #0b0c10 90%);
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.05);
 }
 
-/* ✅ Dark mode stays same */
+/* Dark Mode Variables */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0b0c10;
@@ -24,7 +24,7 @@
   }
 }
 
-/* ✅ Reset & Global */
+/* Global Reset */
 html,
 body {
   margin: 0;
@@ -39,12 +39,12 @@ body {
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0.15px;
 
-  /* 🆕 Adaptive root font size – scales between 14px & 15.5px */
+  /* Adaptive root font size */
   font-size: clamp(14px, 0.9vw + 12px, 15.5px);
   line-height: 1.55;
 }
 
-/* ✅ Balanced section spacing */
+/* Section Spacing */
 section {
   margin-top: 2rem;
   margin-bottom: 0;
@@ -53,14 +53,12 @@ section:first-of-type {
   margin-top: 0;
 }
 
-/* ✅ Headings refined for premium look */
+/* Headings */
 h1, h2, h3 {
   line-height: 1.2;
   font-weight: 600;
   letter-spacing: 0.2px;
 }
-
-/* 🆕 Slightly smaller adaptive heading sizes */
 h1 {
   font-size: clamp(1.8rem, 3vw, 2.6rem);
 }
@@ -71,7 +69,7 @@ h3 {
   font-size: clamp(1.2rem, 2vw, 1.6rem);
 }
 
-/* ✅ Anchor Links */
+/* Anchor Links */
 a {
   text-decoration: none;
   color: inherit;
@@ -82,12 +80,12 @@ a:hover {
   text-shadow: 0 0 6px rgba(77, 166, 255, 0.3);
 }
 
-/* ✅ Muted text */
+/* Muted Text */
 .muted {
   color: var(--foreground-muted);
 }
 
-/* ✅ List reset */
+/* List Reset */
 ul,
 li {
   list-style: none;
@@ -95,7 +93,7 @@ li {
   padding: 0;
 }
 
-/* ✅ Images hover – subtle, premium */
+/* Images */
 img {
   max-width: 100%;
   height: auto;
@@ -108,7 +106,7 @@ img:hover {
   filter: brightness(1.06);
 }
 
-/* ✅ Glass effect refined – softer shadows */
+/* Glass Effect */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(10px) saturate(125%);
@@ -118,7 +116,7 @@ img:hover {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
 
-/* ✅ Smooth fade-in for sections */
+/* Section Fade In Animation */
 section {
   animation: fadeInUp 0.65s ease forwards;
   opacity: 0;
@@ -134,7 +132,7 @@ section {
   }
 }
 
-/* ✅ Buttons universal style – more minimal */
+/* Buttons */
 button {
   transition: all 0.25s ease;
   background: linear-gradient(135deg, var(--accent), #5eb4ff);
@@ -148,7 +146,7 @@ button:hover {
   box-shadow: 0 4px 12px rgba(77, 166, 255, 0.28);
 }
 
-/* ✅ Subtle animated background accent */
+/* Background Accent Animation */
 body::before {
   content: '';
   position: fixed;
@@ -157,7 +155,7 @@ body::before {
   width: 200%;
   height: 200%;
   background: radial-gradient(circle, rgba(77, 166, 255, 0.03), transparent 70%);
-  animation: backgroundMove 28s linear infinite; /* slower for luxury feel */
+  animation: backgroundMove 28s linear infinite;
   z-index: -1;
 }
 @keyframes backgroundMove {
@@ -165,7 +163,7 @@ body::before {
   100% { transform: rotate(360deg); }
 }
 
-/* ✅ Line Clamp */
+/* Line Clamp */
 .line-clamp-2 {
   display: -webkit-box;           
   -webkit-box-orient: vertical;   
@@ -175,6 +173,7 @@ body::before {
   text-overflow: ellipsis;        
 }
 
+/* Utility Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

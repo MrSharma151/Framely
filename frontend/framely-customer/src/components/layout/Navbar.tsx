@@ -1,3 +1,4 @@
+// src/components/layout/Navbar.tsx
 "use client";
 
 import { useState, useContext, useRef, useEffect } from "react";
@@ -5,19 +6,20 @@ import Link from "next/link";
 import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { AuthContext } from "@/context/AuthContext";
-import { useCart } from "@/context/CartContext"; // ✅ Import cart context
+import { useCart } from "@/context/CartContext";
 
+// Global navigation bar with responsive layout, auth state, and cart badge
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false); // mobile menu toggle
+  const [showDropdown, setShowDropdown] = useState(false); // user dropdown toggle
+  const dropdownRef = useRef<HTMLDivElement>(null); // ref for outside click detection
 
   const auth = useContext(AuthContext);
   if (!auth) return null;
   const { user, logout, hydrated } = auth;
 
-  const { cart } = useCart(); // ✅ Get cart state
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // ✅ total quantity
+  const { cart } = useCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // total cart quantity
 
   const baseLinks = [
     { name: "Home", href: "/" },
@@ -29,7 +31,7 @@ export default function Navbar() {
   const userLinks = user ? [{ name: "My Orders", href: "/orders" }] : [];
   const allLinks = [...baseLinks, ...userLinks];
 
-  // ✅ Close dropdown on outside click
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -44,12 +46,12 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-[var(--background-alt)]/80 border-b border-[var(--glass-border)] shadow-sm">
       <div className="container mx-auto flex items-center justify-between py-3 px-6">
         
-        {/* ✅ Logo */}
+        {/* Brand logo */}
         <div className="text-2xl font-bold tracking-wide text-[var(--foreground)] hover:text-[var(--accent)] transition">
           <Link href="/">Framely</Link>
         </div>
 
-        {/* ✅ Desktop Nav Links */}
+        {/* Desktop navigation */}
         <nav className="hidden md:flex items-center space-x-6">
           {allLinks.map((link) => (
             <Link
@@ -58,18 +60,17 @@ export default function Navbar() {
               className="relative text-[var(--foreground-muted)] hover:text-[var(--accent)] transition-colors duration-300 group"
             >
               {link.name}
-              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[var(--accent)] transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[var(--accent)] transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
 
-          {/* ✅ Cart Icon with Badge */}
+          {/* Cart icon with badge */}
           {hydrated && user && (
             <Link
               href="/cart"
               className="relative ml-4 text-[var(--foreground-muted)] hover:text-[var(--accent)] transition"
             >
               <ShoppingCart size={22} />
-              {/* ✅ Show badge if items > 0 */}
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[var(--accent)] text-white text-xs font-medium flex items-center justify-center shadow-md">
                   {totalItems}
@@ -78,11 +79,11 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* ✅ User Dropdown Section */}
+          {/* User dropdown */}
           <div className="ml-4 relative" ref={dropdownRef}>
             {hydrated && user ? (
               <>
-                {/* ✅ Compact Hi, Username! Button */}
+                {/* Compact user button */}
                 <button
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full
                              bg-gradient-to-r from-purple-500/20 to-pink-500/20
@@ -90,17 +91,12 @@ export default function Navbar() {
                              hover:scale-[1.02] hover:shadow-[var(--accent)]/30 transition-all"
                   onClick={() => setShowDropdown((prev) => !prev)}
                 >
-                  {/* Avatar */}
                   <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold text-xs">
                     {user.fullName.charAt(0).toUpperCase()}
                   </div>
-
-                  {/* Hi, Username! */}
                   <span className="text-xs sm:text-sm font-medium text-[var(--foreground)] whitespace-nowrap">
                     Hi, {user.fullName.split(" ")[0]}!
                   </span>
-
-                  {/* Dropdown Arrow */}
                   <ChevronDown
                     size={14}
                     className={`text-[var(--foreground-muted)] transition-transform ${
@@ -109,7 +105,7 @@ export default function Navbar() {
                   />
                 </button>
 
-                {/* ✅ Floating Dropdown Menu */}
+                {/* Floating dropdown menu */}
                 {showDropdown && (
                   <div
                     className="absolute right-0 mt-3 w-56 rounded-xl 
@@ -117,7 +113,6 @@ export default function Navbar() {
                                shadow-2xl border border-[var(--glass-border)] 
                                p-4 animate-fadeIn space-y-3"
                   >
-                    {/* My Profile */}
                     <Link
                       href="/profile"
                       className="flex items-center gap-2 px-3 py-2 rounded-md text-sm 
@@ -130,7 +125,6 @@ export default function Navbar() {
 
                     <hr className="border-[var(--glass-border)]" />
 
-                    {/* ✅ Premium Logout Button */}
                     <button
                       onClick={() => {
                         logout();
@@ -159,7 +153,7 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* ✅ Mobile Menu Toggle */}
+        {/* Mobile menu toggle */}
         <div className="md:hidden flex items-center gap-4">
           {hydrated && user && (
             <Link
@@ -183,7 +177,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ✅ Mobile Dropdown Menu */}
+      {/* Mobile dropdown menu */}
       {isOpen && (
         <div className="md:hidden bg-[var(--background-alt)]/95 backdrop-blur-lg border-t border-[var(--glass-border)] shadow-lg transition-all">
           <div className="flex flex-col space-y-4 px-6 py-4">
@@ -198,7 +192,7 @@ export default function Navbar() {
               </Link>
             ))}
 
-            {/* ✅ Mobile Auth Button */}
+            {/* Mobile auth section */}
             {hydrated &&
               (user ? (
                 <>

@@ -10,7 +10,7 @@ export default function MyProfilePage() {
   const { user, hydrated, logout } = useAuth();
   const router = useRouter();
 
-  // ✅ Redirect if not logged in
+  // Redirect to login if user is not authenticated
   useEffect(() => {
     if (hydrated && !user) {
       toast.error("⚠️ Please login to view your profile");
@@ -23,15 +23,15 @@ export default function MyProfilePage() {
   return (
     <section className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 py-12 px-4">
       <div className="max-w-3xl mx-auto">
-        {/* ✅ Title */}
+
+        {/* Page Title */}
         <h1 className="text-4xl font-extrabold text-center text-white mb-10 drop-shadow-lg">
           👤 My Profile
         </h1>
 
-        {/* ✅ Profile Card */}
-        <div className="relative p-8 rounded-3xl shadow-2xl border border-white/10 backdrop-blur-2xl bg-white/5 
-                        text-center hover:shadow-[0_0_40px_rgba(255,255,255,0.05)] transition-all">
-          
+        {/* Profile Card */}
+        <div className="relative p-8 rounded-3xl shadow-2xl border border-white/10 backdrop-blur-2xl bg-white/5 text-center hover:shadow-[0_0_40px_rgba(255,255,255,0.05)] transition-all">
+
           {/* Avatar */}
           <div className="flex justify-center">
             <div className="relative">
@@ -40,7 +40,6 @@ export default function MyProfilePage() {
                 alt="User Avatar"
                 className="w-28 h-28 rounded-full border-4 border-white/20 shadow-xl"
               />
-              {/* Soft Glow */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/30 to-pink-500/30 blur-xl"></div>
             </div>
           </div>
@@ -66,7 +65,7 @@ export default function MyProfilePage() {
             </div>
           )}
 
-          {/* ✅ Action Buttons */}
+          {/* Action Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-5">
             {/* My Orders */}
             <button
@@ -94,7 +93,7 @@ export default function MyProfilePage() {
             </button>
           </div>
 
-          {/* Placeholder Future Info */}
+          {/* Placeholder for future features */}
           <div className="mt-8 text-xs text-gray-500">
             ✨ Future updates: Address, Mobile, Wishlist & more...
           </div>

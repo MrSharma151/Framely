@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
-import { registerUser } from "@/services/authService"; // use our centralized service
+import { registerUser } from "@/services/authService"; // Centralized registration service
 
+/* Register page component */
 export default function RegisterPage() {
   const router = useRouter();
 
@@ -15,9 +16,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /**
-   * Simple frontend validation before hitting the API
-   */
+  /* Frontend form validation */
   const validateForm = () => {
     if (fullName.trim().length < 6) {
       toast.error("Full name must be at least 6 characters");
@@ -48,24 +47,18 @@ export default function RegisterPage() {
     return true;
   };
 
-  /**
-   * Handles the register form submission
-   * Calls registerUser service instead of direct axios
-   */
+  /* Handles form submission */
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
     if (!validateForm()) return;
 
     setLoading(true);
 
     try {
-      // Call the service with the payload
       await registerUser({ fullName, email, phoneNumber, password });
-
       toast.success("User registered successfully! Please login to continue.");
-      router.push("/auth/login"); // redirect to login after success
+      router.push("/auth/login"); // redirect to login
     } catch (error: any) {
       console.error("Registration error:", error);
       toast.error("Registration failed. Try again!");
@@ -79,9 +72,9 @@ export default function RegisterPage() {
       {/* Background gradient accent */}
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--background)] via-transparent to-[var(--background-alt)] opacity-70"></div>
 
-      {/* Glassy premium card */}
+      {/* Glassy registration card */}
       <div className="glass p-8 w-full max-w-md animate-fadeInUp relative z-10 shadow-2xl rounded-2xl">
-        {/* Heading with subtle gradient text */}
+        {/* Heading */}
         <h1 className="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-[var(--accent)] to-[#78c7ff] bg-clip-text text-transparent">
           Create Your Account
         </h1>
@@ -89,7 +82,7 @@ export default function RegisterPage() {
           Join us and explore premium features
         </p>
 
-        {/* Registration form */}
+        {/* Registration Form */}
         <form onSubmit={handleRegister} className="space-y-5">
           {/* Full Name */}
           <div>
@@ -121,7 +114,7 @@ export default function RegisterPage() {
             />
           </div>
 
-          {/* Phone Number with +91 prefix */}
+          {/* Phone Number */}
           <div>
             <label className="block text-sm text-[var(--foreground-muted)] mb-1">
               Phone Number
@@ -156,12 +149,11 @@ export default function RegisterPage() {
               required
             />
             <p className="text-xs text-[var(--foreground-muted)] mt-1 leading-snug">
-              Must include <span className="text-[var(--accent)] font-medium">8+ chars</span>, 
-              an uppercase, lowercase, number & special symbol
+              Must include <span className="text-[var(--accent)] font-medium">8+ chars</span>, an uppercase, lowercase, number & special symbol
             </p>
           </div>
 
-          {/* Submit button */}
+          {/* Submit Button */}
           <Button
             type="submit"
             variant="primary"
@@ -172,7 +164,7 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        {/* Already have an account? */}
+        {/* Already have an account link */}
         <p className="text-sm text-center mt-6 text-[var(--foreground-muted)]">
           Already have an account?{" "}
           <a

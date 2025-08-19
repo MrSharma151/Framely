@@ -30,13 +30,13 @@ export default function ShopPage() {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
-  // ✅ Pagination state
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const PAGE_SIZE = 10; // ✅ Always 10 products per page
+  const PAGE_SIZE = 10; // Always 10 products per page
 
-  /** ✅ Fetch categories on mount */
+  // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -52,7 +52,7 @@ export default function ShopPage() {
     fetchCategories();
   }, []);
 
-  /** ✅ Fetch products when page/category changes */
+  // Fetch products when page or category changes
   useEffect(() => {
     if (initialCategoryFromURL) {
       setSelectedCategoryName(initialCategoryFromURL);
@@ -62,7 +62,7 @@ export default function ShopPage() {
     }
   }, [initialCategoryFromURL, currentPage]);
 
-  /** ✅ Fetch ALL products with backend pagination */
+  // Fetch all products with backend pagination
   const fetchAllProducts = async (page: number) => {
     try {
       setLoadingProducts(true);
@@ -76,13 +76,13 @@ export default function ShopPage() {
     }
   };
 
-  /** ✅ Fetch products by category (no backend pagination for now) */
+  // Fetch products by category (frontend only)
   const fetchCategoryProducts = async (categoryName: string) => {
     try {
       setLoadingProducts(true);
       const res = await getProductsByCategoryName(categoryName.trim());
       setProducts(res || []);
-      setTotalPages(1); // ✅ No pagination for filtered category
+      setTotalPages(1);
       setCurrentPage(1);
     } catch {
       toast.error(`Failed to load products for "${categoryName}"`);
@@ -91,17 +91,17 @@ export default function ShopPage() {
     }
   };
 
-  /** ✅ Handle category selection */
+  // Handle category selection
   const handleCategorySelect = (categoryName: string | null) => {
     setSelectedCategoryName(categoryName);
     if (!categoryName) {
-      fetchAllProducts(1); // reset to first page
+      fetchAllProducts(1); // Reset to first page
     } else {
       fetchCategoryProducts(categoryName);
     }
   };
 
-  /** ✅ Apply search + sort (frontend only) */
+  // Apply search and sort (frontend only)
   const filteredProducts = products
     .filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
@@ -125,10 +125,10 @@ export default function ShopPage() {
 
   return (
     <section className="relative py-16 sm:py-20">
-      {/* ✅ Background gradient */}
+      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900/20 via-gray-800/10 to-transparent pointer-events-none" />
 
-      {/* ✅ Page Title */}
+      {/* Page Title */}
       <div className="relative z-10 text-center mb-10 px-6">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
           Shop <span className="text-blue-400">Eyewear</span>
@@ -138,7 +138,7 @@ export default function ShopPage() {
         </p>
       </div>
 
-      {/* ✅ Category Filter */}
+      {/* Category Filter */}
       <div className="relative z-20">
         <CategoryFilter
           categories={categories}
@@ -148,7 +148,7 @@ export default function ShopPage() {
         />
       </div>
 
-      {/* ✅ Search & Sort Controls */}
+      {/* Search & Sort Controls */}
       <div className="relative z-20 container mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-6 mt-6 mb-8">
         {/* Search Bar */}
         <div className="flex items-center bg-[var(--background-alt)] rounded-full px-4 py-2 w-full sm:w-72 shadow-inner">
@@ -173,14 +173,14 @@ export default function ShopPage() {
         </button>
       </div>
 
-      {/* ✅ Loading State */}
+      {/* Loading State */}
       {loadingProducts && (
         <div className="flex justify-center items-center py-20 text-gray-400">
           <Loader2 className="animate-spin mr-2" /> Loading products...
         </div>
       )}
 
-      {/* ✅ Product Grid */}
+      {/* Product Grid */}
       {!loadingProducts && (
         <>
           <div className="relative z-20 container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-6">
@@ -195,7 +195,7 @@ export default function ShopPage() {
             )}
           </div>
 
-          {/* ✅ Pagination Controls (only for non-category listing) */}
+          {/* Pagination Controls (only for non-category listing) */}
           {!selectedCategoryName && totalPages > 1 && (
             <div className="flex justify-center items-center gap-4 mt-10">
               <button

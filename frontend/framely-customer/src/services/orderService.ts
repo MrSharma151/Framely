@@ -1,5 +1,7 @@
+// src/services/orderService.ts
 import apiClient from "./apiClient";
 
+// Represents a single item within an order
 export interface OrderItem {
   id: number;
   productId: number;
@@ -9,6 +11,7 @@ export interface OrderItem {
   orderId: number;
 }
 
+// Represents a complete order placed by a user
 export interface Order {
   id: number;
   orderDate: string;
@@ -22,13 +25,13 @@ export interface Order {
   items: OrderItem[];
 }
 
-// ✅ Fetch current user's orders
+// Fetches orders placed by the currently authenticated user
 export const fetchMyOrders = async (): Promise<Order[]> => {
   const res = await apiClient.get<Order[]>("/Orders/my");
   return res.data;
 };
 
-// ✅ Place a new order
+// Places a new order with customer and item details
 export const placeOrder = async (payload: {
   customerName: string;
   email: string;
@@ -45,8 +48,8 @@ export const placeOrder = async (payload: {
   return res.data;
 };
 
-// ✅ (Optional) Cancel an order
-export const cancelMyOrder  = async (orderId: number) => {
+// Cancels an existing order by ID
+export const cancelMyOrder = async (orderId: number) => {
   const res = await apiClient.delete(`/Orders/${orderId}`);
   return res.data;
 };

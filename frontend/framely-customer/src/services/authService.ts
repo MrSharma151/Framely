@@ -1,10 +1,13 @@
+// src/services/authService.ts
 import apiClient from "./apiClient";
 
+// Payload structure for login API
 export interface LoginPayload {
   email: string;
   password: string;
 }
 
+// Payload structure for register API
 export interface RegisterPayload {
   fullName: string;
   email: string;
@@ -12,26 +15,23 @@ export interface RegisterPayload {
   password: string;
 }
 
-// ✅ Login API
+// Sends login request to backend
+// Returns token and user info for use in AuthContext
 export const loginUser = async (data: LoginPayload) => {
   const response = await apiClient.post("/Auth/login", data);
-  
-  // The response usually contains a token and user info
-  // We return it so it can be stored in AuthContext
   return response.data;
 };
 
-// ✅ Register API
+// Sends registration request to backend
+// Returns success message on successful registration
 export const registerUser = async (data: RegisterPayload) => {
   const response = await apiClient.post("/Auth/register", data);
-
-  // The response usually contains only a message like "User registered successfully"
   return response.data;
 };
 
-// ✅ Optional Logout
+// Clears local auth state
+// Can be extended to call logout API if needed
 export const logoutUser = async () => {
-  // If a logout API exists in the future, we can call it here
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 };

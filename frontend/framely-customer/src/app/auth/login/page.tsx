@@ -5,8 +5,9 @@ import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
-import { loginUser } from "@/services/authService"; // use our service instead of axios
+import { loginUser } from "@/services/authService"; // Service to handle login
 
+/* Login page component */
 export default function LoginPage() {
   const auth = useContext(AuthContext);
   const router = useRouter();
@@ -17,23 +18,20 @@ export default function LoginPage() {
 
   if (!auth) return null;
 
-  /**
-   * Handles login form submission
-   * Uses loginUser service instead of direct axios call
-   */
+  /* Handles login form submission */
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Call the loginUser service with the payload
+      // Call login service
       const response = await loginUser({ email, password });
 
-      // Save the returned token + user info to AuthContext
+      // Update AuthContext with user info
       auth.login(response);
 
       toast.success("Login successful");
-      router.push("/"); // redirect to homepage
+      router.push("/"); // Redirect to homepage
     } catch (error: any) {
       console.error("Login error:", error);
       toast.error("Invalid email or password");
@@ -44,10 +42,10 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex justify-center items-center min-h-screen px-4">
-      {/* Subtle animated background glow */}
+      {/* Background glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/5 via-transparent to-[var(--background-alt)]/20 blur-3xl opacity-30"></div>
 
-      {/* Glassy Premium Login Card */}
+      {/* Glassy login card */}
       <div className="glass p-8 sm:p-10 w-full max-w-md animate-fadeInUp relative z-10 rounded-2xl shadow-2xl">
         {/* Heading */}
         <div className="text-center mb-8">
@@ -62,7 +60,7 @@ export default function LoginPage() {
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-5">
-          {/* Email field */}
+          {/* Email Field */}
           <div>
             <label className="block text-sm text-[var(--foreground-muted)] mb-1">
               Email Address
@@ -77,13 +75,10 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Password field */}
+          {/* Password Field */}
           <div>
             <div className="flex justify-between items-center mb-1">
-              <label className="text-sm text-[var(--foreground-muted)]">
-                Password
-              </label>
-              {/* Placeholder for future forget password */}
+              <label className="text-sm text-[var(--foreground-muted)]">Password</label>
               <span className="text-xs text-[var(--foreground-muted)] italic opacity-50">
                 (Forgot password?)
               </span>
@@ -112,9 +107,7 @@ export default function LoginPage() {
         {/* Divider */}
         <div className="flex items-center my-6">
           <div className="flex-grow h-px bg-[var(--glass-border)]"></div>
-          <span className="px-3 text-xs text-[var(--foreground-muted)]">
-            or
-          </span>
+          <span className="px-3 text-xs text-[var(--foreground-muted)]">or</span>
           <div className="flex-grow h-px bg-[var(--glass-border)]"></div>
         </div>
 
