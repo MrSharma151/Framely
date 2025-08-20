@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const apiClient = axios.create({
-  baseURL: "https://localhost:7178/api/v1",
+  baseURL: "https://framely-backend-cvccf3aah7d4ceaq.centralindia-01.azurewebsites.net/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

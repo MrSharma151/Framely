@@ -36,14 +36,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       `}
     >
       {/* Product image with hover zoom */}
-      <div className="relative w-full h-52 overflow-hidden">
-        {/* Replaced Image with img tag */}
+      <div className="relative w-full h-72 overflow-hidden bg-black">
         <img
           src={fixedImage}
           alt={product.name}
           className="
-            absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out 
-            group-hover:scale-105
+            absolute inset-0 w-full h-full object-center object-contain
+            transition-transform duration-700 ease-out group-hover:scale-105
           "
         />
 
@@ -97,25 +96,19 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Product info section */}
       <div className="p-4 text-center flex flex-col items-center space-y-1">
-        {/* Product name (truncated if long) */}
         <h3
           title={product.name}
           className="w-full text-base font-semibold text-white truncate"
         >
-          {product.name.length > 25
-            ? product.name.slice(0, 25) + "…"
-            : product.name}
+          {product.name.length > 25 ? product.name.slice(0, 25) + "…" : product.name}
         </h3>
 
-        {/* Brand name (if available) */}
         {product.brand?.trim() && (
           <p className="text-xs text-gray-400 truncate">{product.brand}</p>
         )}
 
-        {/* Price */}
         <p className="text-lg font-bold text-blue-400 mt-1">{formattedPrice}</p>
 
-        {/* Accent line for premium feel */}
         <div className="w-8 h-0.5 bg-blue-500/40 rounded-full group-hover:w-16 transition-all duration-300" />
       </div>
     </div>
