@@ -24,6 +24,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
   totalPages,
   onPageChange,
 }) => {
+  // Displays fallback message when no orders are available
   if (orders.length === 0) {
     return (
       <div className="text-center py-10 text-[var(--text-secondary)]">
@@ -77,19 +78,21 @@ const OrderTable: React.FC<OrderTableProps> = ({
               </td>
               <td className="px-4 py-3">
                 <span
-                  className={`inline-block rounded-full px-2 py-1 text-xs font-semibold ${order.status === "Pending"
+                  className={`inline-block rounded-full px-2 py-1 text-xs font-semibold ${
+                    order.status === "Pending"
                       ? "bg-yellow-600"
                       : order.status === "Processing"
-                        ? "bg-blue-600"
-                        : order.status === "Completed"
-                          ? "bg-green-600"
-                          : "bg-red-600"
-                    } text-white`}
+                      ? "bg-blue-600"
+                      : order.status === "Completed"
+                      ? "bg-green-600"
+                      : "bg-red-600"
+                  } text-white`}
                 >
                   {order.status}
                 </span>
               </td>
               <td className="px-4 py-3 flex justify-center gap-3 flex-wrap">
+                {/* Button to view order details */}
                 <Button
                   variant="secondary"
                   size="sm"
@@ -99,6 +102,8 @@ const OrderTable: React.FC<OrderTableProps> = ({
                   <Eye className="w-4 h-4 mr-1" />
                   View
                 </Button>
+
+                {/* Button to update order status */}
                 <Button
                   variant="primary"
                   size="sm"
@@ -108,6 +113,8 @@ const OrderTable: React.FC<OrderTableProps> = ({
                   <RotateCcw className="w-4 h-4 mr-1" />
                   Update
                 </Button>
+
+                {/* Button to delete order */}
                 <Button
                   variant="danger"
                   size="sm"
@@ -123,7 +130,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
         </tbody>
       </table>
 
-      {/* Pagination Controls */}
+      {/* Pagination controls */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 py-5 border-t border-[var(--border-color)]">
         <Button
           size="sm"

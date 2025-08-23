@@ -1,3 +1,4 @@
+// src/components/ui/Button.tsx
 import React from "react";
 
 type ButtonProps = {
@@ -10,6 +11,7 @@ type ButtonProps = {
   disabled?: boolean;
 };
 
+// Reusable button component with variant, size, and animation support
 export default function Button({
   children,
   variant = "primary",
@@ -18,6 +20,7 @@ export default function Button({
   type = "button",
   className = "",
 }: ButtonProps) {
+  // Base layout and interaction styles
   const baseStyles = `
     relative inline-flex items-center justify-center rounded-xl font-semibold
     transition-all duration-300 ease-out
@@ -26,12 +29,14 @@ export default function Button({
     group
   `;
 
+  // Size-specific padding and font sizing
   const sizeStyles = {
     sm: "px-4 py-1.5 text-sm",
     md: "px-6 py-2.5 text-base",
     lg: "px-8 py-3 text-lg",
   };
 
+  // Variant-specific color, border, and hover behavior
   const variantStyles = {
     primary: `
       text-white 
@@ -75,10 +80,10 @@ export default function Button({
         ${className}
       `}
     >
-      {/* ✅ Main label */}
+      {/* Main label */}
       {children}
 
-      {/* ✅ Floating Shine Animation */}
+      {/* Shine animation on hover */}
       <span
         className="
           absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent
@@ -87,7 +92,7 @@ export default function Button({
         "
       />
 
-      {/* ✅ Soft glow outline on hover */}
+      {/* Glow outline on hover */}
       <span
         className="
           absolute inset-0 rounded-xl pointer-events-none

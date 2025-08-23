@@ -9,12 +9,13 @@ interface ProductCardProps {
   product: Product;
 }
 
+// Renders a single product card with image, category badge, and CTA
 export default function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
   const fixedImage = product.imageUrl;
   const formattedPrice = `₹${Number(product.price || 0).toLocaleString("en-IN")}`;
 
-  // ✅ Navigate to Product Details Page
+  // Navigate to product details page
   const handleNavigate = () => {
     router.push(`/product/${product.id}`);
   };
@@ -34,25 +35,28 @@ export default function ProductCard({ product }: ProductCardProps) {
         focus:outline-none focus:ring-2 focus:ring-blue-500/40
       `}
     >
-      {/* ✅ Product Image */}
-      <div className="relative w-full h-52 overflow-hidden">
+      {/* Product image with hover zoom */}
+      <div className="relative w-full h-72 overflow-hidden bg-black">
         <img
           src={fixedImage}
           alt={product.name}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="
+            absolute inset-0 w-full h-full object-center object-contain
+            transition-transform duration-700 ease-out group-hover:scale-105
+          "
         />
 
-        {/* ✅ Smooth gradient overlay for hover effect */}
+        {/* Gradient overlay on hover */}
         <div
           className="
             absolute inset-0 
             bg-gradient-to-t from-black/70 via-black/30 to-transparent 
-            opacity-0 group-hover:opacity-100 transition-opacity duration-500
+            opacity-0 group-hover:opacity-100 
+            transition-opacity duration-500
           "
         />
 
-        {/* ✅ Category Badge */}
+        {/* Category badge (if available) */}
         {product.categoryName && (
           <span
             className="
@@ -66,7 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
 
-        {/* ✅ Hover Action Bar (View Details Button) */}
+        {/* Hover action bar with CTA */}
         <div
           className="
             absolute bottom-0 left-0 right-0 
@@ -78,7 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         >
           <Button
             onClick={(e) => {
-              e.stopPropagation(); // ✅ prevent card click duplicate
+              e.stopPropagation(); // prevent bubbling to card click
               router.push(`/product/${product.id}`);
             }}
             variant="secondary"
@@ -90,27 +94,21 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      {/* ✅ Product Info */}
+      {/* Product info section */}
       <div className="p-4 text-center flex flex-col items-center space-y-1">
-        {/* Product Name */}
         <h3
           title={product.name}
           className="w-full text-base font-semibold text-white truncate"
         >
-          {product.name.length > 25
-            ? product.name.slice(0, 25) + "…"
-            : product.name}
+          {product.name.length > 25 ? product.name.slice(0, 25) + "…" : product.name}
         </h3>
 
-        {/* Brand */}
         {product.brand?.trim() && (
           <p className="text-xs text-gray-400 truncate">{product.brand}</p>
         )}
 
-        {/* Price */}
         <p className="text-lg font-bold text-blue-400 mt-1">{formattedPrice}</p>
 
-        {/* ✅ Tiny accent line for premium feel */}
         <div className="w-8 h-0.5 bg-blue-500/40 rounded-full group-hover:w-16 transition-all duration-300" />
       </div>
     </div>

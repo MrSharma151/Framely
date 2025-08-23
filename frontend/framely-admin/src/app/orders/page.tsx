@@ -16,7 +16,6 @@ import OrderTable from "@/components/ui/orders/OrderTable";
 import OrderDetailsModal from "@/components/ui/orders/OrderDetailsModal";
 import OrderStatusUpdateModal from "@/components/ui/orders/OrderStatusUpdateModal";
 import OrderDeleteConfirmationModal from "@/components/ui/orders/OrderDeleteConfirmationModal";
-import Button from "@/components/ui/Button";
 
 interface OrderFilterState {
   status: OrderStatus | undefined;
@@ -47,6 +46,7 @@ const OrdersPage: React.FC = () => {
     sortOrder: "desc",
   });
 
+  // Reusable fetch function
   const fetchOrders = async () => {
     let response;
 
@@ -86,7 +86,7 @@ const OrdersPage: React.FC = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [page, filters]);
+  }, [page, pageSize, filters]);
 
   const handleViewDetails = async (id: number) => {
     const order = await getOrderById(id);
@@ -113,8 +113,15 @@ const OrdersPage: React.FC = () => {
     if (!selectedOrder) return;
     const success = await updateOrderStatus(selectedOrder.id, newStatus);
     if (success) {
-      fetchOrders();
+      // Local update for instant UI feedback
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === selectedOrder.id ? { ...order, status: newStatus } : order
+        )
+      );
       setModals((prev) => ({ ...prev, statusUpdate: false }));
+      // Optional: background refetch for consistency
+      fetchOrders();
     }
   };
 
@@ -122,14 +129,13 @@ const OrdersPage: React.FC = () => {
     if (!selectedOrder) return;
     const success = await deleteOrder(selectedOrder.id);
     if (success) {
-      fetchOrders();
       setModals((prev) => ({ ...prev, deleteConfirm: false }));
+      fetchOrders();
     }
   };
 
   return (
     <div className="page-container px-4 sm:px-6 lg:px-8 py-6 space-y-8 fade-in">
-      {/* Header */}
       <header className="flex-row-between gap-4">
         <div>
           <h1 className="title">📑 Orders</h1>
@@ -139,7 +145,6 @@ const OrdersPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Filters */}
       <section className="card">
         <OrderFilters
           filters={filters}
@@ -156,7 +161,6 @@ const OrdersPage: React.FC = () => {
         />
       </section>
 
-      {/* Table */}
       <section className="overflow-x-auto">
         <OrderTable
           orders={orders}
@@ -169,7 +173,6 @@ const OrdersPage: React.FC = () => {
         />
       </section>
 
-      {/* Modals */}
       {selectedOrder && (
         <>
           <OrderDetailsModal

@@ -2,13 +2,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const apiClient = axios.create({
-  baseURL: "https://localhost:7178/api/v1",
+  baseURL: "https://framely-backend-cvccf3aah7d4ceaq.centralindia-01.azurewebsites.net/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// ✅ Attach JWT token from cookies to each request
+// Attaches JWT token from cookies to every outgoing request
 apiClient.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
@@ -22,21 +22,20 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ Global error handler
+// Handles global API errors and redirects unauthorized users
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
     const message = error.response?.data?.message || error.message;
 
-    console.error("❌ API Error:", message);
+    console.error("API Error:", message);
 
-    // Optional: You can also handle 500, 404, etc. globally here
+    // Clears auth cookies and redirects if unauthorized
     if (status === 401 || status === 403) {
       Cookies.remove("token");
       Cookies.remove("user");
 
-      // Use a slight delay to allow UI feedback before redirect
       setTimeout(() => {
         window.location.href = "/auth/login";
       }, 500);

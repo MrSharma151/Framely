@@ -75,7 +75,7 @@ Framely is a modern **optical e-commerce platform** designed for browsing, manag
 ✅ **Phase 3:** Deployment
 
 🎯 Deployment Plan:
-- Host framely-backend on **Azure App Service**
+- Host backend on **Azure App Service**
 - Deploy both frontends (`framely-customer`, `framely-admin`) on Azure
 - Configure environment variables (API URLs, JWT secrets)
 - Enable HTTPS, optimize images, and apply production caching
@@ -125,23 +125,55 @@ Stay tuned for updates 🚀
 
 ---
 
-## 🛠 Running Locally
+## 📁 Folder Structure
 
 ```bash
-# Clone repository
-git clone <repo-url>
-
-# Run Customer Frontend
-cd framely-customer
-npm install
-npm run dev
-
-# Run Admin Panel
-cd framely-admin
-npm install
-npm run dev
+Framely/
+├── .github/
+│   └── workflows/
+│       ├── framely-customer-deploy.yml
+│       ├── framely-admin-deploy.yml
+│       └── azure-deploy.yml
+├── frontend/
+│   ├── framely-customer/
+│   │   ├── public/
+│   │   ├── src/
+│   │   └── next.config.ts
+│   ├── framely-admin/
+│   │   ├── public/
+│   │   ├── src/
+│   │   └── next.config.ts
+├── backend/
+│   ├── Framely.API/
+│   ├── Framely.Core/
+│   └── Framely.Infrastructure/
 ```
 
 ---
+
+## 📊 Cloud Tagging Strategy
+
+Each Azure resource is tagged with:
+
+- `env`: `production`  
+- `owner`: `framely-core`  
+- `cost-center`: `frontend` / `backend`  
+- `deployable`: `framely` / `framely-admin` / `framely-backend`
+
+This ensures traceability, cost attribution, and environment clarity across cloud dashboards.
+
+---
+
+## 🧠 Summary
+
+This branch reflects:
+
+- Modular CI/CD pipelines for each deployable  
+- Secure secret handling and cloud-native deployment  
+- Typed config and SSR optimization for frontend apps  
+- Self-contained backend deployment with layered architecture  
+- Audit-ready tagging and onboarding clarity across the repo
+
+Every deployable is treated as a production-grade surface, with isolated workflows, scoped secrets, and scalable cloud infrastructure.
 
 

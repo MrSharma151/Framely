@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/hooks/useAuth"; // ✅ useAuth hook banaya tha
+import { useAuth } from "@/hooks/useAuth";
 import { Trash2, Plus, Minus } from "lucide-react";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
@@ -11,11 +11,8 @@ import toast from "react-hot-toast";
 export default function CartPage() {
   const router = useRouter();
   const { cart, removeFromCart, updateQuantity, total } = useCart();
-
-  // ✅ Auth context se user aur hydrated lo
   const { user, hydrated } = useAuth();
 
-  // ✅ Sirf hydration ke baad redirect karo agar logged in nahi ho
   useEffect(() => {
     if (hydrated && !user) {
       toast.error("⚠️ Please login to view your cart");
@@ -31,15 +28,10 @@ export default function CartPage() {
     toast.success("🛒 Cart cleared successfully!");
   };
 
-  // ✅ Hydration se pehle blank return karo (flicker avoid)
-  if (!hydrated) return null;
-
-  // ✅ Agar hydrated ho gaya aur user nahi hai to blank return karo (redirect ho raha)
-  if (!user) return null;
+  if (!hydrated || !user) return null;
 
   return (
     <section className="container mx-auto px-4 md:px-8 py-14">
-      {/* Title Row */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
           🛒 Your Cart
@@ -72,14 +64,16 @@ export default function CartPage() {
               key={item.id}
               className="flex flex-col md:flex-row gap-4 items-start md:items-center bg-gradient-to-r from-gray-900/60 via-gray-800/40 to-gray-900/60 rounded-xl p-5 shadow-md hover:shadow-blue-500/10 transition-all duration-300"
             >
-              {/* Product Image */}
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-28 h-28 md:w-32 md:h-32 rounded-lg object-cover shadow-sm hover:scale-[1.02] transition-transform"
-              />
+              {/* Replaced Image with img tag */}
+              <div className="relative w-28 h-28 md:w-32 md:h-32 shrink-0">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="rounded-lg object-cover shadow-sm w-full h-full hover:scale-[1.02] transition-transform"
+                />
+              </div>
 
-              {/* Product Info + Actions */}
+              {/* Product Details and Actions */}
               <div className="flex-1 w-full">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                   <div>
@@ -104,7 +98,6 @@ export default function CartPage() {
                   </Button>
                 </div>
 
-                {/* Quantity Controls + Subtotal */}
                 <div className="flex flex-wrap justify-start items-center gap-4 mt-3">
                   <div className="flex items-center gap-2 bg-gray-800/70 px-3 py-1.5 rounded-full backdrop-blur-sm text-xs">
                     <button
@@ -133,7 +126,6 @@ export default function CartPage() {
             </div>
           ))}
 
-          {/* ✅ Total + Checkout */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-gray-700 pt-5 mt-5">
             <h2 className="text-lg md:text-xl font-semibold">
               Total:{" "}
@@ -148,9 +140,7 @@ export default function CartPage() {
               className="w-full md:w-auto"
               disabled={cart.length === 0}
               onClick={() => {
-                if (cart.length > 0) {
-                  router.push("/checkout");
-                }
+                if (cart.length > 0) router.push("/checkout");
               }}
             >
               Proceed to Checkout →

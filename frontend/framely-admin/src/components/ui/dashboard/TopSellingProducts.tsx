@@ -12,6 +12,7 @@ export default function TopSellingProducts() {
   const [products, setProducts] = useState<ProductSales[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetches top-selling products by aggregating order data
   useEffect(() => {
     const fetchTopProducts = async () => {
       setLoading(true);
@@ -42,7 +43,7 @@ export default function TopSellingProducts() {
 
   return (
     <div className="card fade-in hover:shadow-[0_8px_25px_rgba(138,180,248,0.25)] hover:scale-[1.01] transition-transform duration-300">
-      {/* Header */}
+      {/* Displays header with title and description */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <div>
           <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-[var(--primary-light)] to-[var(--primary)] bg-clip-text text-transparent">
@@ -54,7 +55,7 @@ export default function TopSellingProducts() {
         </div>
       </div>
 
-      {/* Product List */}
+      {/* Renders list of top-selling products */}
       {loading ? (
         <p className="text-sm text-gray-400">Loading...</p>
       ) : (
@@ -68,7 +69,7 @@ export default function TopSellingProducts() {
                 className="relative rounded-lg p-4 bg-[rgba(255,255,255,0.02)] border border-[var(--border-color)] hover:bg-[rgba(255,255,255,0.05)] transition-all"
               >
                 <div className="flex justify-between items-center">
-                  {/* Product Name */}
+                  {/* Displays product name with rank badge */}
                   <div className="flex items-center gap-3">
                     <span className="w-7 h-7 flex items-center justify-center text-xs font-bold rounded-full bg-gradient-to-r from-[var(--primary-dark)] to-[var(--primary)] text-white shadow-md">
                       {i + 1}
@@ -78,13 +79,13 @@ export default function TopSellingProducts() {
                     </span>
                   </div>
 
-                  {/* Sold Count */}
+                  {/* Displays total units sold */}
                   <span className="text-sm font-semibold text-green-400">
                     {product.sold} sold
                   </span>
                 </div>
 
-                {/* Progress Bar */}
+                {/* Renders progress bar based on relative sales */}
                 <div className="w-full h-2 mt-3 rounded-full bg-[rgba(255,255,255,0.08)] overflow-hidden">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all"
@@ -97,7 +98,7 @@ export default function TopSellingProducts() {
         </ul>
       )}
 
-      {/* Footer CTA */}
+      {/* Link to view full product list */}
       <div className="mt-5 flex justify-end">
         <Link href="/products" className="btn-primary text-xs sm:text-sm">
           View All Products →

@@ -15,6 +15,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   order,
   onClose,
 }) => {
+  // Do not render modal if it's closed or order data is missing
   if (!isOpen || !order) return null;
 
   return (
@@ -24,6 +25,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
           Order #{order.id} Details
         </h2>
 
+        {/* Displays customer and order metadata */}
         <div className="space-y-2 text-sm text-secondary">
           <p><strong>Customer:</strong> {order.customerName}</p>
           <p><strong>Email:</strong> {order.email}</p>
@@ -34,6 +36,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
           <p><strong>User ID:</strong> {order.userId ?? "N/A"}</p>
         </div>
 
+        {/* Displays list of items in the order */}
         <div className="mt-6">
           <h3 className="text-md font-semibold text-primary mb-2">Items</h3>
           <div className="max-h-48 overflow-y-auto table-glass">
@@ -59,11 +62,13 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
             </table>
           </div>
 
+          {/* Displays total order amount */}
           <p className="mt-4 text-right text-lg font-bold text-highlight">
             Total: ₹{order.totalAmount.toFixed(2)}
           </p>
         </div>
 
+        {/* Close button */}
         <div className="mt-6 flex justify-end">
           <Button variant="danger" size="sm" onClick={onClose}>
             Close

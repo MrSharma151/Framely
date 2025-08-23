@@ -20,7 +20,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Redirect to login if not authenticated
+  // Redirects unauthenticated users to the login page
   useEffect(() => {
     const publicPaths = ["/auth/login"];
     if (!user && !publicPaths.includes(pathname)) {
@@ -37,6 +37,7 @@ export default function Navbar() {
     return pathname === path || pathname.startsWith(`${path}/`);
   };
 
+  // Renders navigation links with active state styling
   const renderNavLinks = () =>
     navLinks.map((link) => {
       const active = isActive(link.path);
@@ -69,7 +70,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-[rgba(11,30,57,0.85)] backdrop-blur-xl border-b border-[var(--border-color)] shadow-[0_4px_20px_rgba(0,0,0,0.35)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+          {/* Displays the Framely Admin logo */}
           <Link
             href="/"
             aria-label="Framely Admin Home"
@@ -78,7 +79,7 @@ export default function Navbar() {
             Framely Admin
           </Link>
 
-          {/* Desktop navigation */}
+          {/* Renders desktop navigation links */}
           <nav
             className="hidden md:flex gap-8"
             role="navigation"
@@ -87,7 +88,7 @@ export default function Navbar() {
             {user && renderNavLinks()}
           </nav>
 
-          {/* Desktop user actions */}
+          {/* Displays user actions on desktop */}
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
@@ -109,7 +110,7 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile menu toggle */}
+          {/* Toggles mobile menu visibility */}
           <button
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             className="md:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--highlight)] transition"
@@ -120,7 +121,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Renders mobile navigation menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[rgba(11,30,57,0.95)] backdrop-blur-xl border-t border-[var(--border-color)] animate-fade-in">
           <nav

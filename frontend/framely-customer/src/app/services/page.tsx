@@ -3,6 +3,7 @@
 import { Eye, Home, ShieldCheck, Ruler, Headphones, Contact2 } from "lucide-react";
 
 export default function ServicesPage() {
+  // List of services with icon, title, and description
   const services = [
     {
       icon: <Eye className="w-10 h-10 text-blue-400" />,
@@ -38,10 +39,11 @@ export default function ServicesPage() {
 
   return (
     <section className="relative py-20">
-      {/* ✅ Subtle background gradient */}
+
+      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-white/5"></div>
 
-      {/* ✅ Heading */}
+      {/* Heading Section */}
       <div className="relative z-10 text-center mb-16 px-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
           Our <span className="text-blue-400">Premium Services</span>
@@ -51,35 +53,35 @@ export default function ServicesPage() {
         </p>
       </div>
 
-      {/* ✅ Services Grid */}
+      {/* Services Grid */}
       <div className="relative z-10 container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
         {services.map((service, i) => (
           <div
             key={i}
             className="glass p-8 rounded-2xl text-center group hover:scale-[1.03] transition-transform duration-400"
           >
-            {/* Icon */}
+            {/* Service Icon */}
             <div className="flex items-center justify-center w-20 h-20 mx-auto rounded-full bg-white/5 mb-6 group-hover:rotate-3 transition-transform">
               {service.icon}
             </div>
 
-            {/* Title */}
+            {/* Service Title */}
             <h3 className="text-lg sm:text-xl font-semibold text-white mb-3">
               {service.title}
             </h3>
 
-            {/* Description */}
+            {/* Service Description */}
             <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
               {service.desc}
             </p>
 
-            {/* Subtle hover accent */}
+            {/* Hover accent line */}
             <div className="mt-6 w-10 mx-auto h-[2px] bg-[var(--accent)] opacity-0 group-hover:opacity-100 transition-all"></div>
           </div>
         ))}
       </div>
 
-      {/* ✅ CTA Section */}
+      {/* Call-to-Action Section */}
       <div className="relative z-10 text-center mt-20 px-6">
         <h2 className="text-2xl sm:text-3xl font-bold mb-4">
           Need a Personalized Service?

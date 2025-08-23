@@ -1,11 +1,15 @@
+// src/services/categoryService.ts
 import apiClient from "./apiClient";
 
+// Represents a single category returned by the backend
+// Used for filtering and display
 export interface Category {
-  id: number;          // Backend still returns ID (used for display/reference)
-  name: string;        // ✅ We'll use this for filtering products by category
+  id: number;
+  name: string;
   description: string;
 }
 
+// Structure of paginated category response from backend
 export interface PaginatedCategoriesResponse {
   totalItems: number;
   totalPages: number;
@@ -14,12 +18,8 @@ export interface PaginatedCategoriesResponse {
   data: Category[];
 }
 
-/**
- * ✅ Fetch categories from backend
- * - Backend returns category names (which we’ll use for filtering)
- * - Supports pagination
- * - Returns safe fallback on failure
- */
+// Fetches paginated categories from backend
+// Returns fallback structure on failure
 export const getCategories = async (
   page = 1,
   pageSize = 50
@@ -37,7 +37,7 @@ export const getCategories = async (
       data: response.data?.data ?? [],
     };
   } catch (error) {
-    console.error("❌ Failed to fetch categories:", error);
+    console.error("Failed to fetch categories:", error);
 
     return {
       totalItems: 0,
@@ -49,11 +49,8 @@ export const getCategories = async (
   }
 };
 
-/**
- * ✅ Helper for ShopPage
- * - Fetch all categories without pagination meta
- * - NOTE: Filtering will use `category.name` instead of `id`
- */
+// Fetches all categories without pagination metadata
+// Used for filtering on ShopPage
 export const getAllCategories = async (): Promise<Category[]> => {
   const res = await getCategories(1, 50);
   return res.data;

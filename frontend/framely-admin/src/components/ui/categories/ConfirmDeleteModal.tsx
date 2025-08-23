@@ -31,14 +31,16 @@ export default function ConfirmDeleteModal({
         >
           <Dialog.Panel className="modal-content fade-in">
             <Dialog.Title className="text-center text-xl font-semibold mb-4">
-              🗑️ Delete Category
+              Delete Category
             </Dialog.Title>
 
+            {/* Confirmation message for category deletion */}
             <p className="text-sm text-secondary mb-6 leading-relaxed text-center">
               Are you sure you want to delete
               {categoryName ? ` “${categoryName}”` : " this category"}? This action cannot be undone.
             </p>
 
+            {/* Action buttons for cancel and confirm */}
             <div className="flex justify-end gap-3">
               <Button variant="secondary" size="sm" onClick={onCancel}>
                 Cancel

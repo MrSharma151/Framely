@@ -1,5 +1,7 @@
+// src/components/ui/WhyChooseUs.tsx
 import { Truck, RotateCcw, ShieldCheck, CreditCard } from "lucide-react";
 
+// Highlights Framely's core value propositions with icons and hover effects
 export default function WhyChooseUs() {
   const usp = [
     {
@@ -26,10 +28,10 @@ export default function WhyChooseUs() {
 
   return (
     <section className="relative py-20">
-      {/* ✅ Subtle radial background for depth */}
+      {/* Radial background for subtle depth */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.03)_0%,_transparent_80%)]" />
 
-      {/* ✅ Section Header */}
+      {/* Section header */}
       <div className="relative z-10 text-center mb-16 px-4">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-wide">
           Why Choose <span className="text-[var(--accent)]">Framely?</span>
@@ -41,35 +43,39 @@ export default function WhyChooseUs() {
         </p>
       </div>
 
-      {/* ✅ USP Grid */}
+      {/* USP grid */}
       <div className="relative z-10 container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-6">
         {usp.map((item, index) => (
           <div
             key={index}
-            className="group glass rounded-2xl p-8 flex flex-col items-center text-center 
-            transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-            hover:-translate-y-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
+            className="
+              group glass rounded-2xl p-8 flex flex-col items-center text-center 
+              transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+              hover:-translate-y-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)]
+            "
           >
-            {/* ✅ Icon with glowing hover effect */}
-            <div className="flex items-center justify-center w-20 h-20 rounded-full 
+            {/* Icon container with glow and scale on hover */}
+            <div className="
+              flex items-center justify-center w-20 h-20 rounded-full 
               bg-[var(--background-alt)] shadow-inner shadow-black/40 
-              mb-6 relative overflow-hidden group-hover:scale-110 transition duration-500">
+              mb-6 relative overflow-hidden group-hover:scale-110 transition duration-500
+            ">
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-40" />
               {item.icon}
             </div>
 
-            {/* ✅ Title */}
+            {/* USP title */}
             <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white mt-2 tracking-wide">
               {item.title}
             </h3>
 
-            {/* ✅ Description */}
+            {/* USP description */}
             <p className="mt-3 text-xs sm:text-sm md:text-base text-[var(--foreground-muted)] leading-relaxed">
               {item.desc}
             </p>
 
-            {/* ✅ Smooth underline accent on hover */}
-            <span className="mt-4 block w-10 h-0.5 bg-[var(--accent)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
+            {/* Underline accent on hover */}
+            <span className="mt-4 block w-10 h-0.5 bg-[var(--accent)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
           </div>
         ))}
       </div>

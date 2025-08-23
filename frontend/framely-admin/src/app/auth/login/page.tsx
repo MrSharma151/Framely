@@ -11,13 +11,16 @@ export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
 
+  // Local state for form inputs and loading indicator
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Handles login form submission and authentication flow
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate that both fields are filled
     if (!email || !password) {
       toast.dismiss();
       toast.error("Please fill in all fields.");
@@ -26,21 +29,26 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
+
+      // Attempt login with provided credentials
       const response = await loginUser({ email, password });
 
+      // Restrict access to admin users only
       if (response.role !== "ADMIN") {
         toast.dismiss();
         toast.error("Only Admin users can access this panel.");
         return;
       }
 
+      // Store user session and redirect to dashboard
       login(response);
       toast.dismiss();
-      toast.success("Login successful ✅");
+      toast.success("Login successful");
       router.push("/");
-    } catch (err: any) {
+    } catch {
+      // Handle authentication failure
       toast.dismiss();
-      toast.error("Invalid email or password ❌");
+      toast.error("Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -53,6 +61,7 @@ export default function LoginPage() {
           Admin Panel Login
         </h2>
 
+        {/* Login form with email and password fields */}
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">
@@ -76,12 +85,13 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="Enter your password"
               required
               className="input w-full"
             />
           </div>
 
+          {/* Submit button with loading state */}
           <Button
             type="submit"
             className="w-full justify-center"

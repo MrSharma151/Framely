@@ -2,13 +2,14 @@
 
 import { Eye, Star, Users, Phone, Mail, MapPin } from "lucide-react";
 
+/* About page component */
 export default function AboutPage() {
   return (
     <section className="relative py-20">
-      {/* ✅ Background Gradient */}
+      {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-white/5"></div>
 
-      {/* ✅ Hero Title */}
+      {/* Hero Title Section */}
       <div className="relative z-10 text-center mb-16 px-6">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
           About <span className="text-blue-400">Framely</span>
@@ -18,10 +19,11 @@ export default function AboutPage() {
         </p>
       </div>
 
-      {/* ✅ Story Section */}
+      {/* Story Section */}
       <div className="relative z-10 container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 px-6 items-center">
-        {/* Left - Image */}
+        {/* Left - Optimized Image */}
         <div className="rounded-2xl overflow-hidden shadow-lg hover:scale-[1.02] transition">
+          {/*  Replaced <Image /> with <img> */}
           <img
             src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=80"
             alt="Framely Store"
@@ -38,13 +40,13 @@ export default function AboutPage() {
           </p>
           <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
             From <b>AI-powered eye tests</b> to <b>home visit consultations</b>, we bring technology & care together
-            to give you the best optical experience. Whether it's <b>spectacles, sunglasses, or contact lenses</b>,
+            to give you the best optical experience. Whether it&apos;s <b>spectacles, sunglasses, or contact lenses</b>,
             we ensure the highest quality with unmatched customer support.
           </p>
         </div>
       </div>
 
-      {/* ✅ Mission + Stats */}
+      {/* Mission & Stats Section */}
       <div className="relative z-10 container mx-auto mt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center px-6">
         <div className="glass rounded-2xl p-6 hover:scale-[1.03] transition">
           <Eye className="w-10 h-10 mx-auto text-blue-400 mb-3" />
@@ -69,13 +71,13 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* ✅ Contact Section */}
+      {/* Contact Section */}
       <div className="relative z-10 container mx-auto mt-24 px-6 text-center">
         <h2 className="text-2xl sm:text-3xl font-bold mb-4">
           Get in Touch with Us
         </h2>
         <p className="text-gray-300 max-w-xl mx-auto mb-10">
-          Have questions about our services, products, or want to book a home visit?  
+          Have questions about our services, products, or want to book a home visit?
           Reach out to us via call, email, or visit our store.
         </p>
 
@@ -100,13 +102,13 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Quick CTA */}
+        {/* Quick Call-to-Action */}
         <div className="mt-10">
           <a
             href="mailto:support@framely.com"
             className="inline-block px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 transition text-white font-semibold shadow-lg hover:shadow-blue-500/20"
           >
-            📩 Send us an Email
+            Send us an Email
           </a>
         </div>
       </div>

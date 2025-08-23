@@ -25,6 +25,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   const [productId, setProductId] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
 
+  // Fetches available category names on mount
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await getAllCategories();
@@ -33,6 +34,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     fetchCategories();
   }, []);
 
+  // Applies filters based on input priority
   const handleApplyFilters = () => {
     if (searchTerm) onSearch(searchTerm);
     else if (productId) onSearchById(Number(productId));
@@ -42,6 +44,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     }
   };
 
+  // Clears all filters and resets local state
   const handleClear = () => {
     setSearchTerm("");
     setCategory("");
@@ -52,7 +55,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
 
   return (
     <div className="flex flex-wrap items-end gap-4 mb-6">
-      {/* Product Name */}
+      {/* Filter: Product Name */}
       <div className="flex flex-col">
         <label className="text-[var(--text-secondary)] mb-1 text-xs sm:text-sm">
           Product Name
@@ -66,7 +69,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         />
       </div>
 
-      {/* Brand */}
+      {/* Filter: Brand */}
       <div className="flex flex-col">
         <label className="text-[var(--text-secondary)] mb-1 text-xs sm:text-sm">
           Brand
@@ -80,7 +83,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         />
       </div>
 
-      {/* Product ID */}
+      {/* Filter: Product ID */}
       <div className="flex flex-col">
         <label className="text-[var(--text-secondary)] mb-1 text-xs sm:text-sm">
           Product ID
@@ -94,7 +97,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         />
       </div>
 
-      {/* Category */}
+      {/* Filter: Category */}
       <div className="flex flex-col">
         <label className="text-[var(--text-secondary)] mb-1 text-xs sm:text-sm">
           Category
@@ -113,7 +116,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         </select>
       </div>
 
-      {/* Buttons */}
+      {/* Action Buttons */}
       <div className="flex gap-3 mt-2 sm:mt-0">
         <Button variant="primary" size="sm" onClick={handleApplyFilters}>
           Apply Filters

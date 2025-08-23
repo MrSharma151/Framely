@@ -1,23 +1,20 @@
+// src/context/AuthContext.ts
 "use client";
 
 import { createContext, useState, useEffect, ReactNode } from "react";
 
-/**
- * ✅ Backend AuthResponseDto (exactly what your API returns)
- */
+// Response structure returned by backend on successful login
 export interface AuthResponseDto {
   userId: string;
   fullName: string;
   email: string;
   role: string;
-  token: string; // JWT Access Token
-  expiresAt: string; // ISO string e.g. "2025-07-26T07:41:36Z"
+  token: string;
+  expiresAt: string;
   refreshToken?: string | null;
 }
 
-/**
- * ✅ User object stored in Context (everything except token)
- */
+// User object stored in context (excludes token)
 export interface User {
   userId: string;
   fullName: string;
@@ -27,27 +24,19 @@ export interface User {
   refreshToken?: string | null;
 }
 
-/**
- * ✅ AuthContext type
- */
+// AuthContext shape exposed to consumers
 interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (authData: AuthResponseDto) => void;
   logout: () => void;
-  hydrated: boolean; // ✅ tells if localStorage was checked
+  hydrated: boolean;
 }
 
-/**
- * ✅ Create AuthContext
- */
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
+// Create context with undefined default (enforced via useAuth hook)
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-/**
- * ✅ Provider Props
- */
+// Props for wrapping children with AuthProvider
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -55,11 +44,9 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [hydrated, setHydrated] = useState(false); // ✅ hydration flag
+  const [hydrated, setHydrated] = useState(false);
 
-  /**
-   * ✅ Load auth state from localStorage on app start
-   */
+  // Load auth state from localStorage on initial render
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedToken = localStorage.getItem("token");
@@ -70,14 +57,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(JSON.parse(savedUser));
       }
 
-      // ✅ Mark hydration complete
       setHydrated(true);
     }
   }, []);
 
-  /**
-   * ✅ Login → Save token & user
-   */
+  // Save token and user to state and localStorage
   const login = (authData: AuthResponseDto) => {
     const { token, ...userData } = authData;
 
@@ -90,9 +74,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  /**
-   * ✅ Logout → Clear token & user
-   */
+  // Clear token and user from state and localStorage
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -105,7 +87,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, hydrated }}>
-      {children} {/* ✅ Always render children immediately */}
+      {children}
     </AuthContext.Provider>
   );
 };

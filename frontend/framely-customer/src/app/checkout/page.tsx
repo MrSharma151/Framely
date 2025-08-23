@@ -13,15 +13,15 @@ export default function CheckoutPage() {
   const { cart, total, clearCart } = useCart();
   const { user, hydrated } = useAuth();
 
+  // Form state
   const [customerName, setCustomerName] = useState("");
   const [email, setEmail] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [address, setAddress] = useState("");
   const [mobileError, setMobileError] = useState("");
-
   const [loading, setLoading] = useState(false);
 
-  // ✅ Redirect if not logged in
+  // Redirect if user is not logged in
   useEffect(() => {
     if (hydrated && !user) {
       toast.error("⚠️ Please login to place your order");
@@ -29,7 +29,7 @@ export default function CheckoutPage() {
     }
   }, [hydrated, user, router]);
 
-  // ✅ Autofill user details
+  // Autofill customer details from user context
   useEffect(() => {
     if (user) {
       setCustomerName(user.fullName || "");
@@ -37,12 +37,10 @@ export default function CheckoutPage() {
     }
   }, [user]);
 
-  // ✅ Mobile number validation function
-  const validateMobile = (number: string) => {
-    const regex = /^[6-9]\d{9}$/; // Indian mobile numbers
-    return regex.test(number);
-  };
+  // Validate Indian mobile number
+  const validateMobile = (number: string) => /^[6-9]\d{9}$/.test(number);
 
+  // Handle placing order
   const handlePlaceOrder = async () => {
     if (!customerName || !email || !mobileNumber || !address) {
       toast.error("Please fill all required fields");
@@ -78,16 +76,18 @@ export default function CheckoutPage() {
       toast.success("✅ Order placed successfully!");
       clearCart();
       router.push("/orders");
-    } catch (err: any) {
-      console.error("Order failed:", err.response?.data || err.message);
+    } catch (err: unknown) {
+      console.error("Order failed:", err);
       toast.error("Failed to place order. Try again!");
     } finally {
       setLoading(false);
     }
   };
 
+  // Prevent rendering if not logged in
   if (!user) return null;
 
+  // Empty cart fallback
   if (cart.length === 0) {
     return (
       <div className="py-20 text-center text-gray-400">
@@ -102,18 +102,19 @@ export default function CheckoutPage() {
   return (
     <section className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-950 py-10 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* ✅ Page Title */}
+      
         <h1 className="text-3xl md:text-4xl font-extrabold text-center text-white mb-10">
           🛍 Checkout
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* ✅ LEFT: Order Summary */}
+          {/* LEFT: Order Summary */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/10">
             <h2 className="text-2xl font-bold text-white mb-6">
               Your Order Summary
             </h2>
 
+            {/* List of cart items */}
             <div className="space-y-5">
               {cart.map((item) => (
                 <div
@@ -121,7 +122,7 @@ export default function CheckoutPage() {
                   className="flex items-center justify-between border-b border-gray-700 pb-4"
                 >
                   <div className="flex items-center gap-4">
-                    <img
+                    <img // Using standard img tag for simplicity
                       src={item.image}
                       alt={item.name}
                       className="w-16 h-16 rounded-xl object-cover shadow-md"
@@ -140,24 +141,25 @@ export default function CheckoutPage() {
               ))}
             </div>
 
-            {/* ✅ Total */}
+            {/* Total Amount */}
             <div className="mt-6 flex justify-between text-xl font-bold">
               <span className="text-gray-300">Total:</span>
               <span className="text-green-400">₹{total.toFixed(2)}</span>
             </div>
 
-            {/* ✅ Friendly note */}
+            {/* Friendly Note */}
             <div className="mt-6 p-4 rounded-xl bg-green-900/20 text-green-300 text-sm">
               ✅ All prices include applicable taxes. Cash on Delivery available.
             </div>
           </div>
 
-          {/* ✅ RIGHT: Checkout Form */}
+          {/* RIGHT: Checkout Form */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/10">
             <h2 className="text-2xl font-bold text-white mb-6">
               Customer Information
             </h2>
 
+            {/* Checkout Form */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -165,6 +167,7 @@ export default function CheckoutPage() {
               }}
               className="space-y-4"
             >
+              {/* Customer Name */}
               <input
                 type="text"
                 placeholder="Full Name"
@@ -173,6 +176,7 @@ export default function CheckoutPage() {
                 className="w-full p-3 rounded-lg bg-gray-900 text-white focus:ring-2 focus:ring-blue-500"
               />
 
+              {/* Email */}
               <input
                 type="email"
                 placeholder="Email"
@@ -181,6 +185,7 @@ export default function CheckoutPage() {
                 className="w-full p-3 rounded-lg bg-gray-900 text-white focus:ring-2 focus:ring-blue-500"
               />
 
+              {/* Mobile Number */}
               <input
                 type="tel"
                 placeholder="Mobile Number"
@@ -200,6 +205,7 @@ export default function CheckoutPage() {
                 <p className="text-red-500 text-sm mt-1">{mobileError}</p>
               )}
 
+              {/* Address */}
               <textarea
                 placeholder="Shipping Address"
                 value={address}
@@ -207,7 +213,7 @@ export default function CheckoutPage() {
                 className="w-full p-3 rounded-lg bg-gray-900 text-white focus:ring-2 focus:ring-blue-500"
               />
 
-              {/* ✅ Extra Info */}
+              {/* Extra Info */}
               <div className="p-4 rounded-xl bg-blue-900/20 text-blue-300 text-sm leading-relaxed">
                 ℹ️ <strong>After placing your order</strong>, our optical experts
                 will personally contact you for:
@@ -219,12 +225,12 @@ export default function CheckoutPage() {
                 </ul>
               </div>
 
-              {/* ✅ Payment Mode */}
+              {/* Payment Mode */}
               <div className="p-4 rounded-xl bg-gray-900 text-gray-300 text-sm">
                 ✅ <strong>Cash on Delivery</strong> (COD) will be used for now.
               </div>
 
-              {/* ✅ Place Order Button */}
+              {/* Place Order Button */}
               <Button
                 type="submit"
                 size="lg"
@@ -237,9 +243,9 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* ✅ Additional reassurance section */}
+        {/* Additional reassurance */}
         <div className="mt-12 text-center text-gray-400 text-sm max-w-2xl mx-auto">
-          🔒 Your personal information is secure with us.  
+          🔒 Your personal information is secure with us.
           Our team ensures **safe handling of your prescription & eyewear**.
         </div>
       </div>

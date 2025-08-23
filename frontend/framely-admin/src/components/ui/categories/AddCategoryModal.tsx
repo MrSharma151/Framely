@@ -20,6 +20,7 @@ export default function AddCategoryModal({
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Handles form submission and triggers category creation
   const handleSubmit = async () => {
     if (!name.trim()) return;
     setLoading(true);
@@ -44,9 +45,10 @@ export default function AddCategoryModal({
         >
           <Dialog.Panel className="modal-content fade-in">
             <Dialog.Title className="text-center text-xl font-semibold mb-4">
-              ➕ Add New Category
+              Add New Category
             </Dialog.Title>
 
+            {/* Form fields for category name and description */}
             <div className="space-y-4">
               <input
                 className="w-full"
@@ -63,6 +65,7 @@ export default function AddCategoryModal({
               />
             </div>
 
+            {/* Action buttons for cancel and submit */}
             <div className="mt-6 flex justify-end gap-3">
               <Button
                 variant="secondary"

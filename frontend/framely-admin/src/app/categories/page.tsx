@@ -27,7 +27,7 @@ const CategoriesPage: React.FC = () => {
     categoryName: "",
   });
 
-  // ✅ Fetch categories
+  // Fetches all categories from the backend
   const fetchCategories = async () => {
     try {
       setLoading(true);
@@ -38,15 +38,17 @@ const CategoriesPage: React.FC = () => {
     }
   };
 
+  // Fetch categories on initial render
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  // ✅ Handlers
+  // Updates search term used for filtering categories
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
 
+  // Adds a new category and refreshes the list
   const handleAddCategory = async (newCategory: Omit<Category, "id">) => {
     const success = await createCategory(newCategory);
     if (success) {
@@ -55,6 +57,7 @@ const CategoriesPage: React.FC = () => {
     }
   };
 
+  // Updates an existing category and refreshes the list
   const handleEditCategory = async (
     id: number,
     updatedCategory: Omit<Category, "id">
@@ -68,6 +71,7 @@ const CategoriesPage: React.FC = () => {
     return false;
   };
 
+  // Opens the delete confirmation modal for a selected category
   const triggerDeleteModal = (category: Category) => {
     setConfirmDeleteModal({
       open: true,
@@ -76,6 +80,7 @@ const CategoriesPage: React.FC = () => {
     });
   };
 
+  // Confirms deletion of a category and refreshes the list
   const confirmDeleteCategory = async () => {
     if (confirmDeleteModal.categoryId) {
       const success = await deleteCategory(confirmDeleteModal.categoryId);
@@ -84,18 +89,20 @@ const CategoriesPage: React.FC = () => {
     setConfirmDeleteModal({ open: false, categoryId: null, categoryName: "" });
   };
 
+  // Opens the edit modal for a selected category
   const handleOpenEditModal = (category: Category) => {
     setSelectedCategory(category);
   };
 
+  // Filters categories based on the search term
   const filteredCategories = categories.filter((cat) =>
     cat.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // ✅ UI
+  // Renders the category management interface
   return (
     <div className="page-container px-4 sm:px-6 lg:px-8 py-6 space-y-8 fade-in">
-      {/* Header */}
+      {/* Page header with title and add button */}
       <header className="flex-row-between gap-4">
         <div>
           <h1 className="title">📁 Categories</h1>
@@ -108,12 +115,12 @@ const CategoriesPage: React.FC = () => {
         </Button>
       </header>
 
-      {/* Search */}
+      {/* Search bar for filtering categories */}
       <section className="card">
         <CategorySearchBar searchTerm={searchTerm} onSearch={handleSearch} />
       </section>
 
-      {/* Table */}
+      {/* Table displaying filtered categories */}
       <section className="overflow-x-auto">
         <CategoryTable
           categories={filteredCategories}
@@ -126,7 +133,7 @@ const CategoriesPage: React.FC = () => {
         />
       </section>
 
-      {/* Modals */}
+      {/* Modal for adding a new category */}
       {isAddModalOpen && (
         <AddCategoryModal
           isOpen={isAddModalOpen}
@@ -134,6 +141,8 @@ const CategoriesPage: React.FC = () => {
           onAdd={handleAddCategory}
         />
       )}
+
+      {/* Modal for editing an existing category */}
       {selectedCategory && (
         <EditCategoryModal
           isOpen={!!selectedCategory}
@@ -143,6 +152,8 @@ const CategoriesPage: React.FC = () => {
           onSuccess={() => {}}
         />
       )}
+
+      {/* Modal for confirming category deletion */}
       {confirmDeleteModal.open && (
         <ConfirmDeleteModal
           isOpen={confirmDeleteModal.open}

@@ -22,14 +22,13 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const [brand, setBrand] = useState(product.brand);
   const [description, setDescription] = useState(product.description);
   const [price, setPrice] = useState(product.price);
-  const [imageUrl, setImageUrl] = useState(product.imageUrl);
+  const [imageUrl] = useState(product.imageUrl);
   const [newImageFile, setNewImageFile] = useState<File | null>(null);
   const [categoryId, setCategoryId] = useState<number>(product.categoryId || 0);
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
-    []
-  );
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Fetches available categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       const all = await getAllCategories();
@@ -38,6 +37,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     fetchCategories();
   }, []);
 
+  // Handles form submission and image upload
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -69,6 +69,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       await onProductUpdated(updatedData);
       onClose();
     } catch (error) {
+      console.error("Error updating product:", error);
       toast.error("Failed to update product");
       if (uploadedFileName) {
         await deleteImage(uploadedFileName);
@@ -86,6 +87,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       >
         <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Displays product ID in read-only mode */}
           <input
             type="text"
             value={`ID: ${product.id}`}
@@ -93,6 +95,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-secondary)] cursor-not-allowed"
           />
 
+          {/* Editable fields for product details */}
           <input
             type="text"
             placeholder="Product Name"
@@ -126,19 +129,16 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             required
           />
 
-          {/* ✅ Live Image Preview */}
+          {/* Displays image preview if available */}
           {(newImageFile || imageUrl) && (
             <img
-              src={
-                newImageFile
-                  ? URL.createObjectURL(newImageFile)
-                  : imageUrl
-              }
+              src={newImageFile ? URL.createObjectURL(newImageFile) : imageUrl}
               alt="Preview"
               className="w-full max-h-64 object-contain rounded border border-[var(--border-color)] mb-2"
             />
           )}
 
+          {/* Image upload input */}
           <input
             type="file"
             accept="image/*"
@@ -149,10 +149,12 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             className="w-full p-2 rounded bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-primary)]"
           />
 
+          {/* Image upload guidelines */}
           <p className="text-sm text-[var(--text-muted)] mt-1">
-            ⚠️ Only image files (<strong>JPEG, PNG, GIF, WebP, AVIF</strong>) are allowed. Max size: <strong>2MB</strong>.
+            Only image files (JPEG, PNG, GIF, WebP, AVIF) are allowed. Max size: 2MB.
           </p>
 
+          {/* Category selection dropdown */}
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(parseInt(e.target.value))}
@@ -167,6 +169,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             ))}
           </select>
 
+          {/* Action buttons */}
           <div className="flex justify-end gap-3 mt-6">
             <Button type="button" onClick={onClose} variant="secondary">
               Cancel

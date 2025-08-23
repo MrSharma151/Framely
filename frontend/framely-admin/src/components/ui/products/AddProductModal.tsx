@@ -26,6 +26,7 @@ export default function AddProductModal({
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  // Fetches available categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -39,6 +40,7 @@ export default function AddProductModal({
     fetchCategories();
   }, []);
 
+  // Handles image selection and preview
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -47,6 +49,7 @@ export default function AddProductModal({
     }
   };
 
+  // Handles product creation and image upload
   const handleCreate = async () => {
     if (loading) return;
 
@@ -75,22 +78,22 @@ export default function AddProductModal({
         imageUrl,
       };
 
-      await onProductAdded(newProduct); // parent handles DB + toast
+      await onProductAdded(newProduct);
       onClose();
     } catch (error) {
       toast.dismiss(toastId);
-      console.error("❌ Error during product creation:", error);
+      console.error("Error during product creation:", error);
       toast.error("Failed to create product");
 
-      // 🧹 Cleanup orphan image
+      // Deletes uploaded image if product creation fails
       if (imageUrl) {
         const fileName = imageUrl.split("/").pop();
         if (fileName) {
           try {
             await deleteImage(fileName);
-            console.info("🧹 Orphan image deleted:", fileName);
+            console.info("Orphan image deleted:", fileName);
           } catch (err) {
-            console.warn("⚠️ Failed to delete orphan image:", err);
+            console.warn("Failed to delete orphan image:", err);
           }
         }
       }
@@ -104,6 +107,7 @@ export default function AddProductModal({
       <div className="modal-content fade-in" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
 
+        {/* Form fields for product details */}
         <div className="space-y-4">
           <input
             className="w-full border border-[var(--border-color)] bg-[var(--surface-hover)] p-2 rounded"
@@ -155,10 +159,12 @@ export default function AddProductModal({
             className="w-full border border-[var(--border-color)] bg-[var(--surface-hover)] p-2 rounded"
           />
 
+          {/* Image upload guidelines */}
           <p className="text-sm text-[var(--text-muted)] mt-1">
-            ⚠️ Only image files (<strong>JPEG, PNG, GIF, WebP, AVIF</strong>) are allowed. Max size: <strong>2MB</strong>.
+            Only image files (JPEG, PNG, GIF, WebP, AVIF) are allowed. Max size: 2MB.
           </p>
 
+          {/* Preview of selected image */}
           {previewUrl && (
             <img
               src={previewUrl}
@@ -168,6 +174,7 @@ export default function AddProductModal({
           )}
         </div>
 
+        {/* Action buttons for cancel and submit */}
         <div className="mt-6 flex justify-end gap-3">
           <Button variant="secondary" size="sm" onClick={onClose} disabled={loading}>
             Cancel

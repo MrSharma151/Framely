@@ -1,15 +1,19 @@
 // src/services/apiClient.ts
 import axios from "axios";
 
-// ✅ Create a single axios instance
+// Centralized Axios instance for consistent API configuration
+// - Defines base URL and default headers
+// - Avoids repetitive setup across requests
 const apiClient = axios.create({
-  baseURL: "https://localhost:7178/api/v1", // ✅ Base URL ek hi jagah define
+  baseURL: "https://framely-backend-cvccf3aah7d4ceaq.centralindia-01.azurewebsites.net/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// ✅ OPTIONAL: Attach token automatically if exists
+// Request interceptor to attach auth token if available
+// - Reads token from localStorage (browser only)
+// - Adds Authorization header to each request
 apiClient.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("token");
@@ -20,13 +24,14 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ OPTIONAL: Handle common errors globally
+// Response interceptor for global error handling
+// - Logs error details for debugging
+// - Handles 401 Unauthorized by clearing token and redirecting to login
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error("API Error:", error.response?.data || error.message);
 
-    // Example: If token expired → auto logout
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
       window.location.href = "/auth/login";

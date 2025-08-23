@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-// ✅ Auth data from backend
+// Defines the full authentication response from the backend
 interface AuthResponseDto {
   userId: string;
   fullName: string;
@@ -21,7 +21,7 @@ interface AuthResponseDto {
   refreshToken: string | null;
 }
 
-// ✅ Minimal user model for frontend
+// Defines the minimal user model used on the frontend
 interface User {
   userId: string;
   fullName: string;
@@ -31,6 +31,7 @@ interface User {
   refreshToken: string | null;
 }
 
+// Defines the shape of the authentication context
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -55,7 +56,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // ✅ Hydrate on first load
+  // Restores authentication state from cookies on initial load
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -81,7 +82,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           }
         }
       } catch (err) {
-        console.error("❌ Failed to parse user:", err);
+        console.error("Failed to parse user:", err);
         Cookies.remove("token");
         Cookies.remove("user");
       }
@@ -90,7 +91,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setHydrated(true);
   }, [pathname, router]);
 
-  // ✅ Login
+  // Handles login and persists credentials in cookies
   const login = (authData: AuthResponseDto) => {
     if (authData.role !== "ADMIN") {
       if (!error) {
@@ -122,7 +123,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     router.push("/");
   };
 
-  // ✅ Logout
+  // Clears authentication state and cookies
   const logout = () => {
     setToken(null);
     setUser(null);

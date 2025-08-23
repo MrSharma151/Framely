@@ -1,6 +1,6 @@
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-import LayoutWrapper from "@/components/LayoutWrapper"; // 👈 Client-side hydration wrapper
+import LayoutWrapper from "@/components/LayoutWrapper"; // Enables client-side hydration for nested components
 
 export const metadata = {
   title: "Framely Admin",

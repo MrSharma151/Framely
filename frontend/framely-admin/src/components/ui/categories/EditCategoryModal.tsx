@@ -24,6 +24,7 @@ export default function EditCategoryModal({
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Pre-fills form fields when category data is available
   useEffect(() => {
     if (category) {
       setName(category.name);
@@ -31,6 +32,7 @@ export default function EditCategoryModal({
     }
   }, [category]);
 
+  // Handles form submission and triggers category update
   const handleUpdate = async () => {
     if (!category || !name.trim() || loading) return;
     setLoading(true);
@@ -56,9 +58,10 @@ export default function EditCategoryModal({
         >
           <Dialog.Panel className="modal-content fade-in">
             <Dialog.Title className="text-center text-xl font-semibold mb-4">
-              ✏️ Edit Category
+              Edit Category
             </Dialog.Title>
 
+            {/* Form fields for editing category name and description */}
             <div className="space-y-5">
               <div>
                 <label className="block text-sm font-medium mb-1 text-secondary">
@@ -85,6 +88,7 @@ export default function EditCategoryModal({
                 />
               </div>
 
+              {/* Action buttons for cancel and update */}
               <div className="flex justify-end gap-3 pt-2">
                 <Button variant="secondary" size="sm" onClick={onClose}>
                   Cancel
