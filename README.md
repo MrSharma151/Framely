@@ -1,179 +1,174 @@
-# 👓 Framely – Optical E-commerce Web Application
+# 👓 Framely – Optical E-commerce Platform
 
-Framely is a modern **optical e-commerce platform** designed for browsing, managing, and selling eyewear products including **glasses, sunglasses, and contact lenses**.
-
-### 🧩 Architecture Overview
-- **Backend:** ASP.NET Core Web API – Core APIs & business logic
-- **Customer Frontend:** Next.js – User-facing storefront
-- **Admin Panel:** Next.js – Admin dashboard for product & order management
-
-> ✅ All core modules are now MVP complete. Next up:  Deployment.
+Framely is a modern **optical e-commerce solution** for browsing, managing, and selling eyewear products including **glasses, sunglasses, and contact lenses**.
+It consists of a **shared ASP.NET Core backend**, a **customer storefront**, and an **admin dashboard** – all deployed on **Azure with CI/CD pipelines**.
 
 ---
 
-## 🚀 Project Status
+## 🧩 Architecture Overview
+
+| Layer                 | Framework / Tools        | Hosting (Azure)              |
+| --------------------- | ------------------------ | ---------------------------- |
+| **Backend API**       | ASP.NET Core 9.0 Web API | Azure App Service (Linux)    |
+| **Customer Frontend** | Next.js (TypeScript)     | Azure Static Web Apps        |
+| **Admin Frontend**    | Next.js (TypeScript)     | Azure Static Web Apps        |
+| **Database**          | SQL Server               | Azure SQL / Managed Instance |
+| **Blob Storage**      | Azure Storage Account    | Product Images & Assets      |
+| **Monitoring**        | Application Insights     | Telemetry & Logs             |
+
+---
+
+## 🚀 Live Deployment
+
+* **Customer Storefront** 👉 [Framely Customer](https://orange-wave-06841fe00.1.azurestaticapps.net/)
+* **Admin Dashboard** 👉 [Framely Admin](https://gentle-glacier-044690e00.1.azurestaticapps.net/)
+  ⚠️ Accessible **only with valid admin credentials**
+
+---
+
+## 📌 Project Status
 
 ### 1️⃣ Backend – ASP.NET Core Web API (✅ MVP Complete)
 
-**Implemented Features:**
-- ✔ Product, Category, and Order APIs
-- ✔ DTOs with AutoMapper integration
-- ✔ JWT Authentication + Role-based Authorization
-- ✔ Pagination, Sorting, Filtering, and Searching
-- ✔ Basic validations & error handling
-- ✔ EF Core with migrations
-- ✔ Swagger API docs + partial testing
+* ✔ Products, Categories, Orders APIs
+* ✔ JWT Auth + Role-based Authorization
+* ✔ Pagination, Filtering, Sorting, Search
+* ✔ EF Core migrations + SQL Server
+* ✔ Swagger API docs
+* 🔄 Next: User Management, Payment Services
 
-**Post-MVP Enhancements:**
-- 🔄 Advanced validations & consistent error structure
-- 🔄 Unified response wrapping
-- 🔄 Unit & integration test coverage
+**Blob Endpoints (for product images):**
 
----
-
-### 2️⃣ Customer Frontend – Next.js + TailwindCSS (✅ MVP Complete)
-
-**Key Features:**
-- ✔ App Router setup with Tailwind styling
-- ✔ Auth-aware routing (redirects unauthenticated users)
-- ✔ Shop Page
-  - Server-side pagination (10 items/page)
-  - Category-based filtering
-  - Client-side search & sort (Low→High, High→Low)
-- ✔ Product Details Page (fallback image + category display)
-- ✔ My Orders Page
-  - Displays user orders with IST timestamps
-  - Status badges: `Pending`, `Processing`, `Completed`, `Cancelled`
-  - Cancel option for pending orders
-- ✔ Minimal cart & checkout flow
-- ✔ Toast notifications for feedback
-
-📄 See detailed customer README in `framely-customer/README.md`
+```http
+POST   /Blob/upload      # Uploads image → returns public URL
+DELETE /Blob/{fileName}  # Deletes image by filename
+```
 
 ---
 
-### 3️⃣ Admin Panel – Next.js + TailwindCSS (✅ MVP Complete)
+### 2️⃣ Customer Frontend – Next.js Storefront (✅ MVP Complete)
 
-**Highlights:**
-- 💎 Fully responsive glassmorphic dashboard
-- ✔ CRUD for Products & Categories
-- ✔ Order management: view, update status, cancel
-- ✔ Role-based user access
-- ✔ Search, filter, and pagination
-- ✔ Modals for Add/Edit/Delete actions
-- ✔ Notifications via `react-hot-toast`
-- ✔ Basic revenue & order charts
+* ✔ Product browsing, filtering, searching, sorting
+* ✔ Product details page (with fallback image + category view)
+* ✔ Cart + checkout flow
+* ✔ My Orders page (with IST timestamps + status badges)
+* ✔ Cancel option for pending orders
+* ✔ Toast notifications
+* 🔄 Next: Payment flow integration
 
-📁 This is a separate Next.js app (`framely-admin`) consuming shared backend APIs.
+📄 Detailed guide → `frontend/framely-customer/README.md`
 
 ---
 
-## 🗺️ Roadmap
+### 3️⃣ Admin Frontend – Next.js Dashboard (✅ MVP Complete)
 
-✅ **Phase 1:** Backend + Customer Frontend MVP  
-✅ **Phase 2:** Admin Panel MVP  
-✅ **Phase 3:** Deployment
+* ✔ Glassmorphic responsive dashboard
+* ✔ CRUD for Products & Categories
+* ✔ Order management (view, update status, cancel)
+* ✔ Search, filter, pagination
+* ✔ Image uploads via **Blob APIs**
+* ✔ Revenue & orders overview
+* 🔄 Next: Advanced analytics + role-based access
 
-🎯 Deployment Plan:
-- Host backend on **Azure App Service**
-- Deploy both frontends (`framely-customer`, `framely-admin`) on Azure
-- Configure environment variables (API URLs, JWT secrets)
-- Enable HTTPS, optimize images, and apply production caching
-
----
-
-## 🧰 Tech Stack
-
-| Layer        | Technologies                                      |
-|--------------|---------------------------------------------------|
-| Backend      | ASP.NET Core Web API, EF Core, AutoMapper, JWT    |
-| Frontend     | Next.js (TypeScript), Tailwind CSS                |
-| Database     | SQL Server                                        |
-| Deployment   | Azure App Service                                 |
+📄 Detailed guide → `frontend/framely-admin/README.md`
 
 ---
 
-## 📦 MVP Scope
+## ⚙️ Deployment & CI/CD
 
-- ✅ Users can browse, search, sort, and filter products
-- ✅ Authenticated users can place orders and view history
-- ✅ Orders show IST timestamps and allow cancellation if pending
-- ✅ Admins can manage products, categories, and orders
-- ✅ Backend supports pagination, filtering, sorting, and search
+Branch **`azure-deployment`** → triggers **automatic deployments** on push.
 
-> Framely is now deployment-ready at MVP level.
+### 🔐 GitHub → Azure Secrets
+
+* `AZURE_STATIC_WEB_APPS_API_TOKEN_CUSTOMER` → Customer deploy token
+* `AZURE_STATIC_WEB_APPS_API_TOKEN_ADMIN` → Admin deploy token
+* `AZURE_CREDENTIALS` → Backend App Service credentials
+
+### 🌐 GitHub Workflows
+
+* `.github/workflows/framely-customer-deploy.yml` → Customer Storefront
+* `.github/workflows/framely-admin-deploy.yml` → Admin Dashboard
+* `.github/workflows/azure-deploy.yml` → Backend API
+
+📦 **Hosting Summary**
+
+* **Customer + Admin Frontends** → Azure Static Web Apps (SSR enabled for SEO & LCP)
+* **Backend API** → Azure App Service (Linux, self-contained publish)
+* **Database** → Azure SQL
+* **Storage** → Azure Blob Storage (images)
+* **Monitoring** → Application Insights
+
+---
+
+## ☁️ Azure Resources in Use
+
+| Resource                     | Type                 | Purpose                         |
+| ---------------------------- | -------------------- | ------------------------------- |
+| **framely**                  | Static Web App       | Customer storefront             |
+| **framely-admin**            | Static Web App       | Admin dashboard                 |
+| **framely-app-service-plan** | App Service Plan     | Backend hosting plan            |
+| **framely-backend**          | App Service (Linux)  | ASP.NET Core backend API        |
+| **framely-backend (AI)**     | Application Insights | Monitoring & telemetry          |
+| **framely-db**               | SQL Database         | Persistent relational data      |
+| **framely-sql-server**       | SQL Server           | Database server instance        |
+| **framelystorage**           | Storage Account      | Blob storage for product images |
+
+---
+
+## 📂 Repository Structure
+
+```bash
+Framely/
+├── backend/
+│   ├── Framely.API/            # ASP.NET Core Web API
+│   ├── Framely.Core/           # Domain logic
+│   └── Framely.Infrastructure/ # EF Core + persistence
+├── frontend/
+│   ├── framely-customer/       # Next.js storefront
+│   └── framely-admin/          # Next.js admin dashboard
+├── .github/
+│   └── workflows/              # CI/CD pipelines
+```
+
+---
+
+## 🛠 Running Locally
+
+```bash
+# Clone repo
+git clone <repo-url>
+cd Framely
+
+# Backend
+cd backend/Framely.API
+dotnet run
+
+# Customer Frontend
+cd frontend/framely-customer
+npm install
+npm run dev
+
+# Admin Frontend
+cd frontend/framely-admin
+npm install
+npm run dev
+```
+
+---
+
+## 📊 Roadmap
+
+* ✅ Phase 1: Backend + Customer MVP
+* ✅ Phase 2: Admin MVP
+* ✅ Phase 3: Azure Deployment (CI/CD enabled)
+* 🔜 Phase 4: Payments, Analytics, Advanced RBAC
 
 ---
 
 ## 👨‍💻 Author
 
-**Rohit Sharma**  
-rhs.rohitsharma@gmail.com
+**Rohit Sharma**
+📩 [rhs.rohitsharma@gmail.com](mailto:rhs.rohitsharma@gmail.com)
 
 ---
-
-## 📩 Notes
-
-This project is actively evolving. All core modules—Backend, Customer Frontend, and Admin Panel—are MVP complete and ready for deployment.
-
-Next steps include:
-- 💳 Payment flow simulation
-- ⚙️ CI/CD pipeline experimentation
-- 📊 Advanced analytics & reporting
-
-Stay tuned for updates 🚀
-
----
-
-## 📁 Folder Structure
-
-```bash
-Framely/
-├── .github/
-│   └── workflows/
-│       ├── framely-customer-deploy.yml
-│       ├── framely-admin-deploy.yml
-│       └── azure-deploy.yml
-├── frontend/
-│   ├── framely-customer/
-│   │   ├── public/
-│   │   ├── src/
-│   │   └── next.config.ts
-│   ├── framely-admin/
-│   │   ├── public/
-│   │   ├── src/
-│   │   └── next.config.ts
-├── backend/
-│   ├── Framely.API/
-│   ├── Framely.Core/
-│   └── Framely.Infrastructure/
-```
-
----
-
-## 📊 Cloud Tagging Strategy
-
-Each Azure resource is tagged with:
-
-- `env`: `production`  
-- `owner`: `framely-core`  
-- `cost-center`: `frontend` / `backend`  
-- `deployable`: `framely` / `framely-admin` / `framely-backend`
-
-This ensures traceability, cost attribution, and environment clarity across cloud dashboards.
-
----
-
-## 🧠 Summary
-
-This branch reflects:
-
-- Modular CI/CD pipelines for each deployable  
-- Secure secret handling and cloud-native deployment  
-- Typed config and SSR optimization for frontend apps  
-- Self-contained backend deployment with layered architecture  
-- Audit-ready tagging and onboarding clarity across the repo
-
-Every deployable is treated as a production-grade surface, with isolated workflows, scoped secrets, and scalable cloud infrastructure.
-
 
