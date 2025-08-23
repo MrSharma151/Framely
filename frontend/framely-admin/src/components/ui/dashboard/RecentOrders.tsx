@@ -14,6 +14,7 @@ export default function RecentOrders() {
     Processing: "bg-blue-500/20 text-blue-300",
   };
 
+  // Fetches the latest orders on component mount
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
@@ -26,7 +27,7 @@ export default function RecentOrders() {
 
   return (
     <div className="card fade-in hover:shadow-[0_8px_25px_rgba(138,180,248,0.25)] hover:scale-[1.01] transition-transform duration-300">
-      {/* Header */}
+      {/* Displays header with title and description */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <div>
           <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-[var(--primary-light)] to-[var(--primary)] bg-clip-text text-transparent">
@@ -38,7 +39,7 @@ export default function RecentOrders() {
         </div>
       </div>
 
-      {/* Table Wrapper */}
+      {/* Renders table of recent orders */}
       <div className="overflow-x-auto rounded-lg border border-[var(--border-color)]">
         <table className="w-full text-left text-xs sm:text-sm">
           <thead>
@@ -51,18 +52,21 @@ export default function RecentOrders() {
           </thead>
           <tbody>
             {loading ? (
+              // Displays loading message while fetching data
               <tr>
                 <td colSpan={4} className="py-6 text-center text-[var(--text-secondary)]">
                   Loading recent orders...
                 </td>
               </tr>
             ) : orders.length === 0 ? (
+              // Displays fallback message when no orders are found
               <tr>
                 <td colSpan={4} className="py-6 text-center text-[var(--text-secondary)]">
                   No recent orders found
                 </td>
               </tr>
             ) : (
+              // Renders each order row
               orders.map((order) => (
                 <tr
                   key={order.id}
@@ -89,7 +93,7 @@ export default function RecentOrders() {
         </table>
       </div>
 
-      {/* Footer Mini-Action */}
+      {/* Link to view all orders */}
       <div className="mt-4 flex justify-end">
         <Link href="/orders" className="btn-primary text-xs sm:text-sm">
           View All Orders →

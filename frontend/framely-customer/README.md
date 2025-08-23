@@ -9,7 +9,7 @@ This branch focuses on **deployment hygiene**, **CI/CD modularity**, and **cloud
 - **Azure Static Web App**  
   - Hosted via Azure SWA resource (`framely-customer`)
   - Connected to GitHub for automated deployment
-  - Deployment token stored securely in GitHub secrets (`AZURE_STATIC_WEB_APPS_API_TOKEN`)
+  - Deployment token stored securely in GitHub secrets (`AZURE_STATIC_WEB_APPS_API_TOKEN_CUSTOMER`)
   - Resource tagged for cost, ownership, and environment clarity
 
 ---
@@ -17,7 +17,7 @@ This branch focuses on **deployment hygiene**, **CI/CD modularity**, and **cloud
 ### 🔐 Secrets & Security
 
 - **GitHub Secrets Used**
-  - `AZURE_STATIC_WEB_APPS_API_TOKEN` – for Azure deployment
+  - `AZURE_STATIC_WEB_APPS_API_TOKEN_CUSTOMER` – for Azure deployment
   - All secrets are modular and scoped per deployable
 - **No hardcoded secrets** in repo — enforced via code review and hygiene checks
 
@@ -43,10 +43,8 @@ This branch focuses on **deployment hygiene**, **CI/CD modularity**, and **cloud
 - `next.config.ts` uses inferred typing for compatibility
 - Enabled:
   - `reactStrictMode`
-  - `swcMinify`
   - `trailingSlash`
   - `styledComponents` compiler toggle
-- Image optimization config deferred — will be added when CDN or blob URLs are rendered via `next/image`
 
 ---
 
@@ -62,7 +60,7 @@ Framely/
 │       ├── public/
 │       ├── src/
 │       ├── next.config.ts
-│       └── README.md  ← Deployment-focused in this branch
+│       └── README.md  
 ```
 
 

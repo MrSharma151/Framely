@@ -16,7 +16,6 @@ import OrderTable from "@/components/ui/orders/OrderTable";
 import OrderDetailsModal from "@/components/ui/orders/OrderDetailsModal";
 import OrderStatusUpdateModal from "@/components/ui/orders/OrderStatusUpdateModal";
 import OrderDeleteConfirmationModal from "@/components/ui/orders/OrderDeleteConfirmationModal";
-import Button from "@/components/ui/Button";
 
 interface OrderFilterState {
   status: OrderStatus | undefined;
@@ -47,46 +46,47 @@ const OrdersPage: React.FC = () => {
     sortOrder: "desc",
   });
 
-  const fetchOrders = async () => {
-    let response;
-
-    if (filters.orderId.trim()) {
-      const order = await getOrderById(Number(filters.orderId));
-      response = {
-        data: order ? [order] : [],
-        totalItems: order ? 1 : 0,
-        totalPages: 1,
-        currentPage: 1,
-        pageSize,
-      };
-    } else if (filters.userId.trim()) {
-      const orders = await getOrdersByUserId(filters.userId);
-      response = {
-        data: orders,
-        totalItems: orders.length,
-        totalPages: 1,
-        currentPage: 1,
-        pageSize,
-      };
-    } else {
-      response = await getPaginatedOrders(
-        page,
-        pageSize,
-        filters.sortBy,
-        filters.sortOrder,
-        filters.status
-      );
-    }
-
-    if (response) {
-      setOrders(response.data);
-      setTotalPages(response.totalPages);
-    }
-  };
-
+  // Refetch orders when page or filters change
   useEffect(() => {
+    const fetchOrders = async () => {
+      let response;
+
+      if (filters.orderId.trim()) {
+        const order = await getOrderById(Number(filters.orderId));
+        response = {
+          data: order ? [order] : [],
+          totalItems: order ? 1 : 0,
+          totalPages: 1,
+          currentPage: 1,
+          pageSize,
+        };
+      } else if (filters.userId.trim()) {
+        const orders = await getOrdersByUserId(filters.userId);
+        response = {
+          data: orders,
+          totalItems: orders.length,
+          totalPages: 1,
+          currentPage: 1,
+          pageSize,
+        };
+      } else {
+        response = await getPaginatedOrders(
+          page,
+          pageSize,
+          filters.sortBy,
+          filters.sortOrder,
+          filters.status
+        );
+      }
+
+      if (response) {
+        setOrders(response.data);
+        setTotalPages(response.totalPages);
+      }
+    };
+
     fetchOrders();
-  }, [page, filters]);
+  }, [page, pageSize, filters]);
 
   const handleViewDetails = async (id: number) => {
     const order = await getOrderById(id);
@@ -113,8 +113,8 @@ const OrdersPage: React.FC = () => {
     if (!selectedOrder) return;
     const success = await updateOrderStatus(selectedOrder.id, newStatus);
     if (success) {
-      fetchOrders();
       setModals((prev) => ({ ...prev, statusUpdate: false }));
+      setPage(1); // Refresh from first page
     }
   };
 
@@ -122,14 +122,14 @@ const OrdersPage: React.FC = () => {
     if (!selectedOrder) return;
     const success = await deleteOrder(selectedOrder.id);
     if (success) {
-      fetchOrders();
       setModals((prev) => ({ ...prev, deleteConfirm: false }));
+      setPage(1); // Refresh from first page
     }
   };
 
   return (
     <div className="page-container px-4 sm:px-6 lg:px-8 py-6 space-y-8 fade-in">
-      {/* Header */}
+      {/* Page header with title and description */}
       <header className="flex-row-between gap-4">
         <div>
           <h1 className="title">📑 Orders</h1>
@@ -139,7 +139,7 @@ const OrdersPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Filters */}
+      {/* Filter section for order search and sorting */}
       <section className="card">
         <OrderFilters
           filters={filters}
@@ -156,7 +156,7 @@ const OrdersPage: React.FC = () => {
         />
       </section>
 
-      {/* Table */}
+      {/* Table displaying paginated orders */}
       <section className="overflow-x-auto">
         <OrderTable
           orders={orders}
@@ -169,7 +169,7 @@ const OrdersPage: React.FC = () => {
         />
       </section>
 
-      {/* Modals */}
+      {/* Modals for order details, status update, and deletion */}
       {selectedOrder && (
         <>
           <OrderDetailsModal

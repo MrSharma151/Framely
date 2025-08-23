@@ -13,23 +13,23 @@ interface LayoutWrapperProps {
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const { hydrated } = useAuth();
 
-  // Show loading spinner until hydration completes
+  // Displays a loading spinner until client-side hydration is complete
   if (!hydrated) {
     return <LoadingSpinner />;
   }
 
   return (
     <>
-      {/* Toast notifications */}
+      {/* Renders toast notifications at the top center */}
       <Toaster position="top-center" reverseOrder={false} />
 
-      {/* Navigation bar */}
+      {/* Displays the navigation bar */}
       <Navbar />
 
-      {/* Main content */}
+      {/* Renders the main content area */}
       <main className="flex-1 px-4 sm:px-6 lg:px-8">{children}</main>
 
-      {/* Footer */}
+      {/* Displays the footer section */}
       <Footer />
     </>
   );

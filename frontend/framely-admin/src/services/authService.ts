@@ -1,13 +1,13 @@
 import apiClient from "./apiClient";
 import Cookies from "js-cookie";
 
-// ✅ Login credentials payload
+// Defines the payload structure for login credentials
 export interface LoginPayload {
   email: string;
   password: string;
 }
 
-// ✅ Auth response from backend
+// Defines the full authentication response returned by the backend
 export interface AuthResponse {
   userId: string;
   fullName: string;
@@ -19,7 +19,7 @@ export interface AuthResponse {
 }
 
 /**
- * ✅ Sends login request to the API and returns the full authentication response.
+ * Sends a login request to the API and returns the authentication response.
  */
 export const loginUser = async (data: LoginPayload): Promise<AuthResponse> => {
   const response = await apiClient.post<AuthResponse>("/Auth/login", data);
@@ -27,13 +27,12 @@ export const loginUser = async (data: LoginPayload): Promise<AuthResponse> => {
 };
 
 /**
- * ✅ Clears JWT token and user data from cookies and redirects to login page.
+ * Clears authentication cookies and redirects the user to the login page.
  */
 export const logoutUser = () => {
   Cookies.remove("token");
   Cookies.remove("user");
 
-  // Optional: Add delay for toast to show if needed
   setTimeout(() => {
     window.location.href = "/auth/login";
   }, 300);

@@ -15,6 +15,7 @@ export default function ProductMetrics() {
     { title: "Revenue", value: "₹0", change: "", changeColor: "text-green-400", icon: DollarSign },
   ]);
 
+  // Fetches product, category, and order data to populate metrics
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -44,6 +45,7 @@ export default function ProductMetrics() {
     fetchData();
   }, []);
 
+  // Displays loading spinner while data is being fetched
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -67,7 +69,7 @@ export default function ProductMetrics() {
               hover:scale-[1.02]
             "
           >
-            {/* Icon Container */}
+            {/* Renders metric icon */}
             <div
               className="
                 w-14 h-14 rounded-xl 
@@ -80,7 +82,7 @@ export default function ProductMetrics() {
               <Icon className="w-7 h-7 text-white" />
             </div>
 
-            {/* Title */}
+            {/* Displays metric title */}
             <h3
               className="
                 mt-5 text-lg font-semibold 
@@ -91,19 +93,19 @@ export default function ProductMetrics() {
               {stat.title}
             </h3>
 
-            {/* Value */}
+            {/* Displays metric value */}
             <p className="text-3xl font-extrabold mt-2 tracking-wide text-[var(--text-primary)] leading-snug">
               {stat.value}
             </p>
 
-            {/* Change % */}
+            {/* Displays change percentage if available */}
             {stat.change && (
               <span className={`text-sm mt-1 block ${stat.changeColor}`}>
                 {stat.change}
               </span>
             )}
 
-            {/* Hover Glow Effect */}
+            {/* Glow effect on hover */}
             <div
               className="
                 absolute inset-0 rounded-2xl

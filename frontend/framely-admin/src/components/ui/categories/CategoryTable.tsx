@@ -16,6 +16,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
   onDelete,
   isLoading = false,
 }) => {
+  // Displays loading state while data is being fetched
   if (isLoading) {
     return (
       <div className="flex justify-center py-10">
@@ -24,6 +25,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
     );
   }
 
+  // Displays fallback message when no categories are available
   if (categories.length === 0) {
     return (
       <div className="text-center py-10 text-[var(--text-secondary)] italic">
@@ -58,6 +60,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
               </td>
               <td className="px-4 py-3 text-right">
                 <div className="flex justify-end gap-2">
+                  {/* Button to trigger category edit */}
                   <Button
                     variant="secondary"
                     size="sm"
@@ -67,6 +70,8 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
                     <Pencil className="w-4 h-4 mr-1" />
                     Edit
                   </Button>
+
+                  {/* Button to trigger category deletion */}
                   <Button
                     variant="danger"
                     size="sm"

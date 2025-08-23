@@ -18,6 +18,7 @@ export default function ProductTable({
   onEditClick,
   onDeleteClick,
 }: ProductTableProps) {
+  // Displays loading spinner while data is being fetched
   if (loading) {
     return (
       <div className="flex justify-center py-10">
@@ -26,6 +27,7 @@ export default function ProductTable({
     );
   }
 
+  // Displays fallback message when no products are available
   if (products.length === 0) {
     return (
       <div className="text-center py-10 text-[var(--text-secondary)]">
@@ -86,6 +88,7 @@ export default function ProductTable({
                 ₹{product.price.toLocaleString("en-IN")}
               </td>
               <td className="px-4 py-3 flex justify-center gap-3">
+                {/* Button to trigger product edit */}
                 <Button
                   variant="secondary"
                   size="sm"
@@ -95,6 +98,8 @@ export default function ProductTable({
                   <Pencil className="w-4 h-4 mr-1" />
                   Edit
                 </Button>
+
+                {/* Button to trigger product deletion */}
                 <Button
                   variant="danger"
                   size="sm"

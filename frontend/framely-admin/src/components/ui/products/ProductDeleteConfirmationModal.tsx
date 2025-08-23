@@ -19,6 +19,7 @@ export default function ProductDeleteConfirmationModal({
   onCancel,
   onConfirm,
 }: Props) {
+  // Do not render modal if it's closed or product data is missing
   if (!isOpen || !product) return null;
 
   return (
@@ -27,9 +28,12 @@ export default function ProductDeleteConfirmationModal({
         className="modal-content fade-in max-w-sm"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Modal heading */}
         <h2 className="text-xl font-semibold text-red-400 mb-3">
           Delete Product
         </h2>
+
+        {/* Confirmation message with product name */}
         <p className="text-sm text-[var(--text-secondary)] mb-4">
           Are you sure you want to delete{" "}
           <span className="font-bold text-[var(--text-primary)]">
@@ -37,6 +41,8 @@ export default function ProductDeleteConfirmationModal({
           </span>
           ? This action cannot be undone.
         </p>
+
+        {/* Action buttons for cancel and confirm */}
         <div className="flex justify-end gap-3">
           <Button
             onClick={onCancel}

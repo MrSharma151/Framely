@@ -31,12 +31,14 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
   const [orderId, setOrderId] = useState(filters.orderId);
   const [userId, setUserId] = useState(filters.userId);
 
+  // Syncs local state with external filter props
   useEffect(() => {
     setStatus(filters.status || "");
     setOrderId(filters.orderId);
     setUserId(filters.userId);
   }, [filters]);
 
+  // Applies selected filters
   const handleApply = () => {
     onApplyFilters({
       sortBy,
@@ -47,6 +49,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
     });
   };
 
+  // Clears all filters and resets to default
   const handleClear = () => {
     setSortBy("orderDate");
     setSortOrder("desc");
@@ -61,7 +64,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-      {/* 🔢 Sort By */}
+      {/* Filter: Sort By */}
       <div>
         <label className="block mb-1 text-sm text-secondary">Sort By</label>
         <select
@@ -73,7 +76,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
         </select>
       </div>
 
-      {/* ↕️ Sort Order */}
+      {/* Filter: Sort Order */}
       <div>
         <label className="block mb-1 text-sm text-secondary">Sort Order</label>
         <select
@@ -86,7 +89,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
         </select>
       </div>
 
-      {/* 🏷️ Order Status */}
+      {/* Filter: Order Status */}
       <div>
         <label className="block mb-1 text-sm text-secondary">Order Status</label>
         <select
@@ -103,7 +106,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
         </select>
       </div>
 
-      {/* 🧾 Order ID */}
+      {/* Filter: Order ID */}
       <div>
         <label className="block mb-1 text-sm text-secondary">Order ID</label>
         <input
@@ -115,7 +118,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
         />
       </div>
 
-      {/* 👤 User ID */}
+      {/* Filter: User ID */}
       <div>
         <label className="block mb-1 text-sm text-secondary">User ID</label>
         <input
@@ -127,7 +130,7 @@ const OrderFilters: React.FC<OrderFiltersProps> = ({
         />
       </div>
 
-      {/* ✅ Apply + ❌ Clear Filters */}
+      {/* Action Buttons: Apply and Clear */}
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-end mt-1">
         <Button
           variant="primary"

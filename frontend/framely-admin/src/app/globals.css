@@ -2,19 +2,19 @@
 
 /* Root color variables for dark premium theme */
 :root {
-  --background: #050b15;        
-  --surface: rgba(25, 38, 66, 0.5); 
-  --surface-hover: rgba(30, 50, 88, 0.65);     
-  --accent-primary: #4676E1;    
-  --accent-secondary: #9CC8FF;  
-  --highlight: #B7E3F8;         
-  --text-primary: #FAFBFF;      
-  --text-secondary: #A9B8D4;    
+  --background: #050b15;
+  --surface: rgba(25, 38, 66, 0.5);
+  --surface-hover: rgba(30, 50, 88, 0.65);
+  --accent-primary: #4676E1;
+  --accent-secondary: #9CC8FF;
+  --highlight: #B7E3F8;
+  --text-primary: #FAFBFF;
+  --text-secondary: #A9B8D4;
   --border-color: rgba(255, 255, 255, 0.07);
   --shadow-color: rgba(0, 0, 0, 0.45);
 }
 
-/* Body base styling */
+/* Base styling for the body element */
 body {
   background: radial-gradient(circle at top left, #050b15 0%, #0a1120 80%);
   color: var(--text-primary);
@@ -27,7 +27,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings */
+/* Heading styles */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   letter-spacing: -0.4px;
@@ -37,7 +37,7 @@ h1 { font-size: 2.3rem; line-height: 1.3; }
 h2 { font-size: 1.85rem; }
 h3 { font-size: 1.45rem; }
 
-/* Links */
+/* Link styles and hover effects */
 a {
   color: var(--text-secondary);
   text-decoration: none;
@@ -49,7 +49,7 @@ a:hover {
   text-shadow: 0 0 8px rgba(183, 227, 248, 0.4);
 }
 
-/* Card with glass effect */
+/* Card component with glass effect */
 .card {
   background: var(--surface);
   backdrop-filter: blur(18px);
@@ -65,7 +65,7 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* Form elements */
+/* Styling for form elements */
 input, textarea, select {
   background: rgba(19, 42, 79, 0.85);
   border: 1px solid rgba(138, 180, 248, 0.15);
@@ -80,7 +80,7 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(183, 227, 248, 0.3);
 }
 
-/* Buttons */
+/* Button styles and hover effects */
 button {
   background: linear-gradient(135deg, #4676E1, #5C8EE8);
   color: #fff;
@@ -95,13 +95,13 @@ button:hover {
   box-shadow: 0 8px 24px rgba(156, 200, 255, 0.35);
 }
 
-/* Modal background blur */
+/* Background blur for modal overlay */
 .modal-backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
 }
 
-/* Scrollbar */
+/* Scrollbar customization */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
@@ -112,7 +112,7 @@ button:hover {
   background: var(--accent-primary);
 }
 
-/* Active link styling */
+/* Styling for active navigation links */
 .active-link {
   color: var(--highlight);
   font-weight: 600;
@@ -129,12 +129,12 @@ button:hover {
   border-radius: 2px;
 }
 
-/* Smooth transition for all elements */
+/* Global transition effects for smoother UI */
 * {
   transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Flex row helper */
+/* Flex layout helper for responsive alignment */
 .flex-row-between {
   display: flex;
   flex-direction: column;
@@ -151,11 +151,11 @@ button:hover {
   }
 }
 
-/* Spacing helpers */
+/* Margin and spacing utilities */
 .mb-3 { margin-bottom: 1.5rem; }
 .mt-2 { margin-top: 0.75rem; }
 
-/* Table glass style */
+/* Glass styling for table containers */
 .table-glass {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -164,7 +164,7 @@ button:hover {
   padding: 1rem;
 }
 
-/* Fade-in animation */
+/* Fade-in animation for page transitions */
 .fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -173,30 +173,30 @@ button:hover {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Dark glass background helper */
+/* Background helper for dark glass sections */
 .bg-dark-glass {
   background-color: rgba(15, 15, 25, 0.6);
 }
 
-/* Container for page content */
+/* Container layout for page content */
 .page-container {
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
 }
 
-/* Title text */
+/* Title text styling */
 .title {
   font-size: 1.75rem;
   color: var(--text-primary);
 }
 
-/* Highlight background */
+/* Background highlight utility */
 .bg-highlight {
   background-color: rgba(255, 255, 255, 0.04);
 }
 
-/* Modal backdrop */
+/* Modal backdrop layout and blur */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -208,7 +208,7 @@ button:hover {
   justify-content: center;
 }
 
-/* Modal box */
+/* Modal content container with scroll support */
 .modal-content {
   background: rgba(19, 42, 79, 0.85);
   backdrop-filter: blur(10px);
@@ -219,10 +219,13 @@ button:hover {
   max-width: 500px;
   width: 100%;
 
-  /* Scroll support */
-  max-height: 90vh; /* Prevent modal from exceeding viewport */
-  overflow-y: auto; /* Enable vertical scroll when needed */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: var(--border-color) transparent;
+  /* Prevent modal from exceeding viewport */
+  max-height: 90vh;
 
+  /* Enable vertical scroll when needed */
+  overflow-y: auto;
+
+  /* Scrollbar styling for Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
 }

@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BarChart3, TrendingUp } from "lucide-react";
@@ -22,6 +21,7 @@ interface RevenueData {
 export default function RevenueTrend() {
   const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
 
+  // Fetches and aggregates monthly revenue data from orders
   useEffect(() => {
     const fetchRevenueData = async () => {
       try {
@@ -53,7 +53,7 @@ export default function RevenueTrend() {
   return (
     <div className="card fade-in hover:shadow-[0_8px_25px_rgba(138,180,248,0.25)] hover:scale-[1.01] transition-transform duration-300">
 
-      {/* Header */}
+      {/* Displays header with title and icon */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <div>
           <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-[var(--primary-light)] to-[var(--primary)] bg-clip-text text-transparent">
@@ -68,7 +68,7 @@ export default function RevenueTrend() {
         </div>
       </div>
 
-      {/* Chart */}
+      {/* Renders revenue trend chart or fallback message */}
       <div className="relative h-48 sm:h-56 rounded-lg flex flex-col items-center justify-center bg-[rgba(255,255,255,0.03)] border border-[var(--border-color)] backdrop-blur-md shadow-inner overflow-hidden">
         {revenueData.length > 0 ? (
           <ResponsiveContainer width="100%" height="100%">
@@ -95,6 +95,7 @@ export default function RevenueTrend() {
             </LineChart>
           </ResponsiveContainer>
         ) : (
+          // Displays fallback message when no data is available
           <div className="flex flex-col items-center text-center p-4">
             <BarChart3 className="w-10 h-10 sm:w-12 sm:h-12 text-[var(--accent-secondary)] opacity-40" />
             <span className="mt-2 text-xs sm:text-sm text-[var(--text-secondary)]">
@@ -104,17 +105,13 @@ export default function RevenueTrend() {
         )}
       </div>
 
-      {/* Footer CTA */}
+      {/* Link to view detailed revenue report */}
       <div className="mt-5 flex justify-end">
         <Link href="/" className="btn-primary text-xs sm:text-sm">
           View Detailed Report →
         </Link>
       </div>
 
-
     </div>
   );
 }
-
-
-
