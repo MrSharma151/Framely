@@ -46,45 +46,45 @@ const OrdersPage: React.FC = () => {
     sortOrder: "desc",
   });
 
-  // Refetch orders when page or filters change
+  // Reusable fetch function
+  const fetchOrders = async () => {
+    let response;
+
+    if (filters.orderId.trim()) {
+      const order = await getOrderById(Number(filters.orderId));
+      response = {
+        data: order ? [order] : [],
+        totalItems: order ? 1 : 0,
+        totalPages: 1,
+        currentPage: 1,
+        pageSize,
+      };
+    } else if (filters.userId.trim()) {
+      const orders = await getOrdersByUserId(filters.userId);
+      response = {
+        data: orders,
+        totalItems: orders.length,
+        totalPages: 1,
+        currentPage: 1,
+        pageSize,
+      };
+    } else {
+      response = await getPaginatedOrders(
+        page,
+        pageSize,
+        filters.sortBy,
+        filters.sortOrder,
+        filters.status
+      );
+    }
+
+    if (response) {
+      setOrders(response.data);
+      setTotalPages(response.totalPages);
+    }
+  };
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      let response;
-
-      if (filters.orderId.trim()) {
-        const order = await getOrderById(Number(filters.orderId));
-        response = {
-          data: order ? [order] : [],
-          totalItems: order ? 1 : 0,
-          totalPages: 1,
-          currentPage: 1,
-          pageSize,
-        };
-      } else if (filters.userId.trim()) {
-        const orders = await getOrdersByUserId(filters.userId);
-        response = {
-          data: orders,
-          totalItems: orders.length,
-          totalPages: 1,
-          currentPage: 1,
-          pageSize,
-        };
-      } else {
-        response = await getPaginatedOrders(
-          page,
-          pageSize,
-          filters.sortBy,
-          filters.sortOrder,
-          filters.status
-        );
-      }
-
-      if (response) {
-        setOrders(response.data);
-        setTotalPages(response.totalPages);
-      }
-    };
-
     fetchOrders();
   }, [page, pageSize, filters]);
 
@@ -113,8 +113,15 @@ const OrdersPage: React.FC = () => {
     if (!selectedOrder) return;
     const success = await updateOrderStatus(selectedOrder.id, newStatus);
     if (success) {
+      // Local update for instant UI feedback
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === selectedOrder.id ? { ...order, status: newStatus } : order
+        )
+      );
       setModals((prev) => ({ ...prev, statusUpdate: false }));
-      setPage(1); // Refresh from first page
+      // Optional: background refetch for consistency
+      fetchOrders();
     }
   };
 
@@ -123,13 +130,12 @@ const OrdersPage: React.FC = () => {
     const success = await deleteOrder(selectedOrder.id);
     if (success) {
       setModals((prev) => ({ ...prev, deleteConfirm: false }));
-      setPage(1); // Refresh from first page
+      fetchOrders();
     }
   };
 
   return (
     <div className="page-container px-4 sm:px-6 lg:px-8 py-6 space-y-8 fade-in">
-      {/* Page header with title and description */}
       <header className="flex-row-between gap-4">
         <div>
           <h1 className="title">📑 Orders</h1>
@@ -139,7 +145,6 @@ const OrdersPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Filter section for order search and sorting */}
       <section className="card">
         <OrderFilters
           filters={filters}
@@ -156,7 +161,6 @@ const OrdersPage: React.FC = () => {
         />
       </section>
 
-      {/* Table displaying paginated orders */}
       <section className="overflow-x-auto">
         <OrderTable
           orders={orders}
@@ -169,7 +173,6 @@ const OrdersPage: React.FC = () => {
         />
       </section>
 
-      {/* Modals for order details, status update, and deletion */}
       {selectedOrder && (
         <>
           <OrderDetailsModal
