@@ -170,5 +170,8 @@ npm run dev
 **Rohit Sharma**
 📩 [rhs.rohitsharma@gmail.com](mailto:rhs.rohitsharma@gmail.com)
 
+## 📄 License
+This project is licensed under the MIT License.
+
 ---
 
